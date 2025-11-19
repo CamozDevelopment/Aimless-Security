@@ -21,7 +21,29 @@ export function createMiddleware(config: AimlessConfig = {}) {
                req.socket.remoteAddress ||
                'unknown';
 
-    // Analyze request
+    // Step 1: Check endpoint access control
+    const accessCheck = rasp.checkEndpointAccess({
+      method: req.method,
+      path: req.path,
+      headers: req.headers as Record<string, string>
+    });
+
+    if (!accessCheck.allowed) {
+      logger.warn('Request blocked by access control', {
+        ip,
+        path: req.path,
+        method: req.method,
+        reason: accessCheck.reason
+      });
+
+      return res.status(403).json({
+        error: 'Forbidden',
+        message: accessCheck.reason || 'Access denied',
+        timestamp: new Date().toISOString()
+      });
+    }
+
+    // Step 2: Analyze request for security threats
     const threats = rasp.analyze({
       method: req.method,
       path: req.path,
@@ -31,14 +53,42 @@ export function createMiddleware(config: AimlessConfig = {}) {
       ip
     });
 
+    // Step 3: Check for protected endpoint rules
+    const protectionRule = rasp.getProtectionRules({
+      method: req.method,
+      path: req.path
+    });
+
+    let shouldBlock = rasp.shouldBlock(threats);
+
+    // Apply stricter rules for protected endpoints
+    if (protectionRule && protectionRule.maxThreatLevel) {
+      const severityLevels = { low: 1, medium: 2, high: 3, critical: 4 };
+      const maxLevel = severityLevels[protectionRule.maxThreatLevel];
+      
+      const hasExcessiveThreat = threats.some(t => 
+        severityLevels[t.severity] > maxLevel
+      );
+
+      if (hasExcessiveThreat) {
+        shouldBlock = true;
+        logger.warn('Protected endpoint exceeded threat level', {
+          ip,
+          path: req.path,
+          maxAllowed: protectionRule.maxThreatLevel,
+          threats: threats.map(t => ({ type: t.type, severity: t.severity }))
+        });
+      }
+    }
+
     // Attach threat info to request
     req.aimless = {
       threats,
-      blocked: rasp.shouldBlock(threats)
+      blocked: shouldBlock
     };
 
     // Block request if necessary
-    if (req.aimless.blocked) {
+    if (shouldBlock) {
       logger.error('Request blocked due to security threats', {
         ip,
         path: req.path,

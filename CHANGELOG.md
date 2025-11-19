@@ -5,6 +5,31 @@ All notable changes to Aimless Security will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0] - 2025-11-19
+
+### Added
+- **🎯 ENDPOINT ACCESS CONTROL**: Define exactly which APIs are allowed to execute
+  - **Allowlist Mode**: Only specified endpoints can be accessed (strict whitelist)
+  - **Blocklist Mode**: Block specific dangerous endpoints while allowing everything else
+  - **Protected Endpoints**: Apply extra security rules to sensitive routes (payments, admin, etc.)
+  - **Regex & Wildcard Support**: Flexible endpoint matching with `/api/*` and regex patterns
+  - **Per-Endpoint Rules**: Custom security levels, authentication requirements, rate limits
+  - **Method Filtering**: Allow only specific HTTP methods per endpoint
+  - **Auth Requirements**: Require authentication headers for protected endpoints
+  - **Threat Level Limits**: Set maximum allowed threat level per endpoint (low/medium/high/critical)
+- **New Example**: `examples/access-control.js` with 6 comprehensive configuration examples
+- **Access Control Types**: `EndpointRule`, `AccessControlConfig` interfaces
+
+### Changed
+- **Middleware**: Now checks access control before running threat analysis
+- **Protection Flow**: 3-step process: Access Control → Threat Analysis → Protected Endpoint Rules
+- **RASP Config**: Added `accessControl` configuration object
+
+### Security
+- Protected endpoints can override global security settings
+- Authentication headers are checked before request processing
+- Unmatched endpoints can be configured to allow or block by default
+
 ## [1.2.0] - 2025-11-19
 
 ### Fixed

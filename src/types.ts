@@ -4,13 +4,34 @@ export interface AimlessConfig {
   logging?: LoggingConfig;
 }
 
+export interface EndpointRule {
+  path: string | RegExp; // Exact path or regex pattern
+  methods?: string[]; // Allowed methods (GET, POST, etc.). If omitted, all methods allowed
+  requireAuth?: boolean; // Require authentication header
+  maxThreatLevel?: 'low' | 'medium' | 'high' | 'critical'; // Max allowed threat level
+  rateLimit?: { // Override global rate limit for this endpoint
+    maxRequests: number;
+    windowMs: number;
+  };
+}
+
+export interface AccessControlConfig {
+  mode: 'allowlist' | 'blocklist' | 'monitor'; // Access control mode
+  allowedEndpoints?: EndpointRule[]; // Whitelist of allowed endpoints
+  protectedEndpoints?: EndpointRule[]; // Extra security for sensitive endpoints
+  blockedEndpoints?: (string | RegExp)[]; // Explicitly blocked endpoints
+  defaultAction?: 'allow' | 'block'; // What to do with unmatched endpoints
+  requireAuthHeader?: string; // e.g., 'Authorization' or 'X-API-Key'
+}
+
 export interface RASPConfig {
   enabled?: boolean;
   injectionProtection?: boolean;
   xssProtection?: boolean;
   csrfProtection?: boolean;
   anomalyDetection?: boolean;
-  blockMode?: boolean; // true = block, false = monitor only
+  blockMode?: boolean; // true = block threats, false = monitor only
+  accessControl?: AccessControlConfig; // NEW: Endpoint access control
   trustedOrigins?: string[];
   maxRequestSize?: number; // bytes
   rateLimiting?: {

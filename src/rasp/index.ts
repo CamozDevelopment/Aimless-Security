@@ -21,6 +21,11 @@ export class RASP {
       csrfProtection: false, // Disabled by default to avoid false positives
       anomalyDetection: false, // Disabled by default to avoid false positives
       blockMode: false, // Detection mode by default - safer for production
+      accessControl: {
+        mode: 'monitor', // Default to monitor mode
+        defaultAction: 'allow',
+        ...config.accessControl
+      },
       trustedOrigins: [],
       maxRequestSize: 10 * 1024 * 1024, // 10MB
       rateLimiting: {
@@ -107,6 +112,126 @@ export class RASP {
   shouldBlock(threats: SecurityThreat[]): boolean {
     if (!this.config.blockMode) return false;
     return threats.some(t => t.blocked && ['high', 'critical'].includes(t.severity));
+  }
+
+  /**
+   * Check if endpoint is allowed based on access control rules
+   */
+  checkEndpointAccess(request: {
+    method: string;
+    path: string;
+    headers?: Record<string, string | string[] | undefined>;
+  }): { allowed: boolean; reason?: string; matchedRule?: any } {
+    const ac = this.config.accessControl;
+    if (!ac || ac.mode === 'monitor') {
+      return { allowed: true }; // Monitor mode - always allow, just log
+    }
+
+    const { method, path, headers } = request;
+
+    // Check if endpoint is explicitly blocked
+    if (ac.blockedEndpoints?.length) {
+      const blocked = ac.blockedEndpoints.some(pattern => 
+        this.matchesPattern(path, pattern)
+      );
+      if (blocked) {
+        return { allowed: false, reason: 'Endpoint is blocked' };
+      }
+    }
+
+    // Check authentication requirement
+    if (ac.requireAuthHeader && headers) {
+      const authHeader = headers[ac.requireAuthHeader.toLowerCase()];
+      if (!authHeader) {
+        return { allowed: false, reason: `Missing required header: ${ac.requireAuthHeader}` };
+      }
+    }
+
+    // ALLOWLIST mode - only explicitly allowed endpoints are permitted
+    if (ac.mode === 'allowlist') {
+      if (!ac.allowedEndpoints?.length) {
+        // No allowed endpoints defined, use defaultAction
+        const allowed = ac.defaultAction === 'allow';
+        return { 
+          allowed, 
+          reason: allowed ? undefined : 'Endpoint not in allowlist'
+        };
+      }
+
+      const matchedRule = ac.allowedEndpoints.find(rule => {
+        const pathMatches = this.matchesPattern(path, rule.path);
+        const methodMatches = !rule.methods || rule.methods.includes(method);
+        return pathMatches && methodMatches;
+      });
+
+      if (!matchedRule) {
+        return { allowed: false, reason: 'Endpoint not in allowlist', matchedRule };
+      }
+
+      // Check method-specific rules
+      if (matchedRule.methods && !matchedRule.methods.includes(method)) {
+        return { 
+          allowed: false, 
+          reason: `Method ${method} not allowed for this endpoint`,
+          matchedRule 
+        };
+      }
+
+      // Check auth requirement for this specific endpoint
+      if (matchedRule.requireAuth && headers) {
+        const authHeader = headers['authorization'] || headers['x-api-key'];
+        if (!authHeader) {
+          return { 
+            allowed: false, 
+            reason: 'Authentication required for this endpoint',
+            matchedRule 
+          };
+        }
+      }
+
+      return { allowed: true, matchedRule };
+    }
+
+    // BLOCKLIST mode - all endpoints allowed except explicitly blocked
+    if (ac.mode === 'blocklist') {
+      return { allowed: true }; // Already checked blockedEndpoints above
+    }
+
+    // Default action for unmatched
+    const allowed = ac.defaultAction === 'allow';
+    return { 
+      allowed, 
+      reason: allowed ? undefined : 'No matching rule, default is block'
+    };
+  }
+
+  /**
+   * Check if endpoint has extra protection rules
+   */
+  getProtectionRules(request: { method: string; path: string }) {
+    const ac = this.config.accessControl;
+    if (!ac?.protectedEndpoints?.length) return null;
+
+    return ac.protectedEndpoints.find(rule => {
+      const pathMatches = this.matchesPattern(request.path, rule.path);
+      const methodMatches = !rule.methods || rule.methods.includes(request.method);
+      return pathMatches && methodMatches;
+    });
+  }
+
+  /**
+   * Match path against string or regex pattern
+   */
+  private matchesPattern(path: string, pattern: string | RegExp): boolean {
+    if (typeof pattern === 'string') {
+      // Support wildcards: /api/* matches /api/users, /api/posts, etc.
+      if (pattern.includes('*')) {
+        const regexPattern = pattern.replace(/\*/g, '.*').replace(/\//g, '\\/');
+        return new RegExp(`^${regexPattern}$`).test(path);
+      }
+      return path === pattern;
+    }
+    return pattern.test(path);
   }
 
   generateCSRFToken(sessionId: string): string {

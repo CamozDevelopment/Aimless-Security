@@ -24,22 +24,23 @@
 
 A comprehensive **Runtime Application Self-Protection (RASP)** and **API Fuzzing Engine** for Node.js applications. Aimless Security provides inline protection against injections, XSS/CSRF attacks, and anomalous behavior, along with intelligent API fuzzing capabilities.
 
-## ✨ What's New in v1.2.0
+## ✨ What's New in v1.3.0
 
-- 🔒 **CRITICAL FIX**: Default `blockMode` is now `false` - no more blocking legitimate traffic!
+- 🎯 **ENDPOINT ACCESS CONTROL**: Define which APIs are allowed to execute
+  - **Allowlist Mode**: Only specified endpoints are accessible
+  - **Blocklist Mode**: Block specific dangerous endpoints
+  - **Protected Endpoints**: Extra security for sensitive routes
+  - **Regex & Wildcard Support**: Flexible endpoint matching
+  - **Per-Endpoint Rules**: Custom security levels, auth requirements, rate limits
+- 🔒 **Smart Defaults**: Detection-only mode, opt-in to blocking
 - 🌐 **Full Vercel/Serverless Support** - Works on all serverless platforms
-- 📦 **Safer Defaults**: CSRF, anomaly detection, and rate limiting disabled by default
-- 🎯 **Confidence Scoring** - Know exactly how certain each detection is
 - 🧠 **IP Reputation System** - Automatic behavioral analysis and auto-blocking
 - 🔄 **Multi-Layer XSS Detection** - Catches deeply encoded and mutation XSS attacks
 - ⚡ **Fluent Validation API** - Elegant, chainable input validation
-- 🎨 **Context-Aware Sanitization** - Sanitize for HTML, JavaScript, CSS, URLs
 - 📊 **Vulnerability Scoring** - Fuzzing results now include 0-100 risk scores
-- 🚀 **Quick Start Helper** - One-line protection setup
-- ⏱️ **Timing-Safe Comparisons** - CSRF tokens use crypto.timingSafeEqual
 
-**[See VERCEL.md for Vercel deployment guide](./VERCEL.md)**  
-[See UPGRADING.md for migration guide](./UPGRADING.md)
+**[See examples/access-control.js for access control examples](./examples/access-control.js)**  
+**[See VERCEL.md for Vercel deployment guide](./VERCEL.md)**
 
 ## Features
 
@@ -200,6 +201,87 @@ app.use(express.json());
 app.use(aimless.middleware());
 ```
 
+## Endpoint Access Control
+
+**Define exactly which APIs can be executed in your application:**
+
+### Allowlist Mode - Only Allow Specific Endpoints
+
+```javascript
+const aimless = new Aimless({
+  rasp: {
+    blockMode: true,
+    accessControl: {
+      mode: 'allowlist',
+      defaultAction: 'block',
+      allowedEndpoints: [
+        // Public endpoints
+        { path: '/', methods: ['GET'] },
+        { path: '/health', methods: ['GET'] },
+        { path: '/api/public/*', methods: ['GET'] },
+        
+        // Auth endpoints
+        { path: '/auth/login', methods: ['POST'] },
+        
+        // Protected endpoints
+        { 
+          path: '/api/user/profile', 
+          methods: ['GET', 'PUT'],
+          requireAuth: true // Must have auth header
+        }
+      ]
+    }
+  }
+});
+```
+
+### Blocklist Mode - Block Dangerous Endpoints
+
+```javascript
+accessControl: {
+  mode: 'blocklist',
+  blockedEndpoints: [
+    '/admin/*',
+    '/internal/*',
+    /\/debug.*/, // Regex patterns supported
+    '/.env'
+  ]
+}
+```
+
+### Protected Endpoints - Extra Security
+
+```javascript
+accessControl: {
+  mode: 'monitor',
+  protectedEndpoints: [
+    {
+      path: '/api/payments/*',
+      maxThreatLevel: 'low', // Block even low threats
+      requireAuth: true,
+      rateLimit: { maxRequests: 10, windowMs: 60000 }
+    },
+    {
+      path: '/api/admin/*',
+      maxThreatLevel: 'low',
+      requireAuth: true
+    }
+  ]
+}
+```
+
+### Regex & Wildcard Patterns
+
+```javascript
+allowedEndpoints: [
+  { path: '/api/*' },                    // Wildcard
+  { path: /^\/api\/v\d+\/.*/ },         // Versioned APIs
+  { path: /^\/users\/[0-9a-f-]{36}$/ }, // UUID patterns
+]
+```
+
+**[See examples/access-control.js for complete examples](./examples/access-control.js)**
+
 ## Configuration
 
 ### RASP Configuration
@@ -213,6 +295,17 @@ const aimless = new Aimless({
     csrfProtection: true,           // CSRF protection
     anomalyDetection: true,         // Anomalous behavior detection
     blockMode: true,                // Block threats (false = monitor only)
+    
+    // Access Control (NEW!)
+    accessControl: {
+      mode: 'allowlist',           // 'allowlist' | 'blocklist' | 'monitor'
+      defaultAction: 'block',      // 'allow' | 'block'
+      requireAuthHeader: 'X-API-Key', // Global auth header
+      allowedEndpoints: [],        // See examples above
+      protectedEndpoints: [],      // Extra security rules
+      blockedEndpoints: []         // Explicitly blocked
+    },
+    
     trustedOrigins: [               // Trusted origins for CSRF
       'https://yourdomain.com'
     ],

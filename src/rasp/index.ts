@@ -18,13 +18,13 @@ export class RASP {
       enabled: true,
       injectionProtection: true,
       xssProtection: true,
-      csrfProtection: true,
-      anomalyDetection: true,
-      blockMode: true,
+      csrfProtection: false, // Disabled by default to avoid false positives
+      anomalyDetection: false, // Disabled by default to avoid false positives
+      blockMode: false, // Detection mode by default - safer for production
       trustedOrigins: [],
       maxRequestSize: 10 * 1024 * 1024, // 10MB
       rateLimiting: {
-        enabled: true,
+        enabled: false, // Disabled by default
         maxRequests: 100,
         windowMs: 60000
       },

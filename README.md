@@ -24,10 +24,11 @@
 
 A comprehensive **Runtime Application Self-Protection (RASP)** and **API Fuzzing Engine** for Node.js applications. Aimless Security provides inline protection against injections, XSS/CSRF attacks, and anomalous behavior, along with intelligent API fuzzing capabilities.
 
-## ✨ What's New in v1.1.2
+## ✨ What's New in v1.2.0
 
+- 🔒 **CRITICAL FIX**: Default `blockMode` is now `false` - no more blocking legitimate traffic!
 - 🌐 **Full Vercel/Serverless Support** - Works on all serverless platforms
-- 📦 **Improved Module Resolution** - Better CommonJS/ESM interop
+- 📦 **Safer Defaults**: CSRF, anomaly detection, and rate limiting disabled by default
 - 🎯 **Confidence Scoring** - Know exactly how certain each detection is
 - 🧠 **IP Reputation System** - Automatic behavioral analysis and auto-blocking
 - 🔄 **Multi-Layer XSS Detection** - Catches deeply encoded and mutation XSS attacks

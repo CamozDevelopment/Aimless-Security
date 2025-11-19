@@ -9,12 +9,24 @@ export interface FuzzTarget {
   body?: any;
   params?: Record<string, any>;
   query?: Record<string, any>;
+  expectedStatus?: number;
+  credentials?: { username: string; password: string };
+}
+
+interface ResponseAnalysis {
+  status: number;
+  bodyLength: number;
+  headers: Record<string, string>;
+  responseTime: number;
+  errorMessages: string[];
+  vulnerabilityScore: number;
 }
 
 export class FuzzingEngine {
   private config: Required<FuzzingConfig>;
   private payloadGenerator: PayloadGenerator;
   private logger: Logger;
+  private baselineResponses: Map<string, ResponseAnalysis>;
 
   constructor(config: FuzzingConfig = {}, logger: Logger) {
     this.config = {
@@ -30,6 +42,7 @@ export class FuzzingEngine {
 
     this.logger = logger;
     this.payloadGenerator = new PayloadGenerator();
+    this.baselineResponses = new Map();
   }
 
   async fuzz(target: FuzzTarget): Promise<FuzzingResult> {
@@ -211,59 +224,107 @@ export class FuzzingEngine {
     return vulnerabilities;
   }
 
-  private analyzePayload(payload: any, field: string, location: string): SecurityThreat | null {
+  /**
+   * Analyze response and calculate vulnerability score
+   */
+  private analyzeResponse(
+    payload: any,
+    field: string,
+    location: string,
+    response?: {
+      status: number;
+      body: string;
+      headers: Record<string, string>;
+      responseTime: number;
+    }
+  ): { threat: SecurityThreat | null; score: number } {
     const payloadStr = String(payload);
+    let score = 0;
+    let threat: SecurityThreat | null = null;
+
+    // Response analysis (if available)
+    if (response) {
+      const errorKeywords = ['error', 'exception', 'stack trace', 'sql', 'syntax', 'unexpected'];
+      const hasError = errorKeywords.some(kw => response.body.toLowerCase().includes(kw));
+
+      if (hasError) score += 30;
+      if (response.status >= 500) score += 40;
+      if (response.status === 200 && response.responseTime > 5000) score += 20; // Potential time-based attack
+      if (response.headers['x-powered-by']) score += 10; // Information disclosure
+    }
 
     // Determine threat type based on payload
-    if (payloadStr.includes('SELECT') || payloadStr.includes('UNION')) {
-      return {
+    if (payloadStr.includes('SELECT') || payloadStr.includes('UNION') || payloadStr.includes('OR 1=1')) {
+      score += 50;
+      threat = {
         type: ThreatType.SQL_INJECTION,
-        severity: 'high',
-        description: `SQL injection test payload in ${location}.${field}`,
+        severity: score > 70 ? 'critical' : 'high',
+        description: `SQL injection test payload in ${location}.${field} (score: ${score})`,
         payload: payloadStr,
         timestamp: new Date(),
         blocked: false,
-        metadata: { field, location }
+        metadata: { field, location, vulnerabilityScore: score, response: response ? { status: response.status } : undefined }
       };
     }
 
-    if (payloadStr.includes('<script>') || payloadStr.includes('onerror')) {
-      return {
+    else if (payloadStr.includes('<script>') || payloadStr.includes('onerror') || payloadStr.includes('javascript:')) {
+      score += 45;
+      threat = {
         type: ThreatType.XSS,
-        severity: 'high',
-        description: `XSS test payload in ${location}.${field}`,
+        severity: score > 70 ? 'critical' : 'high',
+        description: `XSS test payload in ${location}.${field} (score: ${score})`,
         payload: payloadStr,
         timestamp: new Date(),
         blocked: false,
-        metadata: { field, location }
+        metadata: { field, location, vulnerabilityScore: score }
       };
     }
 
-    if (payloadStr.includes('$') && (payloadStr.includes('gt') || payloadStr.includes('ne'))) {
-      return {
+    else if (payloadStr.includes('$') && (payloadStr.includes('gt') || payloadStr.includes('ne') || payloadStr.includes('where'))) {
+      score += 45;
+      threat = {
         type: ThreatType.NOSQL_INJECTION,
-        severity: 'high',
-        description: `NoSQL injection test payload in ${location}.${field}`,
+        severity: score > 70 ? 'critical' : 'high',
+        description: `NoSQL injection test payload in ${location}.${field} (score: ${score})`,
         payload: payloadStr,
         timestamp: new Date(),
         blocked: false,
-        metadata: { field, location }
+        metadata: { field, location, vulnerabilityScore: score }
       };
     }
 
-    if (payloadStr.includes('../') || payloadStr.includes('..\\')) {
-      return {
+    else if (payloadStr.includes('../') || payloadStr.includes('..\\') || payloadStr.includes('%2e%2e')) {
+      score += 40;
+      threat = {
         type: ThreatType.PATH_TRAVERSAL,
-        severity: 'high',
-        description: `Path traversal test payload in ${location}.${field}`,
+        severity: score > 70 ? 'critical' : 'high',
+        description: `Path traversal test payload in ${location}.${field} (score: ${score})`,
         payload: payloadStr,
         timestamp: new Date(),
         blocked: false,
-        metadata: { field, location }
+        metadata: { field, location, vulnerabilityScore: score }
       };
     }
 
-    return null;
+    else if (payloadStr.match(/[;&|`]/)) {
+      score += 50;
+      threat = {
+        type: ThreatType.COMMAND_INJECTION,
+        severity: score > 70 ? 'critical' : 'high',
+        description: `Command injection test payload in ${location}.${field} (score: ${score})`,
+        payload: payloadStr,
+        timestamp: new Date(),
+        blocked: false,
+        metadata: { field, location, vulnerabilityScore: score }
+      };
+    }
+
+    return { threat, score };
+  }
+
+  private analyzePayload(payload: any, field: string, location: string): SecurityThreat | null {
+    const result = this.analyzeResponse(payload, field, location);
+    return result.threat;
   }
 
   private isGraphQL(target: FuzzTarget): boolean {

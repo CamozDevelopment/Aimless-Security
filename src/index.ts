@@ -72,8 +72,150 @@ export class Aimless {
   getLogger(): Logger {
     return this.logger;
   }
-}
 
+  /**
+   * Quick validation helper - check if input is safe
+   */
+  isSafe(input: any, context?: string): boolean {
+    const threats = this.rasp.detectInjections(input, context);
+    return threats.length === 0;
+  }
+
+  /**
+   * Context-aware sanitization with multiple output contexts
+   */
+  sanitizeFor(input: string, context: 'html' | 'attribute' | 'javascript' | 'css' | 'url' = 'html'): string {
+    // Use XSS detector's enhanced sanitization
+    const xssDetector = (this.rasp as any).xssDetector;
+    if (xssDetector && typeof xssDetector.sanitize === 'function') {
+      return xssDetector.sanitize(input, context);
+    }
+    return this.rasp.sanitizeOutput(input);
+  }
+
+  /**
+   * Validate and sanitize in one call
+   */
+  validateAndSanitize(input: string, context?: string): { safe: boolean; sanitized: string; threats: any[] } {
+    const threats = this.rasp.detectInjections(input, context);
+    const safe = threats.length === 0;
+    const sanitized = this.rasp.sanitizeOutput(input);
+    
+    return { safe, sanitized, threats };
+  }
+
+  /**
+   * Get IP reputation score (0-100)
+   */
+  getIPReputation(ip: string): number {
+    const anomalyDetector = (this.rasp as any).anomalyDetector;
+    if (anomalyDetector && typeof anomalyDetector.getReputationScore === 'function') {
+      return anomalyDetector.getReputationScore(ip);
+    }
+    return 100;
+  }
+
+  /**
+   * Block or unblock an IP address
+   */
+  setIPBlocked(ip: string, blocked: boolean): void {
+    const anomalyDetector = (this.rasp as any).anomalyDetector;
+    if (anomalyDetector && typeof anomalyDetector.setIPBlocked === 'function') {
+      anomalyDetector.setIPBlocked(ip, blocked);
+    }
+  }
+
+  /**
+   * Get security statistics
+   */
+  getStats(): {
+    rasp: any;
+    fuzzing?: any;
+  } {
+    const anomalyDetector = (this.rasp as any).anomalyDetector;
+    const stats: any = {
+      rasp: {}
+    };
+
+    if (anomalyDetector && typeof anomalyDetector.getStats === 'function') {
+      stats.rasp = anomalyDetector.getStats();
+    }
+
+    return stats;
+  }
+
+  /**
+   * Clear security history (for testing or privacy)
+   */
+  clearHistory(ip?: string): void {
+    const anomalyDetector = (this.rasp as any).anomalyDetector;
+    if (anomalyDetector && typeof anomalyDetector.clearHistory === 'function') {
+      anomalyDetector.clearHistory(ip);
+    }
+  }
+
+  /**
+   * Quick-start method: protect an Express app with sensible defaults
+   */
+  static quickProtect(trustedOrigins?: string[]) {
+    const aimless = new Aimless({
+      rasp: {
+        enabled: true,
+        blockMode: true,
+        trustedOrigins: trustedOrigins || []
+      },
+      logging: {
+        level: 'info'
+      }
+    });
+
+    return {
+      middleware: aimless.middleware(),
+      csrf: aimless.csrf(),
+      aimless
+    };
+  }
+
+  /**
+   * Create a validation chain for fluent API
+   */
+  validate(input: any) {
+    const threats: any[] = [];
+    let sanitized = input;
+
+    return {
+      against: (checks: ('sql' | 'xss' | 'command' | 'path' | 'all')[]) => {
+        const allThreats = this.rasp.detectInjections(input);
+        
+        if (checks.includes('all')) {
+          threats.push(...allThreats);
+        } else {
+          const typeMap: Record<string, string> = {
+            'sql': 'SQL_INJECTION',
+            'xss': 'XSS',
+            'command': 'COMMAND_INJECTION',
+            'path': 'PATH_TRAVERSAL'
+          };
+          
+          checks.forEach(check => {
+            const filtered = allThreats.filter((t: any) => t.type === typeMap[check]);
+            threats.push(...filtered);
+          });
+        }
+
+        return {
+          sanitize: () => {
+            sanitized = typeof input === 'string' ? this.rasp.sanitizeOutput(input) : input;
+            return {
+              result: () => ({ safe: threats.length === 0, sanitized, threats })
+            };
+          },
+          result: () => ({ safe: threats.length === 0, input, threats })
+        };
+      }
+    };
+  }
+}
 // Export everything for direct access
 export * from './types';
 export * from './rasp';

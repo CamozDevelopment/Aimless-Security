@@ -8,12 +8,15 @@
 [![npm downloads](https://img.shields.io/npm/dm/aimless-security.svg?style=flat-square)](https://www.npmjs.com/package/aimless-security)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](https://opensource.org/licenses/MIT)
 [![Node Version](https://img.shields.io/node/v/aimless-security.svg?style=flat-square)](https://nodejs.org)
+[![Vercel Compatible](https://img.shields.io/badge/Vercel-Compatible-black?style=flat-square&logo=vercel)](https://vercel.com)
 [![GitHub issues](https://img.shields.io/github/issues/CamozDevelopment/Aimless-Security.svg?style=flat-square)](https://github.com/CamozDevelopment/Aimless-Security/issues)
 [![GitHub stars](https://img.shields.io/github/stars/CamozDevelopment/Aimless-Security.svg?style=flat-square)](https://github.com/CamozDevelopment/Aimless-Security/stargazers)
 
-**A comprehensive Runtime Application Self-Protection (RASP) and API Fuzzing Engine for Node.js applications**
+**Advanced Runtime Application Self-Protection (RASP) with AI-like behavioral analysis and intelligent API fuzzing for Node.js**
 
-[Features](#features) • [Installation](#installation) • [Quick Start](#quick-start) • [Documentation](#documentation) • [Examples](#examples)
+**✅ Fully compatible with Vercel, Netlify, AWS Lambda, and all serverless platforms**
+
+[Features](#features) • [Installation](#installation) • [Quick Start](#quick-start) • [Vercel Guide](./VERCEL.md) • [Examples](#examples)
 
 </div>
 
@@ -21,23 +24,64 @@
 
 A comprehensive **Runtime Application Self-Protection (RASP)** and **API Fuzzing Engine** for Node.js applications. Aimless Security provides inline protection against injections, XSS/CSRF attacks, and anomalous behavior, along with intelligent API fuzzing capabilities.
 
+## ✨ What's New in v1.1.2
+
+- 🌐 **Full Vercel/Serverless Support** - Works on all serverless platforms
+- 📦 **Improved Module Resolution** - Better CommonJS/ESM interop
+- 🎯 **Confidence Scoring** - Know exactly how certain each detection is
+- 🧠 **IP Reputation System** - Automatic behavioral analysis and auto-blocking
+- 🔄 **Multi-Layer XSS Detection** - Catches deeply encoded and mutation XSS attacks
+- ⚡ **Fluent Validation API** - Elegant, chainable input validation
+- 🎨 **Context-Aware Sanitization** - Sanitize for HTML, JavaScript, CSS, URLs
+- 📊 **Vulnerability Scoring** - Fuzzing results now include 0-100 risk scores
+- 🚀 **Quick Start Helper** - One-line protection setup
+- ⏱️ **Timing-Safe Comparisons** - CSRF tokens use crypto.timingSafeEqual
+
+**[See VERCEL.md for Vercel deployment guide](./VERCEL.md)**  
+[See UPGRADING.md for migration guide](./UPGRADING.md)
+
 ## Features
 
-### 🛡️ Runtime Application Self-Protection (RASP)
+### 🛡️ Enhanced Runtime Application Self-Protection (RASP)
 
-- **Injection Protection**: SQL, NoSQL, Command, XXE, SSRF detection
-- **XSS Protection**: Direct and encoded XSS attack detection
-- **CSRF Protection**: Token-based CSRF validation with origin checking
-- **Anomaly Detection**: Rate limiting, suspicious behavior detection, auth bypass attempts
-- **Real-time Blocking**: Configurable blocking mode for detected threats
+- **Advanced Injection Protection**: 
+  - SQL (20+ patterns including time-based blind, error-based, union-based)
+  - NoSQL (MongoDB, CouchDB, Redis, Cassandra)
+  - Command (PowerShell, Bash, file redirection, environment variables)
+  - XXE (Parameter entities, external DTD, XSLT)
+  - SSRF (Cloud metadata, DNS rebinding, localhost variations)
+  - Path Traversal (Unicode, double encoding, UNC paths)
 
-### 🔍 API Fuzzing Engine
+- **Multi-Layer XSS Protection**: 
+  - Direct and deeply-encoded attack detection
+  - Mutation XSS (mXSS) detection
+  - Context-aware sanitization (HTML, JavaScript, CSS, URL, Attribute)
+  - DOM-based XSS patterns
+  - Template injection detection
 
-- **Smart Parameter Mutation**: Intelligent payload generation for various attack vectors
-- **Auth Bypass Detection**: Tests for common authentication vulnerabilities
-- **Rate Limit Testing**: Identifies weak rate limiting configurations
-- **GraphQL Introspection**: Detects exposed GraphQL schemas
-- **Comprehensive Payloads**: SQL, NoSQL, XSS, Command Injection, Path Traversal, and more
+- **Advanced CSRF Protection**: 
+  - Timing-safe token comparison
+  - One-time token support
+  - Double-submit cookie validation
+  - Automatic token cleanup
+  - Customizable expiration
+
+- **Intelligent Anomaly Detection**: 
+  - IP reputation scoring (0-100)
+  - Behavioral fingerprinting
+  - Request velocity analysis
+  - Auto-blocking malicious IPs
+  - Distributed attack detection
+  - Rate limiting with burst detection
+
+### 🔍 Enhanced API Fuzzing Engine
+
+- **Smart Response Analysis**: Detects errors, SQL exceptions, stack traces
+- **Vulnerability Scoring**: 0-100 risk scores for each finding
+- **Dynamic Severity**: Automatically adjusts severity based on response patterns
+- **Comprehensive Attack Vectors**: SQL, NoSQL, XSS, Command Injection, Path Traversal
+- **GraphQL Support**: Schema introspection and mutation testing
+- **Auth Bypass Testing**: Common authentication vulnerability detection
 
 ## Installation
 
@@ -47,11 +91,57 @@ npm install aimless-security
 
 ## Quick Start
 
-### Basic Express Integration
+### Option 1: One-Line Protection (Recommended)
 
 ```javascript
 const express = require('express');
-const Aimless = require('aimless-security');
+const { Aimless } = require('aimless-security');
+
+const app = express();
+app.use(express.json());
+
+// One-line protection with sensible defaults
+const { middleware, csrf, aimless } = Aimless.quickProtect([
+  'http://localhost:3000',
+  'https://yourdomain.com'
+]);
+
+app.use(middleware);
+app.use(csrf);
+
+// You're protected! 🎉
+```
+
+### Option 2: Fluent Validation API
+
+```javascript
+const { Aimless } = require('aimless-security');
+const aimless = new Aimless();
+
+app.post('/api/user', (req, res) => {
+  // Elegant validation chain
+  const result = aimless.validate(req.body.username)
+    .against(['sql', 'xss', 'command'])
+    .sanitize()
+    .result();
+    
+  if (!result.safe) {
+    return res.status(403).json({ 
+      error: 'Security threat detected',
+      threats: result.threats 
+    });
+  }
+  
+  // Use result.sanitized safely
+  createUser(result.sanitized);
+});
+```
+
+### Option 3: Traditional Setup
+
+```javascript
+const express = require('express');
+const { Aimless } = require('aimless-security');
 
 const app = express();
 app.use(express.json());
@@ -366,6 +456,61 @@ Aimless is designed to have minimal performance impact:
 - Configurable protection levels
 - Optional monitor-only mode for testing
 
+## Testing & Validation
+
+### Running Tests
+
+```bash
+# Run all tests
+npm test
+
+# Run full validation suite
+npm run validate
+
+# Build and test
+npm run test:build
+
+# Verify package imports
+npm run verify
+```
+
+### Test Coverage
+
+Aimless includes 20 comprehensive serverless compatibility tests:
+
+✅ Module loading and initialization  
+✅ Configuration handling  
+✅ SQL injection detection  
+✅ XSS attack detection  
+✅ Input sanitization  
+✅ IP reputation scoring  
+✅ Null/undefined handling  
+✅ Large input processing  
+✅ Multiple instance isolation  
+✅ Node.js crypto integration  
+
+All tests must pass before publishing to NPM.
+
+### Manual Testing
+
+Test SQL injection detection:
+```bash
+node -e "const { Aimless } = require('aimless-security'); const a = new Aimless(); console.log('Safe:', a.isSafe(\"' OR 1=1--\"));"
+# Output: Safe: false
+```
+
+Test XSS detection:
+```bash
+node -e "const { Aimless } = require('aimless-security'); const a = new Aimless(); console.log('Safe:', a.isSafe(\"<script>alert('xss')</script>\"));"
+# Output: Safe: false
+```
+
+Test safe input:
+```bash
+node -e "const { Aimless } = require('aimless-security'); const a = new Aimless(); console.log('Safe:', a.isSafe('Hello World'));"
+# Output: Safe: true
+```
+
 ## Best Practices
 
 1. **Start in Monitor Mode**: Test with `blockMode: false` initially
@@ -374,6 +519,8 @@ Aimless is designed to have minimal performance impact:
 4. **Review Logs**: Monitor detected threats regularly
 5. **Use HTTPS**: Always use HTTPS in production
 6. **Keep Updated**: Regularly update to get latest threat signatures
+7. **Wrap in Try-Catch**: Always wrap validation in try-catch for fail-open behavior
+8. **Test Before Deploy**: Run `npm run validate` before every deployment
 
 ## Examples
 
@@ -383,6 +530,8 @@ See the `/examples` directory for more detailed examples:
 - `advanced-config.js` - Advanced configuration
 - `fuzzing.js` - API fuzzing examples
 - `graphql.js` - GraphQL protection
+- `vercel-nextjs.ts` - Complete Next.js/Vercel example
+- `safe-wrapper.js` - Production-safe error handling wrapper
 
 ## Contributing
 

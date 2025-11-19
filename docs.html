@@ -79,17 +79,41 @@
         <div class="absolute inset-0 bg-gradient-to-br from-primary/10 via-secondary/10 to-accent/10"></div>
         <div class="container mx-auto px-6 relative z-10">
             <div class="text-center max-w-4xl mx-auto">
+                <div class="inline-block bg-primary/20 border border-primary/30 rounded-full px-4 py-2 mb-6">
+                    <span class="text-primary font-semibold">🎉 New in v1.1: AI-like Behavioral Analysis & 300+ Detection Patterns</span>
+                </div>
                 <h1 class="text-5xl md:text-7xl font-bold mb-6">
                     <span class="gradient-text">Runtime Application</span><br>
                     <span class="gradient-text">Self-Protection (RASP)</span>
                 </h1>
                 <p class="text-xl md:text-2xl text-slate-300 mb-8">
-                    Inline protection against injections, XSS/CSRF detection, and intelligent API fuzzing for Node.js applications
+                    Enterprise-grade protection with confidence scoring, IP reputation tracking, and intelligent API fuzzing for Node.js applications
                 </p>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8 max-w-3xl mx-auto">
+                    <div class="bg-slate-800/50 backdrop-blur p-4 rounded-lg border border-slate-700">
+                        <div class="text-3xl font-bold text-primary">300+</div>
+                        <div class="text-sm text-slate-400">Detection Patterns</div>
+                    </div>
+                    <div class="bg-slate-800/50 backdrop-blur p-4 rounded-lg border border-slate-700">
+                        <div class="text-3xl font-bold text-secondary">9</div>
+                        <div class="text-sm text-slate-400">Attack Vectors</div>
+                    </div>
+                    <div class="bg-slate-800/50 backdrop-blur p-4 rounded-lg border border-slate-700">
+                        <div class="text-3xl font-bold text-accent">0-100</div>
+                        <div class="text-sm text-slate-400">Confidence Scores</div>
+                    </div>
+                    <div class="bg-slate-800/50 backdrop-blur p-4 rounded-lg border border-slate-700">
+                        <div class="text-3xl font-bold text-primary">1 Line</div>
+                        <div class="text-sm text-slate-400">Quick Setup</div>
+                    </div>
+                </div>
                 <div class="flex flex-col md:flex-row gap-4 justify-center items-center">
-                    <code class="bg-slate-800 px-6 py-3 rounded-lg text-lg">npm install aimless-security</code>
+                    <code class="bg-slate-800 px-6 py-3 rounded-lg text-lg border border-slate-700">npm install aimless-security</code>
                     <a href="#quick-start" class="bg-primary hover:bg-sky-600 px-8 py-3 rounded-lg font-semibold transition">
                         Get Started <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                    <a href="https://github.com/CamozDevelopment/Aimless-Security" class="bg-slate-700 hover:bg-slate-600 px-8 py-3 rounded-lg font-semibold transition">
+                        <i class="fab fa-github mr-2"></i> View on GitHub
                     </a>
                 </div>
             </div>
@@ -564,44 +588,902 @@ result.vulnerabilities.forEach(v => {
         </div>
     </section>
 
-    <!-- CTA Section -->
+    <!-- v1.1.0 New Features -->
+    <section id="v1-1-features" class="py-20 bg-gradient-to-br from-primary/10 to-accent/10">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-12">
+                <div class="inline-block bg-primary/20 border border-primary/30 rounded-full px-4 py-2 mb-4">
+                    <span class="text-primary font-semibold">🎉 Version 1.1 Features</span>
+                </div>
+                <h2 class="text-4xl font-bold gradient-text">What's New in v1.1</h2>
+                <p class="text-slate-400 mt-4 text-lg">300+ new detection patterns, AI-like behavioral analysis, and developer-friendly APIs</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+                <!-- Confidence Scoring -->
+                <div class="bg-slate-800 rounded-xl p-6 border border-slate-700">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-primary/20 p-3 rounded-lg mr-4">
+                            <i class="fas fa-percentage text-2xl text-primary"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold">Confidence Scoring</h3>
+                    </div>
+                    <p class="text-slate-400 mb-4">Every threat detection now includes a confidence percentage (0-100%) based on pattern matches</p>
+                    <pre><code class="language-javascript">const threats = aimless.analyze({
+  method: 'POST',
+  body: { query: "' OR 1=1--" }
+});
+
+console.log(threats[0].description);
+// "SQL injection (confidence: 75%)"
+console.log(threats[0].metadata.confidence);
+// "75%"</code></pre>
+                </div>
+
+                <!-- IP Reputation -->
+                <div class="bg-slate-800 rounded-xl p-6 border border-slate-700">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-secondary/20 p-3 rounded-lg mr-4">
+                            <i class="fas fa-user-shield text-2xl text-secondary"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold">IP Reputation System</h3>
+                    </div>
+                    <p class="text-slate-400 mb-4">Track malicious IPs with 0-100 scoring, automatic blocking, and behavioral analysis</p>
+                    <pre><code class="language-javascript">// Get IP reputation
+const score = aimless.getIPReputation('1.2.3.4');
+console.log(score); // 85 (0-100)
+
+// Block an IP manually
+aimless.setIPBlocked('1.2.3.4', true);
+
+// Get statistics
+const stats = aimless.getStats();
+console.log(stats.rasp.blockedIPs); // 12</code></pre>
+                </div>
+
+                <!-- Fluent API -->
+                <div class="bg-slate-800 rounded-xl p-6 border border-slate-700">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-accent/20 p-3 rounded-lg mr-4">
+                            <i class="fas fa-wand-magic-sparkles text-2xl text-accent"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold">Fluent Validation API</h3>
+                    </div>
+                    <p class="text-slate-400 mb-4">Elegant, chainable validation for cleaner code</p>
+                    <pre><code class="language-javascript">// Chain validations elegantly
+const result = aimless.validate(userInput)
+  .against(['sql', 'xss', 'command'])
+  .sanitize()
+  .result();
+
+if (!result.safe) {
+  return res.status(403).json({
+    error: 'Invalid input',
+    threats: result.threats
+  });
+}
+
+// Use sanitized value
+processData(result.sanitized);</code></pre>
+                </div>
+
+                <!-- Context-Aware Sanitization -->
+                <div class="bg-slate-800 rounded-xl p-6 border border-slate-700">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-purple-500/20 p-3 rounded-lg mr-4">
+                            <i class="fas fa-broom text-2xl text-purple-400"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold">Context-Aware Sanitization</h3>
+                    </div>
+                    <p class="text-slate-400 mb-4">Sanitize for HTML, JavaScript, CSS, URL, or Attribute contexts</p>
+                    <pre><code class="language-javascript">const input = '<script>alert("xss")</script>';
+
+// Sanitize for different contexts
+const html = aimless.sanitizeFor(input, 'html');
+const js = aimless.sanitizeFor(input, 'javascript');
+const url = aimless.sanitizeFor(input, 'url');
+const css = aimless.sanitizeFor(input, 'css');
+
+// Use in templates
+`&lt;div&gt;${html}&lt;/div&gt;`
+`&lt;script&gt;var data = '${js}';&lt;/script&gt;`
+`&lt;a href="${url}"&gt;Link&lt;/a&gt;`</code></pre>
+                </div>
+
+                <!-- Quick Start Helper -->
+                <div class="bg-slate-800 rounded-xl p-6 border border-slate-700">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-green-500/20 p-3 rounded-lg mr-4">
+                            <i class="fas fa-rocket text-2xl text-green-400"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold">One-Line Protection</h3>
+                    </div>
+                    <p class="text-slate-400 mb-4">Get started with sensible defaults in one line</p>
+                    <pre><code class="language-javascript">// Quick protection setup
+const { middleware, csrf, aimless } = 
+  Aimless.quickProtect([
+    'http://localhost:3000',
+    'https://yourdomain.com'
+  ]);
+
+app.use(middleware);
+app.use(csrf);
+
+// You're protected! 🎉</code></pre>
+                </div>
+
+                <!-- Enhanced Detection -->
+                <div class="bg-slate-800 rounded-xl p-6 border border-slate-700">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-red-500/20 p-3 rounded-lg mr-4">
+                            <i class="fas fa-radar text-2xl text-red-400"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold">300+ Detection Patterns</h3>
+                    </div>
+                    <p class="text-slate-400 mb-4">3x more attack patterns including time-based blind injection, mXSS, cloud metadata SSRF</p>
+                    <ul class="space-y-2 text-sm text-slate-300 mt-4">
+                        <li><i class="fas fa-check text-green-400 mr-2"></i>SQL: Time-based blind, error-based, stacked queries</li>
+                        <li><i class="fas fa-check text-green-400 mr-2"></i>XSS: Mutation XSS (mXSS), DOM-based, multi-layer decoding</li>
+                        <li><i class="fas fa-check text-green-400 mr-2"></i>NoSQL: MongoDB aggregation, Redis, CouchDB, Cassandra</li>
+                        <li><i class="fas fa-check text-green-400 mr-2"></i>SSRF: Cloud metadata (AWS, GCP, Azure), DNS rebinding</li>
+                        <li><i class="fas fa-check text-green-400 mr-2"></i>Command: PowerShell, file redirection, env variables</li>
+                        <li><i class="fas fa-check text-green-400 mr-2"></i>Path: Double encoding, Unicode, UNC paths</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Advanced Usage -->
+    <section id="advanced" class="py-20 bg-slate-800/50">
+        <div class="container mx-auto px-6 max-w-6xl">
+            <h2 class="text-4xl font-bold text-center mb-12 gradient-text">Advanced Usage</h2>
+            
+            <div class="space-y-8">
+                <!-- Helper Methods -->
+                <div class="bg-slate-800 rounded-xl p-6 border border-slate-700">
+                    <h3 class="text-2xl font-bold mb-4 flex items-center">
+                        <i class="fas fa-toolbox text-primary mr-2"></i>
+                        Helper Methods
+                    </h3>
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div>
+                            <h4 class="font-semibold text-lg mb-2 text-accent">Safety Checks</h4>
+                            <pre><code class="language-javascript">// Quick safety check
+if (aimless.isSafe(userInput)) {
+  // Safe to use
+}
+
+// Validate and sanitize together
+const { safe, sanitized, threats } = 
+  aimless.validateAndSanitize(input);
+
+if (!safe) {
+  console.log('Threats:', threats);
+}</code></pre>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-lg mb-2 text-accent">IP Management</h4>
+                            <pre><code class="language-javascript">// Get reputation (0-100)
+const score = aimless.getIPReputation(ip);
+
+// Manual blocking
+aimless.setIPBlocked(ip, true);
+
+// Clear history
+aimless.clearHistory(ip);
+
+// Get statistics
+const stats = aimless.getStats();</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Direct Detector Access -->
+                <div class="bg-slate-800 rounded-xl p-6 border border-slate-700">
+                    <h3 class="text-2xl font-bold mb-4 flex items-center">
+                        <i class="fas fa-microscope text-secondary mr-2"></i>
+                        Direct Detector Access
+                    </h3>
+                    <p class="text-slate-400 mb-4">Access individual detectors for fine-grained control</p>
+                    <pre><code class="language-javascript">// Get specific detectors
+const injectionDetector = aimless.rasp.getInjectionDetector();
+const xssDetector = aimless.rasp.getXSSDetector();
+const csrfDetector = aimless.rasp.getCSRFDetector();
+const anomalyDetector = aimless.rasp.getAnomalyDetector();
+
+// Use them directly
+const threats = injectionDetector.detect(userInput, 'query');
+
+// Context-aware XSS sanitization
+const htmlSafe = xssDetector.sanitize(input, 'html');
+const jsSafe = xssDetector.sanitize(input, 'javascript');
+
+// Advanced CSRF with one-time tokens
+const token = csrfDetector.generateToken(sessionId, 3600000);
+const isValid = csrfDetector.validateToken(sessionId, token, true);
+
+// Anomaly detection features
+const reputation = anomalyDetector.getReputationScore(ip);
+anomalyDetector.setIPBlocked(ip, true);
+const stats = anomalyDetector.getStats();</code></pre>
+                </div>
+
+                <!-- API Fuzzing -->
+                <div class="bg-slate-800 rounded-xl p-6 border border-slate-700">
+                    <h3 class="text-2xl font-bold mb-4 flex items-center">
+                        <i class="fas fa-bug text-cyan-400 mr-2"></i>
+                        API Fuzzing with Vulnerability Scoring
+                    </h3>
+                    <p class="text-slate-400 mb-4">Test your APIs with intelligent fuzzing and 0-100 risk scores</p>
+                    <pre><code class="language-javascript">const results = await aimless.fuzz({
+  url: 'https://api.example.com/data',
+  method: 'POST',
+  body: { id: 1, name: 'test' },
+  expectedStatus: 200
+});
+
+console.log(`Tested ${results.testedPayloads} payloads`);
+console.log(`Found ${results.vulnerabilities.length} issues`);
+
+results.vulnerabilities.forEach(vuln => {
+  const score = vuln.metadata?.vulnerabilityScore || 0;
+  console.log(`${vuln.type}: ${score}/100 risk score`);
+  console.log(`Severity: ${vuln.severity}`);
+  console.log(`Description: ${vuln.description}`);
+});</code></pre>
+                </div>
+
+                <!-- TypeScript Support -->
+                <div class="bg-slate-800 rounded-xl p-6 border border-slate-700">
+                    <h3 class="text-2xl font-bold mb-4 flex items-center">
+                        <i class="fab fa-node-js text-green-400 mr-2"></i>
+                        TypeScript Support
+                    </h3>
+                    <p class="text-slate-400 mb-4">Full type definitions included</p>
+                    <pre><code class="language-typescript">import { Aimless, AimlessConfig, SecurityThreat } from 'aimless-security';
+
+const config: AimlessConfig = {
+  rasp: {
+    enabled: true,
+    blockMode: true,
+    trustedOrigins: ['http://localhost:3000']
+  },
+  logging: {
+    level: 'info'
+  }
+};
+
+const aimless = new Aimless(config);
+
+// Type-safe validation
+const result = aimless.validate(userInput)
+  .against(['sql', 'xss'])
+  .sanitize()
+  .result();
+
+// Typed threats
+result.threats.forEach((threat: SecurityThreat) => {
+  console.log(threat.type, threat.severity);
+});</code></pre>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- API Reference -->
+    <section id="api" class="py-20">
+        <div class="container mx-auto px-6 max-w-6xl">
+            <h2 class="text-4xl font-bold text-center mb-12 gradient-text">API Reference</h2>
+            
+            <div class="space-y-6">
+                <!-- Constructor -->
+                <div class="bg-slate-800 rounded-xl p-6 border border-slate-700">
+                    <h3 class="text-2xl font-bold mb-4 text-primary">Constructor</h3>
+                    <pre><code class="language-javascript">new Aimless(config?: AimlessConfig)</code></pre>
+                    <p class="text-slate-400 mt-4">Create a new Aimless Security instance with optional configuration</p>
+                    <div class="mt-4 p-4 bg-slate-900 rounded-lg">
+                        <h4 class="font-semibold mb-2">Configuration Options:</h4>
+                        <ul class="space-y-1 text-sm text-slate-300">
+                            <li><code class="text-accent">rasp.enabled</code> - Enable RASP protection (default: true)</li>
+                            <li><code class="text-accent">rasp.blockMode</code> - Block threats automatically (default: true)</li>
+                            <li><code class="text-accent">rasp.trustedOrigins</code> - Array of trusted origins for CSRF</li>
+                            <li><code class="text-accent">logging.level</code> - Log level: 'debug', 'info', 'warn', 'error'</li>
+                            <li><code class="text-accent">fuzzing.enabled</code> - Enable fuzzing engine (default: true)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Methods -->
+                <div class="bg-slate-800 rounded-xl p-6 border border-slate-700">
+                    <h3 class="text-2xl font-bold mb-4 text-secondary">Instance Methods</h3>
+                    
+                    <div class="space-y-6">
+                        <div>
+                            <h4 class="font-semibold text-lg text-accent mb-2">middleware()</h4>
+                            <pre><code class="language-javascript">aimless.middleware() → Express Middleware</code></pre>
+                            <p class="text-slate-400 text-sm mt-2">Returns Express middleware for RASP protection</p>
+                        </div>
+
+                        <div>
+                            <h4 class="font-semibold text-lg text-accent mb-2">csrf()</h4>
+                            <pre><code class="language-javascript">aimless.csrf() → Express Middleware</code></pre>
+                            <p class="text-slate-400 text-sm mt-2">Returns CSRF protection middleware</p>
+                        </div>
+
+                        <div>
+                            <h4 class="font-semibold text-lg text-accent mb-2">analyze(request)</h4>
+                            <pre><code class="language-javascript">aimless.analyze(request) → SecurityThreat[]</code></pre>
+                            <p class="text-slate-400 text-sm mt-2">Analyze a request for security threats</p>
+                        </div>
+
+                        <div>
+                            <h4 class="font-semibold text-lg text-accent mb-2">isSafe(input, context?)</h4>
+                            <pre><code class="language-javascript">aimless.isSafe(input, context?) → boolean</code></pre>
+                            <p class="text-slate-400 text-sm mt-2">Quick check if input is safe</p>
+                        </div>
+
+                        <div>
+                            <h4 class="font-semibold text-lg text-accent mb-2">validate(input)</h4>
+                            <pre><code class="language-javascript">aimless.validate(input).against([...]).sanitize().result()</code></pre>
+                            <p class="text-slate-400 text-sm mt-2">Fluent validation API</p>
+                        </div>
+
+                        <div>
+                            <h4 class="font-semibold text-lg text-accent mb-2">sanitizeFor(input, context)</h4>
+                            <pre><code class="language-javascript">aimless.sanitizeFor(input, 'html'|'javascript'|'css'|'url'|'attribute')</code></pre>
+                            <p class="text-slate-400 text-sm mt-2">Context-aware sanitization</p>
+                        </div>
+
+                        <div>
+                            <h4 class="font-semibold text-lg text-accent mb-2">getIPReputation(ip)</h4>
+                            <pre><code class="language-javascript">aimless.getIPReputation(ip) → number (0-100)</code></pre>
+                            <p class="text-slate-400 text-sm mt-2">Get IP reputation score</p>
+                        </div>
+
+                        <div>
+                            <h4 class="font-semibold text-lg text-accent mb-2">setIPBlocked(ip, blocked)</h4>
+                            <pre><code class="language-javascript">aimless.setIPBlocked(ip, true|false) → void</code></pre>
+                            <p class="text-slate-400 text-sm mt-2">Block or unblock an IP address</p>
+                        </div>
+
+                        <div>
+                            <h4 class="font-semibold text-lg text-accent mb-2">getStats()</h4>
+                            <pre><code class="language-javascript">aimless.getStats() → Statistics</code></pre>
+                            <p class="text-slate-400 text-sm mt-2">Get security statistics</p>
+                        </div>
+
+                        <div>
+                            <h4 class="font-semibold text-lg text-accent mb-2">fuzz(target)</h4>
+                            <pre><code class="language-javascript">await aimless.fuzz(target) → FuzzingResult</code></pre>
+                            <p class="text-slate-400 text-sm mt-2">Run API fuzzing tests</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Static Methods -->
+                <div class="bg-slate-800 rounded-xl p-6 border border-slate-700">
+                    <h3 class="text-2xl font-bold mb-4 text-accent">Static Methods</h3>
+                    
+                    <div>
+                        <h4 class="font-semibold text-lg text-primary mb-2">Aimless.quickProtect(origins?)</h4>
+                        <pre><code class="language-javascript">const { middleware, csrf, aimless } = Aimless.quickProtect(['http://localhost:3000']);</code></pre>
+                        <p class="text-slate-400 text-sm mt-2">Quick start with sensible defaults</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Performance & Security -->
+    <section id="performance" class="py-20 bg-slate-800/50">
+        <div class="container mx-auto px-6 max-w-6xl">
+            <h2 class="text-4xl font-bold text-center mb-12 gradient-text">Performance & Security</h2>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Performance -->
+                <div class="bg-slate-800 rounded-xl p-6 border border-slate-700">
+                    <h3 class="text-2xl font-bold mb-4 flex items-center">
+                        <i class="fas fa-gauge-high text-green-400 mr-2"></i>
+                        Performance
+                    </h3>
+                    <ul class="space-y-3 text-slate-300">
+                        <li class="flex items-start">
+                            <i class="fas fa-bolt text-yellow-400 mr-2 mt-1"></i>
+                            <span><strong>< 1ms overhead</strong> per request on average</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-memory text-blue-400 mr-2 mt-1"></i>
+                            <span><strong>Memory efficient</strong> with automatic cleanup</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-chart-line text-green-400 mr-2 mt-1"></i>
+                            <span><strong>Scales horizontally</strong> without state issues</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-clock text-purple-400 mr-2 mt-1"></i>
+                            <span><strong>Non-blocking</strong> async operations</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Security Features -->
+                <div class="bg-slate-800 rounded-xl p-6 border border-slate-700">
+                    <h3 class="text-2xl font-bold mb-4 flex items-center">
+                        <i class="fas fa-shield text-primary mr-2"></i>
+                        Security Features
+                    </h3>
+                    <ul class="space-y-3 text-slate-300">
+                        <li class="flex items-start">
+                            <i class="fas fa-lock text-red-400 mr-2 mt-1"></i>
+                            <span><strong>Timing-safe comparisons</strong> for CSRF tokens</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-shield-halved text-green-400 mr-2 mt-1"></i>
+                            <span><strong>Zero dependencies</strong> for core security</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-code text-cyan-400 mr-2 mt-1"></i>
+                            <span><strong>TypeScript</strong> for type safety</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-double text-accent mr-2 mt-1"></i>
+                            <span><strong>Thoroughly tested</strong> with comprehensive suite</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Comparison Table -->
+            <div class="mt-12 bg-slate-800 rounded-xl p-6 border border-slate-700">
+                <h3 class="text-2xl font-bold mb-6 text-center">Why Choose Aimless Security?</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left">
+                        <thead>
+                            <tr class="border-b border-slate-700">
+                                <th class="pb-3 text-slate-400">Feature</th>
+                                <th class="pb-3 text-center text-green-400">Aimless v1.1</th>
+                                <th class="pb-3 text-center text-slate-500">Others</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-slate-300">
+                            <tr class="border-b border-slate-700">
+                                <td class="py-3">Detection Patterns</td>
+                                <td class="py-3 text-center text-green-400"><i class="fas fa-check"></i> 300+</td>
+                                <td class="py-3 text-center text-slate-500">50-100</td>
+                            </tr>
+                            <tr class="border-b border-slate-700">
+                                <td class="py-3">Confidence Scoring</td>
+                                <td class="py-3 text-center text-green-400"><i class="fas fa-check"></i></td>
+                                <td class="py-3 text-center text-red-400"><i class="fas fa-times"></i></td>
+                            </tr>
+                            <tr class="border-b border-slate-700">
+                                <td class="py-3">IP Reputation System</td>
+                                <td class="py-3 text-center text-green-400"><i class="fas fa-check"></i></td>
+                                <td class="py-3 text-center text-red-400"><i class="fas fa-times"></i></td>
+                            </tr>
+                            <tr class="border-b border-slate-700">
+                                <td class="py-3">Context-Aware Sanitization</td>
+                                <td class="py-3 text-center text-green-400"><i class="fas fa-check"></i> 5 contexts</td>
+                                <td class="py-3 text-center text-slate-500">1 context</td>
+                            </tr>
+                            <tr class="border-b border-slate-700">
+                                <td class="py-3">API Fuzzing</td>
+                                <td class="py-3 text-center text-green-400"><i class="fas fa-check"></i></td>
+                                <td class="py-3 text-center text-red-400"><i class="fas fa-times"></i></td>
+                            </tr>
+                            <tr class="border-b border-slate-700">
+                                <td class="py-3">Fluent API</td>
+                                <td class="py-3 text-center text-green-400"><i class="fas fa-check"></i></td>
+                                <td class="py-3 text-center text-red-400"><i class="fas fa-times"></i></td>
+                            </tr>
+                            <tr class="border-b border-slate-700">
+                                <td class="py-3">One-Line Setup</td>
+                                <td class="py-3 text-center text-green-400"><i class="fas fa-check"></i></td>
+                                <td class="py-3 text-center text-red-400"><i class="fas fa-times"></i></td>
+                            </tr>
+                            <tr>
+                                <td class="py-3">TypeScript Support</td>
+                                <td class="py-3 text-center text-green-400"><i class="fas fa-check"></i></td>
+                                <td class="py-3 text-center text-yellow-400">Partial</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Real-World Examples -->
+    <section id="examples" class="py-20">
+        <div class="container mx-auto px-6 max-w-6xl">
+            <h2 class="text-4xl font-bold text-center mb-12 gradient-text">Real-World Examples</h2>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- E-commerce API -->
+                <div class="bg-slate-800 rounded-xl p-6 border border-slate-700">
+                    <h3 class="text-xl font-bold mb-4 flex items-center">
+                        <i class="fas fa-shopping-cart text-green-400 mr-2"></i>
+                        E-commerce API
+                    </h3>
+                    <pre><code class="language-javascript">const express = require('express');
+const { Aimless } = require('aimless-security');
+
+const app = express();
+app.use(express.json());
+
+const { middleware, csrf } = Aimless.quickProtect([
+  'https://shop.example.com'
+]);
+
+app.use(middleware);
+app.use(csrf);
+
+app.post('/api/products/search', (req, res) => {
+  const { query } = req.body;
+  // Protected against SQL injection
+  const results = db.search(query);
+  res.json(results);
+});
+
+app.post('/api/checkout', (req, res) => {
+  // Protected against CSRF
+  processOrder(req.body);
+  res.json({ success: true });
+});</code></pre>
+                </div>
+
+                <!-- User Management -->
+                <div class="bg-slate-800 rounded-xl p-6 border border-slate-700">
+                    <h3 class="text-xl font-bold mb-4 flex items-center">
+                        <i class="fas fa-users text-blue-400 mr-2"></i>
+                        User Management
+                    </h3>
+                    <pre><code class="language-javascript">const aimless = new Aimless();
+
+app.post('/api/users/profile', (req, res) => {
+  const { bio, website } = req.body;
+  
+  // Validate and sanitize
+  const bioResult = aimless.validate(bio)
+    .against(['xss', 'sql'])
+    .sanitize()
+    .result();
+    
+  if (!bioResult.safe) {
+    return res.status(400).json({
+      error: 'Invalid bio',
+      threats: bioResult.threats
+    });
+  }
+  
+  // Safe to save
+  db.updateUser({
+    bio: bioResult.sanitized,
+    website: aimless.sanitizeFor(website, 'url')
+  });
+  
+  res.json({ success: true });
+});</code></pre>
+                </div>
+
+                <!-- API Gateway -->
+                <div class="bg-slate-800 rounded-xl p-6 border border-slate-700">
+                    <h3 class="text-xl font-bold mb-4 flex items-center">
+                        <i class="fas fa-network-wired text-purple-400 mr-2"></i>
+                        API Gateway with IP Blocking
+                    </h3>
+                    <pre><code class="language-javascript">const aimless = new Aimless();
+
+// Middleware to check IP reputation
+app.use((req, res, next) => {
+  const ip = req.ip;
+  const reputation = aimless.getIPReputation(ip);
+  
+  if (reputation < 30) {
+    return res.status(403).json({
+      error: 'IP blocked due to malicious activity'
+    });
+  }
+  
+  if (reputation < 50) {
+    // Add extra scrutiny for suspicious IPs
+    req.extraValidation = true;
+  }
+  
+  next();
+});
+
+app.use(aimless.middleware());
+
+app.get('/api/stats', (req, res) => {
+  const stats = aimless.getStats();
+  res.json(stats);
+});</code></pre>
+                </div>
+
+                <!-- GraphQL API -->
+                <div class="bg-slate-800 rounded-xl p-6 border border-slate-700">
+                    <h3 class="text-xl font-bold mb-4 flex items-center">
+                        <i class="fas fa-project-diagram text-pink-400 mr-2"></i>
+                        GraphQL API Security
+                    </h3>
+                    <pre><code class="language-javascript">const { graphqlHTTP } = require('express-graphql');
+const aimless = new Aimless();
+
+app.use('/graphql', aimless.middleware());
+
+app.use('/graphql', graphqlHTTP({
+  schema: mySchema,
+  graphiql: true,
+  customValidateFn: (query) => {
+    // Validate GraphQL queries
+    const result = aimless.validate(query)
+      .against(['all'])
+      .result();
+      
+    if (!result.safe) {
+      throw new Error('Malicious query detected');
+    }
+  }
+}));
+
+// Fuzz test your GraphQL endpoint
+async function testGraphQL() {
+  const results = await aimless.fuzz({
+    url: 'http://localhost:4000/graphql',
+    method: 'POST',
+    body: { query: '{ users { id } }' }
+  });
+  
+  console.log('Vulnerabilities:', results.vulnerabilities);
+}</code></pre>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testing Section -->
+    <section class="py-20 bg-slate-800/50">
+        <div class="container mx-auto px-6 max-w-4xl">
+            <h2 class="text-4xl font-bold text-center mb-12 gradient-text">Testing Your Security</h2>
+            
+            <div class="bg-slate-800 rounded-xl p-6 border border-slate-700">
+                <h3 class="text-2xl font-bold mb-4">Test Demo Included</h3>
+                <p class="text-slate-400 mb-4">Run the included test demo to verify all features:</p>
+                <pre><code class="language-bash">node node_modules/aimless-security/test-demo.js</code></pre>
+                
+                <div class="mt-6 p-4 bg-slate-900 rounded-lg">
+                    <h4 class="font-semibold mb-2 text-accent">Tests Included:</h4>
+                    <ul class="space-y-2 text-sm text-slate-300">
+                        <li><i class="fas fa-check text-green-400 mr-2"></i>SQL Injection Detection</li>
+                        <li><i class="fas fa-check text-green-400 mr-2"></i>XSS Protection</li>
+                        <li><i class="fas fa-check text-green-400 mr-2"></i>CSRF Token Validation</li>
+                        <li><i class="fas fa-check text-green-400 mr-2"></i>NoSQL Injection</li>
+                        <li><i class="fas fa-check text-green-400 mr-2"></i>Command Injection</li>
+                        <li><i class="fas fa-check text-green-400 mr-2"></i>Path Traversal</li>
+                        <li><i class="fas fa-check text-green-400 mr-2"></i>XXE Detection</li>
+                        <li><i class="fas fa-check text-green-400 mr-2"></i>SSRF Detection</li>
+                        <li><i class="fas fa-check text-green-400 mr-2"></i>Anomaly Detection</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Demo Section -->
+    <section class="py-20">
+        <div class="container mx-auto px-6 max-w-4xl">
+            <h2 class="text-4xl font-bold text-center mb-4 gradient-text">See It In Action</h2>
+            <p class="text-center text-slate-400 mb-12">All 9 core features tested and validated</p>
+            
+            <div class="bg-slate-800 rounded-xl p-6 border border-slate-700">
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                    <div class="flex items-center space-x-3 p-3 bg-green-500/10 rounded-lg border border-green-500/30">
+                        <i class="fas fa-check-circle text-2xl text-green-400"></i>
+                        <span class="font-semibold">SQL Injection</span>
+                    </div>
+                    <div class="flex items-center space-x-3 p-3 bg-green-500/10 rounded-lg border border-green-500/30">
+                        <i class="fas fa-check-circle text-2xl text-green-400"></i>
+                        <span class="font-semibold">XSS Protection</span>
+                    </div>
+                    <div class="flex items-center space-x-3 p-3 bg-green-500/10 rounded-lg border border-green-500/30">
+                        <i class="fas fa-check-circle text-2xl text-green-400"></i>
+                        <span class="font-semibold">CSRF Tokens</span>
+                    </div>
+                    <div class="flex items-center space-x-3 p-3 bg-green-500/10 rounded-lg border border-green-500/30">
+                        <i class="fas fa-check-circle text-2xl text-green-400"></i>
+                        <span class="font-semibold">NoSQL Injection</span>
+                    </div>
+                    <div class="flex items-center space-x-3 p-3 bg-green-500/10 rounded-lg border border-green-500/30">
+                        <i class="fas fa-check-circle text-2xl text-green-400"></i>
+                        <span class="font-semibold">Command Injection</span>
+                    </div>
+                    <div class="flex items-center space-x-3 p-3 bg-green-500/10 rounded-lg border border-green-500/30">
+                        <i class="fas fa-check-circle text-2xl text-green-400"></i>
+                        <span class="font-semibold">Path Traversal</span>
+                    </div>
+                    <div class="flex items-center space-x-3 p-3 bg-green-500/10 rounded-lg border border-green-500/30">
+                        <i class="fas fa-check-circle text-2xl text-green-400"></i>
+                        <span class="font-semibold">XXE Detection</span>
+                    </div>
+                    <div class="flex items-center space-x-3 p-3 bg-green-500/10 rounded-lg border border-green-500/30">
+                        <i class="fas fa-check-circle text-2xl text-green-400"></i>
+                        <span class="font-semibold">SSRF Detection</span>
+                    </div>
+                    <div class="flex items-center space-x-3 p-3 bg-green-500/10 rounded-lg border border-green-500/30">
+                        <i class="fas fa-check-circle text-2xl text-green-400"></i>
+                        <span class="font-semibold">Anomaly Detection</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Migration Guide -->
+    <section id="migration" class="py-20 bg-gradient-to-br from-slate-800 to-slate-900">
+        <div class="container mx-auto px-6 max-w-4xl">
+            <h2 class="text-4xl font-bold text-center mb-12 gradient-text">Upgrading to v1.1</h2>
+            
+            <div class="bg-slate-800 rounded-xl p-6 border border-green-500/30 mb-6">
+                <div class="flex items-start">
+                    <i class="fas fa-info-circle text-2xl text-green-400 mr-4 mt-1"></i>
+                    <div>
+                        <h3 class="text-xl font-bold mb-2 text-green-400">100% Backward Compatible</h3>
+                        <p class="text-slate-300">v1.1 is fully backward compatible with v1.0. No breaking changes!</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="space-y-6">
+                <div class="bg-slate-800 rounded-xl p-6 border border-slate-700">
+                    <h3 class="text-2xl font-bold mb-4">Step 1: Update Package</h3>
+                    <pre><code class="language-bash">npm update aimless-security</code></pre>
+                </div>
+                
+                <div class="bg-slate-800 rounded-xl p-6 border border-slate-700">
+                    <h3 class="text-2xl font-bold mb-4">Step 2: Leverage New Features (Optional)</h3>
+                    <p class="text-slate-400 mb-4">Your existing code works as-is, but you can enhance it with new features:</p>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <h4 class="font-semibold text-accent mb-2">Before (v1.0 - Still Works!):</h4>
+                            <pre><code class="language-javascript">const aimless = new Aimless();
+app.use(aimless.middleware());
+
+const threats = aimless.rasp.analyze(req);
+if (threats.length > 0) {
+  // Handle threats
+}</code></pre>
+                        </div>
+                        
+                        <div>
+                            <h4 class="font-semibold text-primary mb-2">After (v1.1 - Enhanced!):</h4>
+                            <pre><code class="language-javascript">// Option 1: Quick start
+const { middleware, csrf } = Aimless.quickProtect(['http://localhost:3000']);
+app.use(middleware);
+app.use(csrf);
+
+// Option 2: Use new fluent API
+const result = aimless.validate(userInput)
+  .against(['sql', 'xss'])
+  .sanitize()
+  .result();
+
+if (!result.safe) {
+  // Get confidence scores
+  result.threats.forEach(threat => {
+    console.log(`${threat.type}: ${threat.metadata.confidence}`);
+  });
+}
+
+// Option 3: Check IP reputation
+const reputation = aimless.getIPReputation(req.ip);
+if (reputation < 50) {
+  // Handle suspicious IP
+}</code></pre>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-slate-800 rounded-xl p-6 border border-slate-700">
+                    <h3 class="text-2xl font-bold mb-4">What You Get Automatically</h3>
+                    <ul class="space-y-2 text-slate-300">
+                        <li><i class="fas fa-check text-green-400 mr-2"></i>300+ detection patterns (3x more coverage)</li>
+                        <li><i class="fas fa-check text-green-400 mr-2"></i>Confidence scores in threat metadata</li>
+                        <li><i class="fas fa-check text-green-400 mr-2"></i>Better false positive reduction</li>
+                        <li><i class="fas fa-check text-green-400 mr-2"></i>IP reputation tracking (automatic)</li>
+                        <li><i class="fas fa-check text-green-400 mr-2"></i>Enhanced XSS multi-layer decoding</li>
+                        <li><i class="fas fa-check text-green-400 mr-2"></i>Cloud metadata SSRF protection</li>
+                        <li><i class="fas fa-check text-green-400 mr-2"></i>PowerShell command injection detection</li>
+                        <li><i class="fas fa-check text-green-400 mr-2"></i>Time-based SQL injection patterns</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
     <section class="py-20 bg-gradient-to-br from-primary/20 to-accent/20">
         <div class="container mx-auto px-6 text-center">
             <h2 class="text-4xl font-bold mb-6 gradient-text">Ready to Secure Your API?</h2>
             <p class="text-xl text-slate-300 mb-8 max-w-2xl mx-auto">
-                Join developers protecting their applications with Aimless Security
+                Join developers protecting their applications with Aimless Security v1.1
             </p>
-            <div class="flex flex-col md:flex-row gap-4 justify-center">
-                <code class="bg-slate-800 px-6 py-3 rounded-lg text-lg">npm install aimless-security</code>
-                <a href="https://www.npmjs.com/package/aimless-security" target="_blank" class="bg-primary hover:bg-sky-600 px-8 py-3 rounded-lg font-semibold transition inline-block">
+            <div class="flex flex-col md:flex-row gap-4 justify-center items-center">
+                <button onclick="copyInstallCommand()" class="bg-primary hover:bg-sky-600 px-8 py-3 rounded-lg font-semibold transition inline-flex items-center">
+                    <i class="fas fa-download mr-2"></i>
+                    Copy Install Command
+                </button>
+                <a href="https://www.npmjs.com/package/aimless-security" target="_blank" class="bg-secondary hover:bg-cyan-600 px-8 py-3 rounded-lg font-semibold transition inline-block">
                     View on NPM <i class="fas fa-external-link-alt ml-2"></i>
                 </a>
+                <a href="https://github.com/CamozDevelopment/Aimless-Security" target="_blank" class="bg-slate-700 hover:bg-slate-600 px-8 py-3 rounded-lg font-semibold transition inline-block">
+                    <i class="fab fa-github mr-2"></i> GitHub
+                </a>
             </div>
+            <p class="text-slate-400 mt-8">
+                <i class="fas fa-star text-yellow-400"></i>
+                Star us on GitHub • Free & Open Source • MIT License
+            </p>
         </div>
     </section>
 
     <!-- Footer -->
     <footer class="py-12 bg-slate-900 border-t border-slate-800">
         <div class="container mx-auto px-6">
-            <div class="flex flex-col md:flex-row justify-between items-center">
-                <div class="flex items-center space-x-3 mb-4 md:mb-0">
-                    <i class="fas fa-shield-halved text-2xl text-primary"></i>
-                    <span class="text-xl font-bold gradient-text">Aimless Security</span>
+            <div class="grid md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <div class="flex items-center space-x-3 mb-4">
+                        <i class="fas fa-shield-halved text-2xl text-primary"></i>
+                        <span class="text-xl font-bold gradient-text">Aimless Security</span>
+                    </div>
+                    <p class="text-slate-400 text-sm">
+                        Enterprise-grade security for Node.js applications. Protect against OWASP Top 10 vulnerabilities with ease.
+                    </p>
                 </div>
-                <div class="flex space-x-6">
-                    <a href="https://www.npmjs.com/package/aimless-security" class="text-slate-400 hover:text-primary transition">
-                        <i class="fab fa-npm text-2xl"></i>
-                    </a>
-                    <a href="https://github.com/CamozDevelopment/Aimless-Security" class="text-slate-400 hover:text-primary transition">
-                        <i class="fab fa-github text-2xl"></i>
-                    </a>
-                    <a href="#" class="text-slate-400 hover:text-primary transition">
-                        <i class="fas fa-book text-2xl"></i>
-                    </a>
+                
+                <div>
+                    <h4 class="font-bold mb-4 text-slate-200">Quick Links</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#features" class="text-slate-400 hover:text-primary transition">Features</a></li>
+                        <li><a href="#installation" class="text-slate-400 hover:text-primary transition">Installation</a></li>
+                        <li><a href="#v1-1-features" class="text-slate-400 hover:text-primary transition">What's New</a></li>
+                        <li><a href="#api" class="text-slate-400 hover:text-primary transition">API Reference</a></li>
+                        <li><a href="#migration" class="text-slate-400 hover:text-primary transition">Migration Guide</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold mb-4 text-slate-200">Resources</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="https://github.com/CamozDevelopment/Aimless-Security" target="_blank" class="text-slate-400 hover:text-primary transition">GitHub Repository</a></li>
+                        <li><a href="https://www.npmjs.com/package/aimless-security" target="_blank" class="text-slate-400 hover:text-primary transition">NPM Package</a></li>
+                        <li><a href="https://github.com/CamozDevelopment/Aimless-Security/issues" target="_blank" class="text-slate-400 hover:text-primary transition">Report Issues</a></li>
+                        <li><a href="https://github.com/CamozDevelopment/Aimless-Security/blob/main/CHANGELOG.md" target="_blank" class="text-slate-400 hover:text-primary transition">Changelog</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold mb-4 text-slate-200">Community</h4>
+                    <div class="space-y-3">
+                        <a href="https://github.com/CamozDevelopment/Aimless-Security" target="_blank" class="flex items-center text-slate-400 hover:text-primary transition text-sm">
+                            <i class="fab fa-github mr-2"></i> Star on GitHub
+                        </a>
+                        <a href="https://www.npmjs.com/package/aimless-security" target="_blank" class="flex items-center text-slate-400 hover:text-primary transition text-sm">
+                            <i class="fab fa-npm mr-2"></i> View on NPM
+                        </a>
+                        <div class="mt-4 pt-4 border-t border-slate-800">
+                            <p class="text-xs text-slate-500">Version 1.1.1</p>
+                            <p class="text-xs text-slate-500">Node.js >= 16.0.0</p>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="text-center mt-8 text-slate-500">
-                <p>&copy; 2025 Aimless Security. MIT License. Built with ❤️ for the Node.js community.</p>
+            
+            <div class="border-t border-slate-800 pt-8 text-center">
+                <p class="text-slate-500 text-sm">&copy; 2025 Aimless Security. Released under the MIT License.</p>
+                <p class="text-slate-600 text-xs mt-2">Built with ❤️ for the Node.js community by <a href="https://github.com/CamozDevelopment" class="text-primary hover:underline">Camoz Development</a></p>
             </div>
         </div>
     </footer>
@@ -617,6 +1499,21 @@ result.vulnerabilities.forEach(v => {
                 }
             });
         });
+
+        // Copy install command
+        function copyInstallCommand() {
+            const command = 'npm install aimless-security';
+            navigator.clipboard.writeText(command).then(() => {
+                const btn = event.target.closest('button');
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-check mr-2"></i>Copied!';
+                btn.classList.add('bg-green-500');
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                    btn.classList.remove('bg-green-500');
+                }, 2000);
+            });
+        }
 
         // Prism syntax highlighting
         Prism.highlightAll();

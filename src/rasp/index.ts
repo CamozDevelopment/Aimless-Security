@@ -117,6 +117,32 @@ export class RASP {
     return this.xssDetector.sanitize(output);
   }
 
+  /**
+   * Detect injections (SQL, NoSQL, Command, Path Traversal, etc.)
+   */
+  detectInjections(input: any, context?: string): SecurityThreat[] {
+    return this.injectionDetector.detect(input, context);
+  }
+
+  /**
+   * Get direct access to detectors for advanced use cases
+   */
+  getInjectionDetector(): InjectionDetector {
+    return this.injectionDetector;
+  }
+
+  getXSSDetector(): XSSDetector {
+    return this.xssDetector;
+  }
+
+  getCSRFDetector(): CSRFDetector {
+    return this.csrfDetector;
+  }
+
+  getAnomalyDetector(): AnomalyDetector {
+    return this.anomalyDetector;
+  }
+
   private getHeader(headers: Record<string, string | string[] | undefined>, name: string): string | undefined {
     const value = headers[name.toLowerCase()];
     return Array.isArray(value) ? value[0] : value;

@@ -43,6 +43,7 @@ export interface SecurityThreat {
   payload?: string;
   timestamp: Date;
   blocked: boolean;
+  confidence?: number; // 0-100 confidence score
   metadata?: Record<string, any>;
 }
 

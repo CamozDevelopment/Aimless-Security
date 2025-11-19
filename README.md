@@ -8,8 +8,8 @@
 [![npm downloads](https://img.shields.io/npm/dm/aimless-security.svg?style=flat-square)](https://www.npmjs.com/package/aimless-security)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](https://opensource.org/licenses/MIT)
 [![Node Version](https://img.shields.io/node/v/aimless-security.svg?style=flat-square)](https://nodejs.org)
-[![GitHub issues](https://img.shields.io/github/issues/yourusername/aimless-security.svg?style=flat-square)](https://github.com/yourusername/aimless-security/issues)
-[![GitHub stars](https://img.shields.io/github/stars/yourusername/aimless-security.svg?style=flat-square)](https://github.com/yourusername/aimless-security/stargazers)
+[![GitHub issues](https://img.shields.io/github/issues/CamozDevelopment/Aimless-Security.svg?style=flat-square)](https://github.com/CamozDevelopment/Aimless-Security/issues)
+[![GitHub stars](https://img.shields.io/github/stars/CamozDevelopment/Aimless-Security.svg?style=flat-square)](https://github.com/CamozDevelopment/Aimless-Security/stargazers)
 
 **A comprehensive Runtime Application Self-Protection (RASP) and API Fuzzing Engine for Node.js applications**
 

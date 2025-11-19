@@ -26,36 +26,36 @@ git add .
 # Create initial commit
 git commit -m "Initial commit: Aimless Security v1.0.0"
 
-# Add your GitHub repository as remote (replace yourusername with your GitHub username)
-git remote add origin https://github.com/yourusername/aimless-security.git
+# Add your GitHub repository as remote
+git remote add origin https://github.com/CamozDevelopment/Aimless-Security.git
 
 # Push to GitHub
 git branch -M main
 git push -u origin main
 ```
 
-## Step 3: Update Repository Links
+## Step 3: Repository Links Updated
 
-After creating your GitHub repo, update these files with your actual username:
+All repository links have been updated to use `CamozDevelopment/Aimless-Security`:
 
 ### 1. package.json
-Replace `yourusername` with your GitHub username:
+Repository URLs have been updated to:
 ```json
 "repository": {
   "type": "git",
-  "url": "https://github.com/YOURUSERNAME/aimless-security.git"
+  "url": "https://github.com/CamozDevelopment/Aimless-Security.git"
 },
-"homepage": "https://github.com/YOURUSERNAME/aimless-security#readme",
+"homepage": "https://github.com/CamozDevelopment/Aimless-Security#readme",
 "bugs": {
-  "url": "https://github.com/YOURUSERNAME/aimless-security/issues"
+  "url": "https://github.com/CamozDevelopment/Aimless-Security/issues"
 }
 ```
 
 ### 2. README.md
-Replace badge URLs with your username:
+Badge URLs have been updated to:
 ```markdown
-[![GitHub issues](https://img.shields.io/github/issues/YOURUSERNAME/aimless-security.svg?style=flat-square)](https://github.com/YOURUSERNAME/aimless-security/issues)
-[![GitHub stars](https://img.shields.io/github/stars/YOURUSERNAME/aimless-security.svg?style=flat-square)](https://github.com/YOURUSERNAME/aimless-security/stargazers)
+[![GitHub issues](https://img.shields.io/github/issues/CamozDevelopment/Aimless-Security.svg?style=flat-square)](https://github.com/CamozDevelopment/Aimless-Security/issues)
+[![GitHub stars](https://img.shields.io/github/stars/CamozDevelopment/Aimless-Security.svg?style=flat-square)](https://github.com/CamozDevelopment/Aimless-Security/stargazers)
 ```
 
 ## Step 4: Set Up GitHub Pages (Optional)
@@ -125,7 +125,7 @@ Then on GitHub:
 
 ```powershell
 # Clone your repository
-git clone https://github.com/yourusername/aimless-security.git
+git clone https://github.com/CamozDevelopment/Aimless-Security.git
 
 # Check status
 git status
@@ -208,10 +208,10 @@ Settings → Branches → Add rule:
 
 Once your repo is live, you can share:
 
-- **GitHub**: `https://github.com/yourusername/aimless-security`
+- **GitHub**: `https://github.com/CamozDevelopment/Aimless-Security`
 - **NPM**: `https://www.npmjs.com/package/aimless-security`
-- **Docs**: `https://yourusername.github.io/aimless-security/docs.html`
-- **Issues**: `https://github.com/yourusername/aimless-security/issues`
+- **Docs**: `https://CamozDevelopment.github.io/Aimless-Security/docs.html`
+- **Issues**: `https://github.com/CamozDevelopment/Aimless-Security/issues`
 
 ## Support
 

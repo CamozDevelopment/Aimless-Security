@@ -26,11 +26,11 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/aimless-security.git"
+    "url": "https://github.com/CamozDevelopment/Aimless-Security.git"
   },
-  "homepage": "https://github.com/yourusername/aimless-security#readme",
+  "homepage": "https://github.com/CamozDevelopment/Aimless-Security#readme",
   "bugs": {
-    "url": "https://github.com/yourusername/aimless-security/issues"
+    "url": "https://github.com/CamozDevelopment/Aimless-Security/issues"
   },
   "dependencies": {
     "express": "^4.18.2"

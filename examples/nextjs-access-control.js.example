@@ -1,0 +1,298 @@
+/**
+ * Real-World Example: Next.js API Routes with Access Control
+ * 
+ * This shows how to protect a Next.js app with endpoint access control.
+ * Only specific API routes are allowed, everything else is blocked.
+ */
+
+// File: middleware.ts (Next.js 13+ middleware)
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
+import Aimless from 'aimless-security';
+
+const aimless = new Aimless({
+  rasp: {
+    blockMode: true,
+    injectionProtection: true,
+    xssProtection: true,
+    csrfProtection: true,
+    
+    accessControl: {
+      mode: 'allowlist',
+      defaultAction: 'block',
+      
+      // Only these API routes are accessible
+      allowedEndpoints: [
+        // Public pages
+        { path: '/', methods: ['GET'] },
+        { path: '/about', methods: ['GET'] },
+        { path: '/pricing', methods: ['GET'] },
+        { path: '/docs/*', methods: ['GET'] },
+        
+        // Auth endpoints
+        { path: '/api/auth/login', methods: ['POST'] },
+        { path: '/api/auth/register', methods: ['POST'] },
+        { path: '/api/auth/logout', methods: ['POST'] },
+        
+        // Public API
+        { path: '/api/public/status', methods: ['GET'] },
+        { path: '/api/public/blog/*', methods: ['GET'] },
+        
+        // Protected API (requires auth)
+        { 
+          path: '/api/user/profile', 
+          methods: ['GET', 'PUT'],
+          requireAuth: true 
+        },
+        { 
+          path: '/api/user/settings', 
+          methods: ['GET', 'PUT', 'DELETE'],
+          requireAuth: true 
+        },
+        
+        // Stripe webhooks
+        { path: '/api/webhooks/stripe', methods: ['POST'] },
+      ],
+      
+      // Extra protection for sensitive routes
+      protectedEndpoints: [
+        {
+          path: '/api/admin/*',
+          maxThreatLevel: 'low',
+          requireAuth: true,
+          methods: ['GET', 'POST', 'PUT', 'DELETE']
+        },
+        {
+          path: '/api/payments/*',
+          maxThreatLevel: 'low',
+          requireAuth: true,
+          rateLimit: { maxRequests: 10, windowMs: 60000 }
+        }
+      ],
+      
+      // Explicitly blocked
+      blockedEndpoints: [
+        '/api/internal/*',
+        '/api/debug/*',
+        /.env/,
+        /\.git/
+      ]
+    }
+  },
+  
+  logging: {
+    enabled: true,
+    level: 'warn'
+  }
+});
+
+export function middleware(request: NextRequest) {
+  const { pathname, searchParams } = request.nextUrl;
+  
+  // Step 1: Check access control
+  const accessCheck = aimless.rasp.checkEndpointAccess({
+    method: request.method,
+    path: pathname,
+    headers: Object.fromEntries(request.headers)
+  });
+
+  if (!accessCheck.allowed) {
+    console.warn('🚫 Access denied:', {
+      path: pathname,
+      method: request.method,
+      reason: accessCheck.reason
+    });
+
+    return NextResponse.json(
+      { 
+        error: 'Forbidden',
+        message: accessCheck.reason || 'Access denied',
+        timestamp: new Date().toISOString()
+      },
+      { status: 403 }
+    );
+  }
+
+  // Step 2: Scan query params and body for threats
+  const threats = aimless.rasp.analyze({
+    method: request.method,
+    path: pathname,
+    query: Object.fromEntries(searchParams),
+    headers: Object.fromEntries(request.headers),
+    ip: request.ip || request.headers.get('x-forwarded-for') || 'unknown'
+  });
+
+  // Step 3: Check protected endpoint rules
+  const protectionRule = aimless.rasp.getProtectionRules({
+    method: request.method,
+    path: pathname
+  });
+
+  let shouldBlock = aimless.rasp.shouldBlock(threats);
+
+  // Apply stricter rules for protected endpoints
+  if (protectionRule && threats.length > 0) {
+    const severityLevels = { low: 1, medium: 2, high: 3, critical: 4 };
+    const maxLevel = severityLevels[protectionRule.maxThreatLevel || 'high'];
+    
+    const hasExcessiveThreat = threats.some(t => 
+      severityLevels[t.severity] > maxLevel
+    );
+
+    if (hasExcessiveThreat) {
+      shouldBlock = true;
+      console.warn('🔒 Protected endpoint threat detected:', {
+        path: pathname,
+        maxAllowed: protectionRule.maxThreatLevel,
+        threats: threats.map(t => ({ type: t.type, severity: t.severity }))
+      });
+    }
+  }
+
+  if (shouldBlock) {
+    console.error('⚠️  Security threat blocked:', {
+      path: pathname,
+      method: request.method,
+      threats: threats.map(t => t.type)
+    });
+
+    return NextResponse.json(
+      { 
+        error: 'Forbidden',
+        message: 'Security threat detected',
+        timestamp: new Date().toISOString()
+      },
+      { status: 403 }
+    );
+  }
+
+  // Log threats even if not blocking
+  if (threats.length > 0) {
+    console.warn('⚠️  Security threats detected (not blocking):', {
+      path: pathname,
+      threats: threats.map(t => ({ type: t.type, severity: t.severity }))
+    });
+  }
+
+  // Continue to route handler
+  return NextResponse.next();
+}
+
+// Apply middleware to all routes
+export const config = {
+  matcher: [
+    /*
+     * Match all request paths except for the ones starting with:
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     */
+    '/((?!_next/static|_next/image|favicon.ico).*)',
+  ],
+};
+
+// ============================================================================
+// Example API Route: /api/user/profile
+// ============================================================================
+
+// File: app/api/user/profile/route.ts
+import { NextRequest, NextResponse } from 'next/server';
+
+export const runtime = 'nodejs'; // Required for Vercel
+
+export async function GET(request: NextRequest) {
+  // Middleware already checked access control and threats
+  // This code only runs if the request is safe
+  
+  return NextResponse.json({
+    user: {
+      id: 1,
+      name: 'John Doe',
+      email: 'john@example.com'
+    }
+  });
+}
+
+export async function PUT(request: NextRequest) {
+  const body = await request.json();
+  
+  // Validate and sanitize user input
+  const result = aimless.validate(body.name)
+    .against(['sql', 'xss'])
+    .sanitize()
+    .result();
+  
+  if (!result.safe) {
+    return NextResponse.json(
+      { 
+        error: 'Invalid input',
+        threats: result.threats 
+      },
+      { status: 400 }
+    );
+  }
+  
+  // Update user with sanitized data
+  // updateUser({ name: result.sanitized });
+  
+  return NextResponse.json({ success: true });
+}
+
+// ============================================================================
+// Example Protected Route: /api/payments/charge
+// ============================================================================
+
+// File: app/api/payments/charge/route.ts
+export const runtime = 'nodejs';
+
+export async function POST(request: NextRequest) {
+  // This endpoint has extra protection:
+  // - maxThreatLevel: 'low' (zero tolerance)
+  // - requireAuth: true
+  // - rateLimit: 10 requests/minute
+  
+  const body = await request.json();
+  
+  // Validate payment data with zero tolerance
+  const amountCheck = aimless.validate(body.amount)
+    .against(['sql', 'xss', 'command'])
+    .sanitize()
+    .result();
+  
+  if (!amountCheck.safe) {
+    return NextResponse.json(
+      { error: 'Invalid payment data' },
+      { status: 400 }
+    );
+  }
+  
+  // Process payment...
+  
+  return NextResponse.json({ 
+    success: true,
+    transactionId: 'txn_123' 
+  });
+}
+
+// ============================================================================
+// Example: Testing Locally
+// ============================================================================
+
+// curl http://localhost:3000/api/user/profile
+// ✅ Allowed (GET request, in allowlist)
+
+// curl -X DELETE http://localhost:3000/api/user/profile
+// ❌ Blocked (DELETE not in allowed methods)
+
+// curl http://localhost:3000/api/admin/users
+// ❌ Blocked (not in allowlist, unless you add it)
+
+// curl http://localhost:3000/api/user/profile?id=1%20OR%201=1
+// ⚠️  Threat detected (SQL injection in query param)
+// ❌ Blocked if blockMode: true
+
+// curl -X POST http://localhost:3000/api/payments/charge \
+//   -H "Content-Type: application/json" \
+//   -d '{"amount": "100<script>alert(1)</script>"}'
+// ⚠️  XSS threat detected in protected endpoint
+// ❌ Blocked (maxThreatLevel: 'low' has zero tolerance)

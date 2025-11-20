@@ -3,6 +3,7 @@ import { InjectionDetector } from './injection-detector';
 import { XSSDetector } from './xss-detector';
 import { CSRFDetector } from './csrf-detector';
 import { AnomalyDetector } from './anomaly-detector';
+import { AdvancedThreatDetector } from './advanced-detector';
 import { Logger } from '../logger';
 
 export class RASP {
@@ -11,6 +12,7 @@ export class RASP {
   private xssDetector: XSSDetector;
   private csrfDetector: CSRFDetector;
   private anomalyDetector: AnomalyDetector;
+  private advancedDetector: AdvancedThreatDetector;
   private logger: Logger;
 
   constructor(config: RASPConfig = {}, logger: Logger) {
@@ -41,6 +43,7 @@ export class RASP {
     this.xssDetector = new XSSDetector();
     this.csrfDetector = new CSRFDetector(this.config.trustedOrigins);
     this.anomalyDetector = new AnomalyDetector();
+    this.advancedDetector = new AdvancedThreatDetector();
   }
 
   analyze(request: {
@@ -68,6 +71,10 @@ export class RASP {
       const bodyXSS = this.xssDetector.detect(request.body, 'body');
       threats.push(...queryXSS, ...bodyXSS);
     }
+
+    // Advanced threat detection (LDAP, Template Injection, etc.)
+    const advancedThreats = this.advancedDetector.detectAll(request.body, request.path.includes('graphql') ? 'graphql' : undefined);
+    threats.push(...advancedThreats);
 
     // CSRF detection
     if (this.config.csrfProtection && request.headers) {
@@ -250,6 +257,55 @@ export class RASP {
   }
 
   /**
+   * Detect LDAP injection
+   */
+  detectLDAPInjection(input: string): SecurityThreat | null {
+    return this.advancedDetector.detectLDAPInjection(input);
+  }
+
+  /**
+   * Detect template injection (SSTI)
+   */
+  detectTemplateInjection(input: string): SecurityThreat | null {
+    return this.advancedDetector.detectTemplateInjection(input);
+  }
+
+  /**
+   * Validate file upload security
+   */
+  validateFileUpload(filename: string, content?: string, mimeType?: string): SecurityThreat | null {
+    return this.advancedDetector.validateFileUpload(filename, content, mimeType);
+  }
+
+  /**
+   * Analyze JWT token security
+   */
+  analyzeJWT(token: string): SecurityThreat | null {
+    return this.advancedDetector.analyzeJWT(token);
+  }
+
+  /**
+   * Detect GraphQL attacks
+   */
+  detectGraphQLAttack(query: string): SecurityThreat | null {
+    return this.advancedDetector.detectGraphQLAttack(query);
+  }
+
+  /**
+   * Detect prototype pollution
+   */
+  detectPrototypePollution(input: any): SecurityThreat | null {
+    return this.advancedDetector.detectPrototypePollution(input);
+  }
+
+  /**
+   * Detect deserialization attacks
+   */
+  detectDeserialization(input: string): SecurityThreat | null {
+    return this.advancedDetector.detectDeserialization(input);
+  }
+
+  /**
    * Get direct access to detectors for advanced use cases
    */
   getInjectionDetector(): InjectionDetector {
@@ -266,6 +322,10 @@ export class RASP {
 
   getAnomalyDetector(): AnomalyDetector {
     return this.anomalyDetector;
+  }
+
+  getAdvancedDetector(): AdvancedThreatDetector {
+    return this.advancedDetector;
   }
 
   private getHeader(headers: Record<string, string | string[] | undefined>, name: string): string | undefined {

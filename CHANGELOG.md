@@ -5,6 +5,28 @@ All notable changes to Aimless Security will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.1] - 2025-11-20
+
+### Added
+- **Enhanced Detection Patterns**: 50+ new patterns across all threat types
+  - **SQL Injection**: Added admin bypass, multi-line comments, database fingerprinting, NULL byte injection
+  - **NoSQL Injection**: Added prototype pollution, server-side JS, MongoDB $function operator
+  - **Command Injection**: Added package managers, reverse shells, compression attacks, base64 decoding
+  - **Path Traversal**: Better detection with UNC paths and multiple slash patterns
+- **False Positive Prevention**: Significantly reduced false positives
+  - Requires 2+ pattern matches for most threats (unless high-confidence pattern)
+  - Context-aware whitelisting (email, username, name, uuid, date, url, number)
+  - Smart value detection (prose, safe words, normal text)
+  - Input length filtering (skip < 2 chars or > 10000 chars)
+- **Improved Confidence Scoring**: More realistic confidence levels
+  - 1 match = 30%, 2 matches = 60%, 3 matches = 85%, 4+ matches = 90-100%
+- **Comprehensive Testing**: 23/23 false positive prevention tests passing
+
+### Fixed
+- Package name changed from `aimless-security` to `aimless-sdk`
+- Validate API now correctly detects XSS threats
+- Type map in validate() updated to match actual threat type values
+
 ## [1.3.0] - 2025-11-19
 
 ### Added

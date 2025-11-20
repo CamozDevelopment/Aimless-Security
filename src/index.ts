@@ -184,17 +184,26 @@ export class Aimless {
     let sanitized = input;
 
     return {
-      against: (checks: ('sql' | 'xss' | 'command' | 'path' | 'all')[]) => {
-        const allThreats = this.rasp.detectInjections(input);
+      against: (checks: ('sql' | 'nosql' | 'xss' | 'command' | 'path' | 'xxe' | 'ssrf' | 'all')[]) => {
+        // Get injection threats (SQL, NoSQL, Command, Path, XXE, SSRF)
+        const injectionThreats = this.rasp.detectInjections(input);
+        
+        // Get XSS threats separately
+        const xssThreats = typeof input === 'string' ? this.rasp.getXSSDetector().detect(input) : [];
+        
+        const allThreats = [...injectionThreats, ...xssThreats];
         
         if (checks.includes('all')) {
           threats.push(...allThreats);
         } else {
           const typeMap: Record<string, string> = {
-            'sql': 'SQL_INJECTION',
-            'xss': 'XSS',
-            'command': 'COMMAND_INJECTION',
-            'path': 'PATH_TRAVERSAL'
+            'sql': 'sql_injection',
+            'nosql': 'nosql_injection',
+            'xss': 'xss',
+            'command': 'command_injection',
+            'path': 'path_traversal',
+            'xxe': 'xxe',
+            'ssrf': 'ssrf'
           };
           
           checks.forEach(check => {

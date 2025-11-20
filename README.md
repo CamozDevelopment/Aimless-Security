@@ -87,9 +87,19 @@ A comprehensive **Runtime Application Self-Protection (RASP)** and **API Fuzzing
 
 ## Installation
 
+Install directly from GitHub:
+
 ```bash
-npm install aimless-security
+npm install CamozDevelopment/Aimless-Security
 ```
+
+Or install a specific version:
+
+```bash
+npm install CamozDevelopment/Aimless-Security#v1.3.1
+```
+
+**Note:** Package is distributed via GitHub. No NPM account required for installation.
 
 ## Quick Start
 
@@ -97,7 +107,7 @@ npm install aimless-security
 
 ```javascript
 const express = require('express');
-const { Aimless } = require('aimless-security');
+const { Aimless } = require('aimless-sdk');
 
 const app = express();
 app.use(express.json());

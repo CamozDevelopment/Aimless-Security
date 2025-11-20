@@ -9,7 +9,7 @@
  */
 
 const express = require('express');
-const aimlessSDK = require('aimless-security');
+const aimlessSDK = require('aimless-sdk');
 
 const app = express();
 app.use(express.json());

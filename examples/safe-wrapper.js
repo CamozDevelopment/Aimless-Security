@@ -6,7 +6,7 @@
  * where you want guaranteed availability even if the security layer fails.
  */
 
-const { Aimless } = require('aimless-security');
+const { Aimless } = require('aimless-sdk');
 
 class SafeAimless {
   constructor(config = {}) {

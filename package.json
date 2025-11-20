@@ -1,6 +1,6 @@
 {
   "name": "aimless-sdk",
-  "version": "1.3.1",
+  "version": "1.3.2",
   "description": "Enhanced Runtime Application Self-Protection (RASP) and API Fuzzing Engine with advanced threat detection, behavioral analysis, and intelligent response scoring for Node.js applications",
   "main": "dist/index.js",
   "module": "dist/index.js",
@@ -17,7 +17,8 @@
     "build": "tsc",
     "test": "node test-serverless.js && node test-access-control.js && node test-false-positives.js",
     "test:advanced": "node tests/security-detection.test.js",
-    "test:all": "npm test && npm run test:advanced",
+    "test:polyglot": "node tests/polyglot-unicode.test.js",
+    "test:all": "npm test && npm run test:advanced && npm run test:polyglot",
     "test:build": "npm run build && npm test",
     "validate": "node validate.js",
     "prepublishOnly": "npm run validate",

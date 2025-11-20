@@ -1,6 +1,19 @@
 import { ThreatType, SecurityThreat } from '../types';
 
 export class InjectionDetector {
+  // Unicode SQL Injection patterns (separate for high-confidence detection)
+  private unicodeSQLPatterns: RegExp[] = [
+    /[\uFF03-\uFF5E]/,  // Full-width characters (e.g., ＳＥＬＥＣＴ)
+    /\u0053\u0045\u004C\u0045\u0043\u0054/i,  // Unicode SELECT
+    /\u0055\u004E\u0049\u004F\u004E/i,  // Unicode UNION
+    /\u0044\u0052\u004F\u0050/i,  // Unicode DROP
+    // Homoglyph attacks (visually similar characters)
+    /[ЅЕLЕСТІОNUΝІОN]/,  // Cyrillic lookalikes (Е is Cyrillic E)
+    /[ᏚᎬᏞᎬᏟᎢ]/,  // Cherokee lookalikes
+    // Latin Extended ranges that could be used for obfuscation
+    /[\u0100-\u017F][\u0100-\u017F]+/,  // Require 2+ Latin Extended-A chars
+  ];
+
   // Enhanced SQL Injection patterns with context awareness
   private sqlPatterns = [
     // SQL Keywords - more comprehensive
@@ -275,21 +288,28 @@ export class InjectionDetector {
 
       // SQL Injection detection with confidence scoring
       const sqlMatches = this.sqlPatterns.filter(pattern => pattern.test(value));
-      if (sqlMatches.length > 0) {
-        // Require at least 2 pattern matches to reduce false positives
-        if (sqlMatches.length >= 2 || this.hasHighConfidenceSQLPattern(value)) {
+      const unicodeMatches = this.unicodeSQLPatterns.filter(pattern => pattern.test(value));
+      const totalSQLMatches = sqlMatches.length + unicodeMatches.length;
+      
+      if (totalSQLMatches > 0) {
+        // Unicode SQL patterns are high confidence (only 1 match needed)
+        // Regular SQL patterns need 2+ matches
+        if (totalSQLMatches >= 2 || unicodeMatches.length > 0 || this.hasHighConfidenceSQLPattern(value)) {
+          const attackType = unicodeMatches.length > 0 ? 'unicode-sql' : 'sql';
           threats.push({
             type: ThreatType.SQL_INJECTION,
-            severity: sqlMatches.length >= 3 ? 'critical' : 'high',
-            description: `Potential SQL injection detected (confidence: ${this.calculateConfidence(sqlMatches.length, this.sqlPatterns.length)})`,
+            severity: totalSQLMatches >= 3 ? 'critical' : 'high',
+            description: `Potential ${unicodeMatches.length > 0 ? 'Unicode ' : ''}SQL injection detected (confidence: ${this.calculateConfidence(totalSQLMatches, this.sqlPatterns.length)})`,
             payload: value,
             timestamp: new Date(),
             blocked: true,
-            confidence: this.calculateConfidenceNumber(sqlMatches.length, this.sqlPatterns.length),
+            confidence: this.calculateConfidenceNumber(totalSQLMatches, this.sqlPatterns.length),
             metadata: { 
               context, 
-              matchCount: sqlMatches.length,
-              confidence: this.calculateConfidence(sqlMatches.length, this.sqlPatterns.length)
+              matchCount: totalSQLMatches,
+              attackType,
+              unicodeDetected: unicodeMatches.length > 0,
+              confidence: this.calculateConfidence(totalSQLMatches, this.sqlPatterns.length)
             }
           });
         }
@@ -386,9 +406,73 @@ export class InjectionDetector {
           }
         });
       }
+
+      // Polyglot Injection detection (SQL + XSS combined)
+      const polyglotThreat = this.detectPolyglot(value);
+      if (polyglotThreat) {
+        threats.push(polyglotThreat);
+      }
     }
 
     return threats;
+  }
+
+  /**
+   * Detect polyglot injections (SQL + XSS combined attacks)
+   * These are sophisticated attacks that work as both SQL and XSS
+   */
+  private detectPolyglot(value: string): SecurityThreat | null {
+    // Polyglot patterns - attacks that work as both SQL and XSS
+    const polyglotPatterns = [
+      // Classic polyglot: works as SQL injection AND XSS
+      /'><script>.*?<\/script>/i,
+      /'\s*OR\s*.*?<script>/i,
+      /"\s*OR\s*.*?<script>/i,
+      // SQL with XSS payload
+      /'\s*UNION.*?<script>/i,
+      /SELECT.*?<script>/i,
+      // XSS with SQL syntax
+      /<script>.*?(SELECT|UNION|INSERT|DELETE)/i,
+      /<img.*?(SELECT|UNION|OR\s*1=1)/i,
+      // JavaScript protocol with SQL
+      /javascript:.*?(SELECT|UNION|INSERT)/i,
+      // Event handlers with SQL
+      /on\w+\s*=.*?(SELECT|UNION|OR\s*['"]?\d+['"]?\s*=\s*['"]?\d+)/i,
+      // Data URI with SQL
+      /data:text\/html.*?(SELECT|UNION|INSERT)/i,
+      // SVG with SQL injection
+      /<svg.*?(SELECT|UNION|INSERT)/i,
+      // SQL comments with HTML tags
+      /<!--.*?(SELECT|UNION|INSERT).*?-->/i,
+      // Combined quote escaping
+      /['"].*?<.*?>.*?(OR|UNION|SELECT)/i,
+      // CDATA sections with SQL
+      /<!\[CDATA\[.*?(SELECT|UNION|INSERT)/i,
+      // Attribute injection with SQL
+      /\w+\s*=\s*['"].*?(SELECT|UNION).*?<\//i
+    ];
+
+    const matches = polyglotPatterns.filter(pattern => pattern.test(value));
+    
+    if (matches.length >= 2) {
+      return {
+        type: ThreatType.SQL_INJECTION, // Could be either, using SQL as primary
+        severity: 'critical',
+        description: `Polyglot injection detected (SQL + XSS combined attack) - confidence: ${this.calculateConfidence(matches.length, polyglotPatterns.length)}`,
+        payload: value,
+        timestamp: new Date(),
+        blocked: true,
+        confidence: this.calculateConfidenceNumber(matches.length, polyglotPatterns.length),
+        metadata: {
+          attackType: 'polyglot',
+          matchCount: matches.length,
+          confidence: this.calculateConfidence(matches.length, polyglotPatterns.length),
+          details: 'This payload can exploit both SQL injection and XSS vulnerabilities'
+        }
+      };
+    }
+
+    return null;
   }
 
   private extractInputs(input: any): string[] {

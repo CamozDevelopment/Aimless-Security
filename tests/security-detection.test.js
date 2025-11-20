@@ -6,7 +6,7 @@
  * Purpose: Verify LDAP, Template, JWT, and GraphQL security detection
  */
 
-const { Aimless } = require('./dist/index.js');
+const { Aimless } = require('../dist/index.js');
 
 let testsPassed = 0;
 let testsFailed = 0;

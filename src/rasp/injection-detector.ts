@@ -292,24 +292,30 @@ export class InjectionDetector {
       const totalSQLMatches = sqlMatches.length + unicodeMatches.length;
       
       if (totalSQLMatches > 0) {
-        // Unicode SQL patterns are high confidence (only 1 match needed)
+        // Unicode SQL patterns are ALWAYS high confidence - even 1 match is suspicious
         // Regular SQL patterns need 2+ matches
-        if (totalSQLMatches >= 2 || unicodeMatches.length > 0 || this.hasHighConfidenceSQLPattern(value)) {
+        const shouldBlock = unicodeMatches.length > 0 || totalSQLMatches >= 2 || this.hasHighConfidenceSQLPattern(value);
+        
+        if (shouldBlock) {
           const attackType = unicodeMatches.length > 0 ? 'unicode-sql' : 'sql';
+          const confidence = unicodeMatches.length > 0 ? 
+            Math.max(85, this.calculateConfidenceNumber(totalSQLMatches, this.sqlPatterns.length)) : // Unicode is always high confidence
+            this.calculateConfidenceNumber(totalSQLMatches, this.sqlPatterns.length);
+          
           threats.push({
             type: ThreatType.SQL_INJECTION,
-            severity: totalSQLMatches >= 3 ? 'critical' : 'high',
-            description: `Potential ${unicodeMatches.length > 0 ? 'Unicode ' : ''}SQL injection detected (confidence: ${this.calculateConfidence(totalSQLMatches, this.sqlPatterns.length)})`,
+            severity: unicodeMatches.length > 0 || totalSQLMatches >= 3 ? 'critical' : 'high',
+            description: `Potential ${unicodeMatches.length > 0 ? 'Unicode ' : ''}SQL injection detected (confidence: ${unicodeMatches.length > 0 ? confidence : this.calculateConfidence(totalSQLMatches, this.sqlPatterns.length)}%)`,
             payload: value,
             timestamp: new Date(),
             blocked: true,
-            confidence: this.calculateConfidenceNumber(totalSQLMatches, this.sqlPatterns.length),
+            confidence,
             metadata: { 
               context, 
               matchCount: totalSQLMatches,
               attackType,
               unicodeDetected: unicodeMatches.length > 0,
-              confidence: this.calculateConfidence(totalSQLMatches, this.sqlPatterns.length)
+              confidence: `${confidence}%`
             }
           });
         }

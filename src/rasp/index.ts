@@ -58,26 +58,47 @@ export class RASP {
 
     const threats: SecurityThreat[] = [];
 
-    // Injection detection
-    if (this.config.injectionProtection) {
-      const queryThreats = this.injectionDetector.detect(request.query, 'query');
-      const bodyThreats = this.injectionDetector.detect(request.body, 'body');
-      threats.push(...queryThreats, ...bodyThreats);
+    try {
+      // Injection detection - only if data exists
+      if (this.config.injectionProtection) {
+        if (request.query && typeof request.query === 'object') {
+          const queryThreats = this.injectionDetector.detect(request.query, 'query');
+          threats.push(...queryThreats);
+        }
+        if (request.body && typeof request.body === 'object') {
+          const bodyThreats = this.injectionDetector.detect(request.body, 'body');
+          threats.push(...bodyThreats);
+        }
+      }
+
+      // XSS detection - only if data exists
+      if (this.config.xssProtection) {
+        if (request.query && typeof request.query === 'object') {
+          const queryXSS = this.xssDetector.detect(request.query, 'query');
+          threats.push(...queryXSS);
+        }
+        if (request.body && typeof request.body === 'object') {
+          const bodyXSS = this.xssDetector.detect(request.body, 'body');
+          threats.push(...bodyXSS);
+        }
+      }
+
+      // Advanced threat detection (LDAP, Template Injection, etc.) - with safety check
+      if (request.body) {
+        const advancedThreats = this.advancedDetector.detectAll(
+          request.body, 
+          request.path?.includes('graphql') ? 'graphql' : undefined
+        );
+        threats.push(...advancedThreats);
+      }
+    } catch (detectionError) {
+      // Log error but continue - don't let detection errors break the request
+      this.logger.error('Error during threat detection:', detectionError);
     }
 
-    // XSS detection
-    if (this.config.xssProtection) {
-      const queryXSS = this.xssDetector.detect(request.query, 'query');
-      const bodyXSS = this.xssDetector.detect(request.body, 'body');
-      threats.push(...queryXSS, ...bodyXSS);
-    }
-
-    // Advanced threat detection (LDAP, Template Injection, etc.)
-    const advancedThreats = this.advancedDetector.detectAll(request.body, request.path.includes('graphql') ? 'graphql' : undefined);
-    threats.push(...advancedThreats);
-
-    // CSRF detection
-    if (this.config.csrfProtection && request.headers) {
+    try {
+      // CSRF detection
+      if (this.config.csrfProtection && request.headers) {
       const origin = this.getHeader(request.headers, 'origin');
       const referer = this.getHeader(request.headers, 'referer');
       const csrfToken = this.getHeader(request.headers, 'x-csrf-token');
@@ -94,24 +115,42 @@ export class RASP {
       if (csrfThreat) threats.push(csrfThreat);
     }
 
-    // Anomaly detection
-    if (this.config.anomalyDetection && request.ip) {
-      const userAgent = this.getHeader(request.headers || {}, 'user-agent');
-      const bodySize = request.body ? JSON.stringify(request.body).length : 0;
-      
-      const anomalies = this.anomalyDetector.detect(
-        request.ip,
-        request.method,
-        request.path,
-        userAgent,
-        bodySize
-      );
-      
-      threats.push(...anomalies);
+    } catch (csrfError) {
+      this.logger.error('Error during CSRF detection:', csrfError);
     }
 
-    // Log threats
-    threats.forEach(threat => this.logger.threat(threat));
+    try {
+      // Anomaly detection
+      if (this.config.anomalyDetection && request.ip) {
+        const userAgent = this.getHeader(request.headers || {}, 'user-agent');
+        let bodySize = 0;
+        try {
+          bodySize = request.body ? JSON.stringify(request.body).length : 0;
+        } catch {
+          bodySize = 0; // Circular reference or other JSON error
+        }
+        
+        const anomalies = this.anomalyDetector.detect(
+          request.ip,
+          request.method,
+          request.path,
+          userAgent,
+          bodySize
+        );
+        
+        threats.push(...anomalies);
+      }
+    } catch (anomalyError) {
+      this.logger.error('Error during anomaly detection:', anomalyError);
+    }
+
+    // Log threats safely
+    try {
+      threats.forEach(threat => this.logger.threat(threat));
+    } catch (logError) {
+      // Even logging shouldn't break the flow
+      console.error('Failed to log threats:', logError);
+    }
 
     return threats;
   }

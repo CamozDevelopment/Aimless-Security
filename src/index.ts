@@ -185,36 +185,46 @@ export class Aimless {
 
     return {
       against: (checks: ('sql' | 'nosql' | 'xss' | 'command' | 'path' | 'xxe' | 'ssrf' | 'all')[]) => {
-        // Get injection threats (SQL, NoSQL, Command, Path, XXE, SSRF)
-        const injectionThreats = this.rasp.detectInjections(input);
-        
-        // Get XSS threats separately
-        const xssThreats = typeof input === 'string' ? this.rasp.getXSSDetector().detect(input) : [];
-        
-        const allThreats = [...injectionThreats, ...xssThreats];
-        
-        if (checks.includes('all')) {
-          threats.push(...allThreats);
-        } else {
-          const typeMap: Record<string, string> = {
-            'sql': 'sql_injection',
-            'nosql': 'nosql_injection',
-            'xss': 'xss',
-            'command': 'command_injection',
-            'path': 'path_traversal',
-            'xxe': 'xxe',
-            'ssrf': 'ssrf'
-          };
+        try {
+          // Get injection threats (SQL, NoSQL, Command, Path, XXE, SSRF)
+          const injectionThreats = this.rasp.detectInjections(input);
           
-          checks.forEach(check => {
-            const filtered = allThreats.filter((t: any) => t.type === typeMap[check]);
-            threats.push(...filtered);
-          });
+          // Get XSS threats separately - only for string inputs
+          const xssThreats = typeof input === 'string' ? this.rasp.getXSSDetector().detect(input) : [];
+          
+          const allThreats = [...injectionThreats, ...xssThreats];
+          
+          if (checks.includes('all')) {
+            threats.push(...allThreats);
+          } else {
+            const typeMap: Record<string, string> = {
+              'sql': 'sql_injection',
+              'nosql': 'nosql_injection',
+              'xss': 'xss',
+              'command': 'command_injection',
+              'path': 'path_traversal',
+              'xxe': 'xxe',
+              'ssrf': 'ssrf'
+            };
+            
+            checks.forEach(check => {
+              const filtered = allThreats.filter((t: any) => t.type === typeMap[check]);
+              threats.push(...filtered);
+            });
+          }
+        } catch (error) {
+          this.logger.error('Validation error:', error);
+          // On error, assume safe to not break the app
         }
 
         return {
           sanitize: () => {
-            sanitized = typeof input === 'string' ? this.rasp.sanitizeOutput(input) : input;
+            try {
+              sanitized = typeof input === 'string' ? this.rasp.sanitizeOutput(input) : input;
+            } catch (error) {
+              this.logger.error('Sanitization error:', error);
+              sanitized = input; // Return original if sanitization fails
+            }
             return {
               result: () => ({ safe: threats.length === 0, sanitized, threats })
             };

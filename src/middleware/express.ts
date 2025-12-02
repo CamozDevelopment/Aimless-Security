@@ -15,11 +15,13 @@ export function createMiddleware(config: AimlessConfig = {}) {
   const rasp = new RASP(config.rasp, logger);
 
   return (req: AimlessRequest, res: Response, next: NextFunction) => {
-    // Get client IP
-    const ip = (req.headers['x-forwarded-for'] as string)?.split(',')[0] || 
-               (req.headers['x-real-ip'] as string) ||
-               req.socket.remoteAddress ||
-               'unknown';
+    try {
+      // Get client IP with safety checks
+      const ip = (req.headers?.['x-forwarded-for'] as string)?.split(',')[0]?.trim() || 
+                 (req.headers?.['x-real-ip'] as string) ||
+                 req.socket?.remoteAddress ||
+                 req.ip ||
+                 'unknown';
 
     // Step 1: Check endpoint access control
     const accessCheck = rasp.checkEndpointAccess({
@@ -44,12 +46,13 @@ export function createMiddleware(config: AimlessConfig = {}) {
     }
 
     // Step 2: Analyze request for security threats
+    // Only analyze if query/body exist and are objects
     const threats = rasp.analyze({
       method: req.method,
-      path: req.path,
-      query: req.query,
-      body: req.body,
-      headers: req.headers as Record<string, string>,
+      path: req.path || req.url || '/',
+      query: req.query && typeof req.query === 'object' ? req.query : undefined,
+      body: req.body && typeof req.body === 'object' ? req.body : undefined,
+      headers: (req.headers || {}) as Record<string, string>,
       ip
     });
 
@@ -106,6 +109,24 @@ export function createMiddleware(config: AimlessConfig = {}) {
 
     // Continue to next middleware
     next();
+    } catch (error) {
+      // Log error but don't break the application
+      logger.error('Aimless middleware error:', error);
+      
+      // In production, fail open (allow request) rather than fail closed
+      // This prevents the security middleware from breaking the app
+      if (config.rasp?.blockMode === false || !config.rasp?.blockMode) {
+        // Allow request to continue
+        next();
+      } else {
+        // Only block if explicitly in block mode and configured to fail closed
+        res.status(500).json({
+          error: 'Internal Server Error',
+          message: 'Security check failed',
+          timestamp: new Date().toISOString()
+        });
+      }
+    }
   };
 }
 
@@ -114,13 +135,25 @@ export function csrfProtection(config: AimlessConfig = {}) {
   const rasp = new RASP(config.rasp, logger);
 
   return (req: Request, res: Response, next: NextFunction) => {
-    // Add CSRF token to response locals
-    const sessionId = (req as any).session?.id || (req as any).sessionID || 'default';
-    const csrfToken = rasp.generateCSRFToken(sessionId);
+    try {
+      // Add CSRF token to response locals
+      const sessionId = (req as any).session?.id || (req as any).sessionID || 'default';
+      const csrfToken = rasp.generateCSRFToken(sessionId);
 
-    res.locals.csrfToken = csrfToken;
-    res.setHeader('X-CSRF-Token', csrfToken);
+      // Safely set locals and header
+      if (res.locals) {
+        res.locals.csrfToken = csrfToken;
+      }
+      
+      if (!res.headersSent) {
+        res.setHeader('X-CSRF-Token', csrfToken);
+      }
 
-    next();
+      next();
+    } catch (error) {
+      logger.error('CSRF middleware error:', error);
+      // Fail open - continue without CSRF token rather than breaking the app
+      next();
+    }
   };
 }

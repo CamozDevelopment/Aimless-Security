@@ -152,6 +152,40 @@ export class Aimless {
   }
 
   /**
+   * Get security analytics (v1.3.4 feature)
+   */
+  getAnalytics(): any {
+    // Placeholder - returns basic stats for now
+    // In a full implementation, this would use SecurityAnalyticsEngine
+    return {
+      totalRequests: 0,
+      threatsDetected: 0,
+      threatsBlocked: 0,
+      topAttackTypes: [],
+      topAttackIPs: [],
+      requestsByHour: [],
+      averageResponseTime: 0,
+      uptime: Date.now() - (this as any).startTime || 0
+    };
+  }
+
+  /**
+   * Get analytics summary text (v1.3.4 feature)
+   */
+  getAnalyticsSummary(): string {
+    const analytics = this.getAnalytics();
+    return `
+📊 Security Analytics Summary
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Total Requests: ${analytics.totalRequests.toLocaleString()}
+Threats Detected: ${analytics.threatsDetected.toLocaleString()}
+Threats Blocked: ${analytics.threatsBlocked.toLocaleString()}
+Average Response Time: ${analytics.averageResponseTime.toFixed(2)}ms
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    `.trim();
+  }
+
+  /**
    * Clear security history (for testing or privacy)
    */
   clearHistory(ip?: string): void {

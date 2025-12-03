@@ -38,6 +38,8 @@ export interface RASPConfig {
     enabled: boolean;
     maxRequests: number;
     windowMs: number;
+    dynamicThrottling?: boolean; // Adjust limits based on IP reputation
+    suspiciousIPMultiplier?: number; // Rate limit multiplier for suspicious IPs (default: 0.5)
   };
   // UI Customization
   customBlockMessage?: string; // Custom message after "Request blocked by Aimless Security"
@@ -45,6 +47,23 @@ export interface RASPConfig {
     enabled: boolean; // Show "Checking security..." loading screen
     message?: string; // Custom loading message (default: "Checking security...")
     minDuration?: number; // Minimum duration in ms (default: 500)
+  };
+  // Advanced Features
+  webhooks?: {
+    enabled: boolean;
+    url: string; // Webhook URL for attack notifications
+    events?: ('block' | 'threat' | 'rateLimit' | 'all')[]; // Which events to send
+    includePayload?: boolean; // Include attack payload in webhook (default: false)
+    customHeaders?: Record<string, string>; // Custom headers for webhook
+  };
+  requestFingerprinting?: {
+    enabled: boolean; // Enable browser/bot fingerprinting
+    blockAutomatedTraffic?: boolean; // Auto-block obvious bots
+    trustBrowserFingerprints?: boolean; // Allow known good fingerprints
+  };
+  analytics?: {
+    enabled: boolean; // Enable detailed analytics
+    retention?: number; // Days to keep analytics data (default: 30)
   };
 }
 
@@ -96,4 +115,38 @@ export interface FuzzingResult {
   testedPayloads: number;
   duration: number;
   timestamp: Date;
+}
+
+export interface WebhookPayload {
+  event: 'block' | 'threat' | 'rateLimit';
+  timestamp: Date;
+  ip: string;
+  path: string;
+  method: string;
+  threats?: SecurityThreat[];
+  payload?: any;
+  userAgent?: string;
+  reputation?: number;
+}
+
+export interface RequestFingerprint {
+  userAgent: string;
+  acceptLanguage?: string;
+  acceptEncoding?: string;
+  connection?: string;
+  isBot: boolean;
+  botScore: number; // 0-100, higher = more likely bot
+  browserFingerprint?: string;
+}
+
+export interface SecurityAnalytics {
+  totalRequests: number;
+  threatsDetected: number;
+  threatsBlocked: number;
+  topAttackTypes: Array<{ type: string; count: number }>;
+  topAttackIPs: Array<{ ip: string; count: number; reputation: number }>;
+  requestsByHour: Array<{ hour: number; count: number; threats: number }>;
+  geographicData?: Array<{ country: string; requests: number; threats: number }>;
+  averageResponseTime: number;
+  uptime: number;
 }

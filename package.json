@@ -1,5 +1,5 @@
 {
-  "name": "aimless-sdk",
+  "name": "aimless-security",
   "version": "1.3.4",
   "description": "Enhanced Runtime Application Self-Protection (RASP) and API Fuzzing Engine with advanced threat detection, behavioral analysis, and intelligent response scoring for Node.js applications",
   "main": "dist/index.js",

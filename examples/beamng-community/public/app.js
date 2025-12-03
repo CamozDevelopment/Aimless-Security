@@ -292,6 +292,7 @@ async function testSQLInjection() {
 
 async function testXSS() {
     showAttackResult('Testing XSS Attack...');
+    console.log('🧪 Testing XSS Attack - Sending malicious payload');
     const res = await fetch('/api/mods/1/reviews', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -301,19 +302,32 @@ async function testXSS() {
         })
     });
     const data = await res.json();
-    showAttackResult(`XSS test sent!\nCheck console for Aimless Security logs.\nResponse: ${JSON.stringify(data, null, 2)}`);
+    console.log('📡 XSS Test Response:', data);
+    console.log('📊 Response Status:', res.status);
+    showAttackResult(`XSS test sent!\nStatus: ${res.status}\nResponse: ${JSON.stringify(data, null, 2)}`);
 }
 
 async function testRateLimit() {
     showAttackResult('Testing Rate Limit...\nSending 50 requests rapidly...');
+    console.log('🧪 Testing Rate Limit - Sending 50 rapid requests');
     
     const promises = [];
     for (let i = 0; i < 50; i++) {
-        promises.push(fetch('/api/mods'));
+        promises.push(fetch('/api/mods').then(r => ({ status: r.status, ok: r.ok })));
     }
     
-    await Promise.all(promises);
-    showAttackResult(`Rate limit test completed!\nSent 50 requests.\nCheck console for rate limiting logs.`);
+    const results = await Promise.all(promises);
+    const blocked = results.filter(r => r.status === 429).length;
+    const successful = results.filter(r => r.ok).length;
+    
+    console.log('📊 Rate Limit Test Results:', {
+        total: results.length,
+        successful: successful,
+        blocked: blocked,
+        statuses: results.map(r => r.status)
+    });
+    
+    showAttackResult(`Rate limit test completed!\nTotal: ${results.length}\nSuccessful: ${successful}\nBlocked (429): ${blocked}`);
 }
 
 function showAttackResult(message) {

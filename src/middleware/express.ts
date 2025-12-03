@@ -146,6 +146,26 @@ export function createMiddleware(config: AimlessConfig = {}) {
 
   return (req: AimlessRequest, res: Response, next: NextFunction) => {
     try {
+      // Skip security checks for common browser resources and service workers
+      const skipPaths = [
+        '/favicon.ico',
+        '/robots.txt',
+        '/sitemap.xml',
+        '/sw.js',
+        '/service-worker.js',
+        '/manifest.json',
+        '/browserconfig.xml'
+      ];
+      
+      if (skipPaths.includes(req.path)) {
+        return next();
+      }
+
+      // Skip for static assets
+      if (req.path.match(/\.(css|js|jpg|jpeg|png|gif|svg|ico|woff|woff2|ttf|eot|map)$/)) {
+        return next();
+      }
+
       // Get client IP with safety checks
       const ip = (req.headers?.['x-forwarded-for'] as string)?.split(',')[0]?.trim() || 
                  (req.headers?.['x-real-ip'] as string) ||
@@ -323,6 +343,8 @@ export function loadingScreen(config: AimlessConfig = {}) {
 
   const message = loadingConfig.message || 'Checking security...';
   const minDuration = loadingConfig.minDuration || 500;
+  const hostedUrl = loadingConfig.hostedUrl || 'https://aimless.qzz.io/security/loading.html';
+  const useHosted = loadingConfig.useHosted || false;
 
   return (req: Request, res: Response, next: NextFunction) => {
     const startTime = Date.now();

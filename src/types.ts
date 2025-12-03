@@ -47,6 +47,8 @@ export interface RASPConfig {
     enabled: boolean; // Show "Checking security..." loading screen
     message?: string; // Custom loading message (default: "Checking security...")
     minDuration?: number; // Minimum duration in ms (default: 500)
+    hostedUrl?: string; // URL to hosted loading page (e.g., https://aimless.qzz.io/security/loading.html)
+    useHosted?: boolean; // Use hosted loading page instead of inline
   };
   // Advanced Features
   webhooks?: {

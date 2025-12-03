@@ -1,269 +1,221 @@
-# Aimless Security - Installation & Usage Guide
+# 📦 Installation Guide
 
-## Installation
-
-```bash
-npm install aimless-security
-```
-
-Or if you're working locally with this SDK:
+## Install Package
 
 ```bash
-cd AimlessSDK
-npm install
-npm run build
+npm install CamozDevelopment/Aimless-Security
 ```
 
-## Running the Demo
-
-To see all features in action:
-
-```bash
-node test-demo.js
-```
-
-Expected output: All 9 tests should pass with detailed threat detection logs.
-
-## Basic Usage
-
-### 1. Express Integration
+That's it! Now add it to your app:
 
 ```javascript
-const express = require('express');
-const Aimless = require('aimless-security');
+const { Aimless } = require('aimless-sdk');
+
+const aimless = new Aimless({ rasp: { enabled: true } });
+app.use(aimless.middleware());
+```
+
+## Quick Test
+
+Want to see it work? Run this:
+
+```bash
+# Create a test file
+echo "const express = require('express');
+const { Aimless } = require('aimless-sdk');
 
 const app = express();
 app.use(express.json());
 
+const aimless = new Aimless({ rasp: { enabled: true } });
+app.use(aimless.middleware());
+
+app.get('/test', (req, res) => res.json({ ok: true }));
+app.listen(3000, () => console.log('Running on :3000'));
+" > test.js
+
+# Run it
+node test.js
+```
+
+Now try attacking it:
+
+```bash
+# Normal request - ✅ WORKS
+curl "http://localhost:3000/test?id=123"
+
+# SQL injection - ❌ BLOCKED
+curl "http://localhost:3000/test?id=admin'--"
+
+# XSS attack - ❌ BLOCKED
+curl "http://localhost:3000/test?name=<script>alert(1)</script>"
+```
+
+## Run Examples
+
+The SDK comes with working examples:
+
+```bash
+# Clone or download the repo
+git clone https://github.com/CamozDevelopment/Aimless-Security.git
+cd Aimless-Security
+
+# Install dependencies
+npm install
+
+# Run the v1.3.4 demo (shows all features)
+npm run build
+node examples/v1.3.4-features-demo.js
+```
+
+Open http://localhost:3000 to see the interactive demo!
+
+## Configuration Examples
+
+### Minimal (Just Protection)
+
+```javascript
+const aimless = new Aimless({ rasp: { enabled: true } });
+app.use(aimless.middleware());
+```
+
+### Recommended (Protection + UI)
+
+```javascript
 const aimless = new Aimless({
   rasp: {
     enabled: true,
-    blockMode: true
+    loadingScreen: {
+      enabled: true,
+      message: 'Checking security...'
+    }
   }
 });
 
+app.use(aimless.loading());
 app.use(aimless.middleware());
-
-app.listen(3000);
 ```
 
-### 2. Run Example Server
+### Full Features (Everything!)
 
-```bash
-node examples/basic-express.js
-```
-
-Then test with:
-```bash
-# Normal request - should work
-curl "http://localhost:3000/api/users?search=test"
-
-# SQL injection - should be blocked
-curl "http://localhost:3000/api/users?search=' OR '1'='1"
-
-# XSS attack - should be blocked
-curl "http://localhost:3000/api/users?search=<script>alert(1)</script>"
-```
-
-### 3. API Fuzzing
-
-```bash
-node examples/fuzzing.js
-```
-
-### 4. Advanced Configuration
-
-```bash
-node examples/advanced-config.js
-```
-
-## Testing Checklist
-
-### ✅ RASP Protection Tests
-
-- [ ] SQL Injection detection
-- [ ] NoSQL Injection detection
-- [ ] Command Injection detection
-- [ ] XSS detection (direct)
-- [ ] XSS detection (encoded)
-- [ ] CSRF token generation
-- [ ] CSRF validation
-- [ ] Path traversal detection
-- [ ] XXE detection
-- [ ] SSRF detection
-- [ ] Rate limiting
-- [ ] Anomaly detection
-- [ ] Clean request validation
-
-### ✅ Fuzzing Tests
-
-- [ ] Query parameter fuzzing
-- [ ] POST body fuzzing
-- [ ] Header fuzzing
-- [ ] Auth bypass testing
-- [ ] Rate limit testing
-- [ ] GraphQL introspection
-- [ ] Custom payload injection
-
-### ✅ Integration Tests
-
-- [ ] Express middleware integration
-- [ ] CSRF middleware integration
-- [ ] Custom threat handling
-- [ ] Error handling
-- [ ] Logging functionality
-
-## Configuration Options
-
-### Minimal Configuration
 ```javascript
-new Aimless({ rasp: { enabled: true } })
-```
-
-### Recommended Configuration
-```javascript
-new Aimless({
+const aimless = new Aimless({
   rasp: {
     enabled: true,
     blockMode: true,
-    injectionProtection: true,
-    xssProtection: true,
-    csrfProtection: true,
-    anomalyDetection: true,
-    trustedOrigins: ['https://yourdomain.com']
-  },
-  logging: {
-    enabled: true,
-    level: 'info'
-  }
-})
-```
-
-### Maximum Security Configuration
-```javascript
-new Aimless({
-  rasp: {
-    enabled: true,
-    blockMode: true,
-    injectionProtection: true,
-    xssProtection: true,
-    csrfProtection: true,
-    anomalyDetection: true,
-    trustedOrigins: ['https://yourdomain.com', 'https://app.yourdomain.com'],
-    maxRequestSize: 5 * 1024 * 1024, // 5MB
+    
+    // Custom messages
+    customBlockMessage: 'Contact security@example.com',
+    
+    // Loading screen
+    loadingScreen: {
+      enabled: true,
+      message: 'Verifying security...'
+    },
+    
+    // Webhook alerts
+    webhooks: {
+      enabled: true,
+      url: 'https://discord.com/api/webhooks/YOUR/WEBHOOK',
+      events: ['block', 'threat']
+    },
+    
+    // Block bots
+    requestFingerprinting: {
+      enabled: true,
+      blockAutomatedTraffic: true
+    },
+    
+    // Analytics
+    analytics: {
+      enabled: true,
+      retention: 30
+    },
+    
+    // Rate limiting
     rateLimiting: {
       enabled: true,
-      maxRequests: 50,
-      windowMs: 60000
+      maxRequests: 100,
+      windowMs: 60000,
+      dynamicThrottling: true
     }
-  },
-  fuzzing: {
-    enabled: true,
-    maxPayloads: 100,
-    authBypassTests: true,
-    rateLimitTests: true,
-    graphqlIntrospection: true
-  },
-  logging: {
-    enabled: true,
-    level: 'debug'
   }
-})
-```
-
-## Common Use Cases
-
-### 1. Protect REST API
-```javascript
-app.use(aimless.middleware());
-app.get('/api/users', (req, res) => { /* handler */ });
-```
-
-### 2. Protect with CSRF
-```javascript
-app.use(aimless.csrf());
-app.use(aimless.middleware());
-app.post('/api/submit', (req, res) => { /* handler */ });
-```
-
-### 3. Custom Threat Handling
-```javascript
-app.use(aimless.middleware());
-app.use((req, res, next) => {
-  if (req.aimless?.threats.length > 0) {
-    // Your custom logic
-    logToSIEM(req.aimless.threats);
-  }
-  next();
 });
+
+app.use(aimless.loading());
+app.use(aimless.middleware());
 ```
 
-### 4. Sanitize User Input
+## Verify Installation
+
+Test that everything works:
+
 ```javascript
-app.post('/api/comment', (req, res) => {
-  const safe = aimless.sanitize(req.body.comment);
-  // Store safe comment
-});
+const { Aimless } = require('aimless-sdk');
+const aimless = new Aimless();
+
+// Test SQL detection
+console.log('SQL safe?', aimless.isSafe("admin' OR '1'='1"));  // false
+
+// Test XSS detection
+console.log('XSS safe?', aimless.isSafe('<script>alert(1)</script>'));  // false
+
+// Test normal input
+console.log('Normal safe?', aimless.isSafe('Hello World'));  // true
 ```
 
-### 5. Test Your API
-```javascript
-const result = await aimless.fuzz({
-  url: 'http://localhost:3000/api/login',
-  method: 'POST',
-  body: { username: 'test', password: 'test' }
-});
+## Common Issues
+
+### "Cannot find module 'aimless-sdk'"
+
+**Fix:** Make sure you installed from GitHub:
+```bash
+npm install CamozDevelopment/Aimless-Security
 ```
 
-## Troubleshooting
+### CSRF tokens not working
 
-### Issue: Too many false positives
-**Solution**: Adjust sensitivity or disable specific protections
+**Fix:** Make sure CSRF middleware comes first:
 ```javascript
-new Aimless({
+app.use(aimless.csrf());       // ← First
+app.use(aimless.middleware()); // ← Second
+```
+
+### Too many false positives
+
+**Fix:** Start in monitor mode:
+```javascript
+const aimless = new Aimless({
   rasp: {
-    blockMode: false, // Monitor only
-    // or disable specific protections
-    commandInjection: false
+    enabled: true,
+    blockMode: false  // Just log, don't block
   }
-})
+});
 ```
 
-### Issue: Performance impact
-**Solution**: Reduce rate limit checks or disable anomaly detection
-```javascript
-new Aimless({
-  rasp: {
-    anomalyDetection: false,
-    rateLimiting: { enabled: false }
-  }
-})
-```
+### Loading screen not showing
 
-### Issue: CSRF tokens not working
-**Solution**: Ensure CSRF middleware comes before RASP middleware
+**Fix:** Add `loading()` middleware BEFORE `middleware()`:
 ```javascript
-app.use(aimless.csrf());  // First
-app.use(aimless.middleware());  // Second
+app.use(aimless.loading());    // ← First (loading screen)
+app.use(aimless.middleware()); // ← Second (security)
 ```
 
 ## Next Steps
 
-1. ✅ Install and run the demo
-2. ✅ Try the basic example
-3. ✅ Test with malicious inputs
-4. ✅ Run fuzzing tests
-5. ✅ Integrate into your project
-6. ✅ Configure for production
-7. ✅ Monitor and tune
+1. ✅ **Install** - `npm install CamozDevelopment/Aimless-Security`
+2. ✅ **Add to app** - 3 lines of code (see above)
+3. ✅ **Test it** - Try attacking your own app
+4. 📖 **Learn more** - Read [QUICKSTART.md](./QUICKSTART.md)
+5. 🎨 **Customize** - Add webhooks, loading screens, analytics
 
-## Support
+## Need Help?
 
-- 📖 Read [README.md](./README.md) for full documentation
-- 💡 Check [examples/](./examples/) for more examples
-- 🐛 Found a bug? Please report it
-- 💬 Questions? Open a discussion
+- 📖 [Quick Start Guide](./QUICKSTART.md) - Get started in 5 minutes
+- 📚 [Full Documentation](./README.md) - All features explained
+- 💡 [Examples](./examples/) - Working code samples
+- 🐛 [Report Issues](https://github.com/CamozDevelopment/Aimless-Security/issues)
 
-## License
+---
 
-MIT - See [LICENSE](./LICENSE) file
+**Ready to protect your app?** → [Quick Start Guide](./QUICKSTART.md)

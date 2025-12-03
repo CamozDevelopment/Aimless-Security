@@ -1,125 +1,280 @@
-# Quick Start Guide - Aimless Security
+# 🚀 Quick Start - Get Protected in 3 Lines
 
-## Installation
+## Install
 
 ```bash
-npm install aimless-security
+npm install CamozDevelopment/Aimless-Security
 ```
 
-## 5-Minute Setup
-
-### Step 1: Install and Import
+## Add to Your App
 
 ```javascript
 const express = require('express');
-const Aimless = require('aimless-security');
+const { Aimless } = require('aimless-sdk');
 
 const app = express();
 app.use(express.json());
-```
 
-### Step 2: Initialize Aimless
+// 🛡️ Add Aimless (3 lines)
+const aimless = new Aimless({ rasp: { enabled: true } });
+app.use(aimless.loading());      // Loading screen
+app.use(aimless.middleware());   // Security protection
 
-```javascript
-const aimless = new Aimless({
-  rasp: {
-    enabled: true,
-    blockMode: true
-  }
-});
-```
-
-### Step 3: Apply Middleware
-
-```javascript
-app.use(aimless.middleware());
-```
-
-### Step 4: Create Your Routes
-
-```javascript
+// Your routes work normally
 app.get('/api/users', (req, res) => {
   res.json({ users: [] });
 });
 
-app.listen(3000, () => {
-  console.log('Server running with Aimless Security');
-});
+app.listen(3000);
 ```
 
-## That's It!
+## ✅ You're Protected!
 
-Your API is now protected against:
-- ✅ SQL Injection
-- ✅ NoSQL Injection  
-- ✅ XSS Attacks
-- ✅ CSRF Attacks
-- ✅ Command Injection
-- ✅ Path Traversal
-- ✅ Rate Limit Abuse
-- ✅ Anomalous Behavior
+Your app now blocks:
+- SQL Injection (`admin' OR '1'='1`)
+- XSS Attacks (`<script>alert('xss')</script>`)
+- Command Injection (`; rm -rf /`)
+- Path Traversal (`../../../etc/passwd`)
+- Bots & Scrapers (curl, wget, etc.)
+- Rate Limit Abuse
+- And 20+ other attack types
 
-## Test It
+## 🧪 Test It
 
-Try these malicious requests to see Aimless in action:
+Try attacking your own app to see Aimless work:
 
 ```bash
-# SQL Injection attempt - BLOCKED
-curl "http://localhost:3000/api/users?id=' OR '1'='1"
+# SQL Injection - BLOCKED ❌
+curl "http://localhost:3000/api/users?id=admin'--"
 
-# XSS attempt - BLOCKED
-curl "http://localhost:3000/api/users?search=<script>alert(1)</script>"
+# XSS Attack - BLOCKED ❌
+curl "http://localhost:3000/api/users?name=<script>alert(1)</script>"
 
-# Path Traversal attempt - BLOCKED
-curl "http://localhost:3000/api/file?path=../../../etc/passwd"
+# Normal request - ALLOWED ✅
+curl "http://localhost:3000/api/users?id=123"
 ```
 
-## Next Steps
+## 🎨 Add Features (Optional)
 
-- [Read the full documentation](./README.md)
-- [Explore examples](./examples/)
-- [Configure CSRF protection](./README.md#csrf-protection)
-- [Run API fuzzing tests](./examples/fuzzing.js)
+### Custom Loading Screen
 
-## TypeScript
-
-```typescript
-import Aimless from 'aimless-security';
-
-const aimless = new Aimless({
-  rasp: { enabled: true, blockMode: true }
-});
-
-app.use(aimless.middleware());
-```
-
-## Advanced Configuration
+Show users a security check screen:
 
 ```javascript
 const aimless = new Aimless({
   rasp: {
+    loadingScreen: {
+      enabled: true,
+      message: 'Checking security...'
+    }
+  }
+});
+
+app.use(aimless.loading());
+app.use(aimless.middleware());
+```
+
+### Get Instant Alerts (Discord/Slack)
+
+Get notified when attacks happen:
+
+```javascript
+const aimless = new Aimless({
+  rasp: {
+    webhooks: {
+      enabled: true,
+      url: 'https://discord.com/api/webhooks/YOUR/WEBHOOK',
+      events: ['block', 'threat']
+    }
+  }
+});
+```
+
+### Block All Bots
+
+Auto-detect and block automated traffic:
+
+```javascript
+const aimless = new Aimless({
+  rasp: {
+    requestFingerprinting: {
+      enabled: true,
+      blockAutomatedTraffic: true
+    }
+  }
+});
+```
+
+### Track Security Metrics
+
+See what's being attacked:
+
+```javascript
+app.get('/analytics', (req, res) => {
+  res.json(aimless.getAnalytics());
+});
+```
+
+## 📖 Full Example
+
+```javascript
+const express = require('express');
+const { Aimless } = require('aimless-sdk');
+
+const app = express();
+app.use(express.json());
+
+const aimless = new Aimless({
+  rasp: {
     enabled: true,
     blockMode: true,
-    injectionProtection: true,
-    xssProtection: true,
-    csrfProtection: true,
-    anomalyDetection: true,
-    trustedOrigins: ['https://yourdomain.com'],
+    
+    // Custom UI
+    customBlockMessage: 'Contact: security@example.com',
+    loadingScreen: {
+      enabled: true,
+      message: 'Verifying security...'
+    },
+    
+    // Webhooks
+    webhooks: {
+      enabled: true,
+      url: 'YOUR_WEBHOOK_URL',
+      events: ['block']
+    },
+    
+    // Bot detection
+    requestFingerprinting: {
+      enabled: true,
+      blockAutomatedTraffic: true
+    },
+    
+    // Rate limiting
     rateLimiting: {
       enabled: true,
       maxRequests: 100,
       windowMs: 60000
     }
-  },
-  logging: {
-    enabled: true,
-    level: 'info'
   }
+});
+
+app.use(aimless.loading());
+app.use(aimless.middleware());
+
+// Your routes
+app.get('/api/users', (req, res) => {
+  res.json({ users: [] });
+});
+
+app.post('/api/login', (req, res) => {
+  // Input is already sanitized by Aimless
+  const { username, password } = req.body;
+  res.json({ status: 'ok' });
+});
+
+// Check analytics
+app.get('/analytics', (req, res) => {
+  res.json(aimless.getAnalytics());
+});
+
+app.listen(3000, () => {
+  console.log('✅ Server running with Aimless Security');
 });
 ```
 
-## Support
+## 🎯 Validate User Input
 
-- 📖 [Full Documentation](./README.md)
-- 🐛 [Report Issues](https://github.com/your-repo/issues)
-- 💬 [Discussions](https://github.com/your-repo/discussions)
+```javascript
+app.post('/api/comment', (req, res) => {
+  // Check if input is safe
+  const result = aimless.validate(req.body.comment)
+    .against(['sql', 'xss'])
+    .sanitize()
+    .result();
+    
+  if (!result.safe) {
+    return res.status(403).json({ error: 'Invalid input' });
+  }
+  
+  // Use the sanitized version
+  saveComment(result.sanitized);
+  res.json({ success: true });
+});
+```
+
+## 🔒 CSRF Protection
+
+```javascript
+app.use(aimless.csrf());  // Add CSRF protection
+
+app.get('/form', (req, res) => {
+  res.send(`
+    <form method="POST">
+      <input type="hidden" value="${res.locals.csrfToken}">
+      <button>Submit</button>
+    </form>
+  `);
+});
+```
+
+## ☁️ Works Everywhere
+
+### Vercel / Next.js
+
+```javascript
+// pages/api/users.js
+import { Aimless } from 'aimless-sdk';
+
+const aimless = new Aimless({ rasp: { enabled: true } });
+
+export default async function handler(req, res) {
+  const threats = aimless.analyze({
+    method: req.method,
+    path: req.url,
+    query: req.query,
+    body: req.body,
+    headers: req.headers,
+    ip: req.headers['x-forwarded-for']
+  });
+
+  if (threats.length > 0) {
+    return res.status(403).json({ error: 'Blocked' });
+  }
+
+  res.json({ users: [] });
+}
+```
+
+### AWS Lambda
+
+```javascript
+const { Aimless } = require('aimless-sdk');
+const aimless = new Aimless({ rasp: { enabled: true } });
+
+exports.handler = async (event) => {
+  const threats = aimless.analyze({
+    method: event.httpMethod,
+    path: event.path,
+    query: event.queryStringParameters,
+    body: JSON.parse(event.body || '{}'),
+    headers: event.headers,
+    ip: event.requestContext.identity.sourceIp
+  });
+
+  if (threats.length > 0) {
+    return { statusCode: 403, body: 'Blocked' };
+  }
+
+  return { statusCode: 200, body: JSON.stringify({ users: [] }) };
+};
+```
+
+## 🆘 Need Help?
+
+- 📖 [Full Documentation](./README.md) - All features & config
+- 💡 [Examples](./examples/) - Working code examples
+- 🐛 [Report Issues](https://github.com/CamozDevelopment/Aimless-Security/issues)
+
+---
+
+**That's it! You're now protected against 20+ attack types** 🎉

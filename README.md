@@ -1,109 +1,42 @@
-# Aimless Security
+# 🛡️ Aimless Security
 
 <div align="center">
 
 ![Aimless Security](https://img.shields.io/badge/Aimless-Security-0ea5e9?style=for-the-badge&logo=shield&logoColor=white)
 
-[![npm version](https://img.shields.io/npm/v/aimless-security.svg?style=flat-square)](https://www.npmjs.com/package/aimless-security)
-[![npm downloads](https://img.shields.io/npm/dm/aimless-security.svg?style=flat-square)](https://www.npmjs.com/package/aimless-security)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](https://opensource.org/licenses/MIT)
-[![Node Version](https://img.shields.io/node/v/aimless-security.svg?style=flat-square)](https://nodejs.org)
-[![Vercel Compatible](https://img.shields.io/badge/Vercel-Compatible-black?style=flat-square&logo=vercel)](https://vercel.com)
-[![GitHub issues](https://img.shields.io/github/issues/CamozDevelopment/Aimless-Security.svg?style=flat-square)](https://github.com/CamozDevelopment/Aimless-Security/issues)
+[![Node Version](https://img.shields.io/badge/node-%3E%3D16.0.0-brightgreen?style=flat-square)](https://nodejs.org)
 [![GitHub stars](https://img.shields.io/github/stars/CamozDevelopment/Aimless-Security.svg?style=flat-square)](https://github.com/CamozDevelopment/Aimless-Security/stargazers)
 
-**Advanced Runtime Application Self-Protection (RASP) with AI-like behavioral analysis and intelligent API fuzzing for Node.js**
+**🚀 Protect your Node.js app in 3 lines of code**
 
-**✅ Fully compatible with Vercel, Netlify, AWS Lambda, and all serverless platforms**
+Stop SQL injection, XSS, bots, and 10+ attack types automatically
 
-[Features](#features) • [Installation](#installation) • [Quick Start](#quick-start) • [Vercel Guide](./VERCEL.md) • [Examples](#examples)
+[Quick Start](#-quick-start-3-lines) • [Features](#-features) • [Examples](#-examples) • [Documentation](./docs.html)
 
 </div>
 
 ---
 
-A comprehensive **Runtime Application Self-Protection (RASP)** and **API Fuzzing Engine** for Node.js applications. Aimless Security provides inline protection against injections, XSS/CSRF attacks, and anomalous behavior, along with intelligent API fuzzing capabilities.
+## 💡 Why Aimless Security?
 
-## ✨ What's New in v1.3.0
+- ✅ **3-Line Setup** - Seriously. Copy, paste, protected.
+- 🎨 **Beautiful UI** - Custom loading screens with your branding
+- 🔔 **Instant Alerts** - Get notified in Slack/Discord when attacks happen
+- 🤖 **Auto Bot Blocking** - Stops scrapers, scanners, and automated attacks
+- 📊 **Built-in Analytics** - See what's being attacked in real-time
+- 🌐 **Works Everywhere** - Express, Next.js, Vercel, AWS Lambda, anywhere
+- 🆓 **Completely Free** - MIT licensed, use it anywhere
 
-- 🎯 **ENDPOINT ACCESS CONTROL**: Define which APIs are allowed to execute
-  - **Allowlist Mode**: Only specified endpoints are accessible
-  - **Blocklist Mode**: Block specific dangerous endpoints
-  - **Protected Endpoints**: Extra security for sensitive routes
-  - **Regex & Wildcard Support**: Flexible endpoint matching
-  - **Per-Endpoint Rules**: Custom security levels, auth requirements, rate limits
-- 🔒 **Smart Defaults**: Detection-only mode, opt-in to blocking
-- 🌐 **Full Vercel/Serverless Support** - Works on all serverless platforms
-- 🧠 **IP Reputation System** - Automatic behavioral analysis and auto-blocking
-- 🔄 **Multi-Layer XSS Detection** - Catches deeply encoded and mutation XSS attacks
-- ⚡ **Fluent Validation API** - Elegant, chainable input validation
-- 📊 **Vulnerability Scoring** - Fuzzing results now include 0-100 risk scores
+## 🚀 Quick Start (3 Lines)
 
-**[See examples/access-control.js for access control examples](./examples/access-control.js)**  
-**[See VERCEL.md for Vercel deployment guide](./VERCEL.md)**
-
-## Features
-
-### 🛡️ Enhanced Runtime Application Self-Protection (RASP)
-
-- **Advanced Injection Protection**: 
-  - SQL (20+ patterns including time-based blind, error-based, union-based)
-  - NoSQL (MongoDB, CouchDB, Redis, Cassandra)
-  - Command (PowerShell, Bash, file redirection, environment variables)
-  - XXE (Parameter entities, external DTD, XSLT)
-  - SSRF (Cloud metadata, DNS rebinding, localhost variations)
-  - Path Traversal (Unicode, double encoding, UNC paths)
-
-- **Multi-Layer XSS Protection**: 
-  - Direct and deeply-encoded attack detection
-  - Mutation XSS (mXSS) detection
-  - Context-aware sanitization (HTML, JavaScript, CSS, URL, Attribute)
-  - DOM-based XSS patterns
-  - Template injection detection
-
-- **Advanced CSRF Protection**: 
-  - Timing-safe token comparison
-  - One-time token support
-  - Double-submit cookie validation
-  - Automatic token cleanup
-  - Customizable expiration
-
-- **Intelligent Anomaly Detection**: 
-  - IP reputation scoring (0-100)
-  - Behavioral fingerprinting
-  - Request velocity analysis
-  - Auto-blocking malicious IPs
-  - Distributed attack detection
-  - Rate limiting with burst detection
-
-### 🔍 Enhanced API Fuzzing Engine
-
-- **Smart Response Analysis**: Detects errors, SQL exceptions, stack traces
-- **Vulnerability Scoring**: 0-100 risk scores for each finding
-- **Dynamic Severity**: Automatically adjusts severity based on response patterns
-- **Comprehensive Attack Vectors**: SQL, NoSQL, XSS, Command Injection, Path Traversal
-- **GraphQL Support**: Schema introspection and mutation testing
-- **Auth Bypass Testing**: Common authentication vulnerability detection
-
-## Installation
-
-Install directly from GitHub:
+### Installation
 
 ```bash
 npm install CamozDevelopment/Aimless-Security
 ```
 
-Or install a specific version:
-
-```bash
-npm install CamozDevelopment/Aimless-Security#v1.3.1
-```
-
-**Note:** Package is distributed via GitHub. No NPM account required for installation.
-
-## Quick Start
-
-### Option 1: One-Line Protection (Recommended)
+### Setup
 
 ```javascript
 const express = require('express');
@@ -112,36 +45,181 @@ const { Aimless } = require('aimless-sdk');
 const app = express();
 app.use(express.json());
 
-// One-line protection with sensible defaults
-const { middleware, csrf, aimless } = Aimless.quickProtect([
-  'http://localhost:3000',
-  'https://yourdomain.com'
-]);
+const aimless = new Aimless({ rasp: { enabled: true } });
+app.use(aimless.middleware());  // ← That's it! You're protected 🎉
 
-app.use(middleware);
-app.use(csrf);
-
-// You're protected! 🎉
+app.listen(3000);
 ```
 
-### Option 2: Fluent Validation API
+**Done!** Your app is now protected against:
+- ✅ SQL Injection
+- ✅ XSS Attacks
+- ✅ Command Injection
+- ✅ Path Traversal
+- ✅ NoSQL Injection
+- ✅ CSRF Attacks
+- ✅ XXE & SSRF
+- ✅ Rate Limit Abuse
+- ✅ Bot/Scanner Traffic
+- ✅ Unicode SQL Injection
+- ✅ Polyglot Attacks
+
+## ✨ What's New in v1.3.4
+
+## ✨ What's New in v1.3.4
+
+### 🎨 Custom UI Features
+```javascript
+const aimless = new Aimless({
+  rasp: {
+    // Beautiful loading screen while checking security
+    loadingScreen: {
+      enabled: true,
+      message: 'Verifying your request...'
+    },
+    // Custom message when blocking attacks
+    customBlockMessage: 'Contact support@yourcompany.com'
+  }
+});
+
+app.use(aimless.loading());  // Add before middleware
+app.use(aimless.middleware());
+```
+
+### 🔔 Webhook Notifications
+Get instant alerts in Slack or Discord when attacks happen:
 
 ```javascript
-const { Aimless } = require('aimless-security');
-const aimless = new Aimless();
+webhooks: {
+  enabled: true,
+  url: 'https://hooks.slack.com/services/YOUR/WEBHOOK/URL',
+  events: ['block', 'threat']  // What to notify about
+}
+```
 
+### 🤖 Bot Detection
+Automatically detect and block bots, scrapers, and automated attacks:
+
+```javascript
+requestFingerprinting: {
+  enabled: true,
+  blockAutomatedTraffic: true  // Auto-block bots
+}
+```
+
+### 📊 Security Analytics
+Track what's being attacked in real-time:
+
+```javascript
+app.get('/analytics', (req, res) => {
+  res.json(aimless.getAnalytics());  // Get detailed metrics
+});
+```
+
+### ⚡ Smart Rate Limiting
+Rate limits that adapt based on IP reputation:
+
+```javascript
+rateLimiting: {
+  enabled: true,
+  maxRequests: 100,
+  windowMs: 60000,
+  dynamicThrottling: true  // Lower limits for suspicious IPs
+}
+```
+
+## 🎯 Features
+
+### Security Protection
+- **SQL Injection** - 30+ patterns including Unicode SQL
+- **XSS Protection** - Multi-layer detection with sanitization
+- **Polyglot Attacks** - Detects combined SQL+XSS attacks
+- **Command Injection** - PowerShell, Bash, file operations
+- **Path Traversal** - Directory traversal prevention
+- **NoSQL Injection** - MongoDB, Redis, CouchDB
+- **CSRF Protection** - Automatic token generation
+- **XXE & SSRF** - XML and server-side request forgery
+- **Rate Limiting** - Prevent abuse and DoS attacks
+
+### Advanced Features
+- **Custom Loading Screens** - Beautiful security check UI
+- **Webhook Notifications** - Slack/Discord alerts
+- **Bot Detection** - Block automated traffic
+- **Security Analytics** - Real-time attack metrics
+- **IP Reputation** - Automatic threat scoring
+- **Access Control** - Define allowed/blocked endpoints
+- **API Fuzzing** - Find vulnerabilities before attackers do
+
+## 📖 Examples
+
+### Basic Protection
+
+```javascript
+const aimless = new Aimless({ rasp: { enabled: true } });
+app.use(aimless.middleware());
+```
+
+### Full Features Setup
+
+```javascript
+const aimless = new Aimless({
+  rasp: {
+    enabled: true,
+    blockMode: true,
+    
+    // Custom UI
+    customBlockMessage: 'For support: security@example.com',
+    loadingScreen: {
+      enabled: true,
+      message: 'Checking security...',
+      minDuration: 500
+    },
+    
+    // Webhooks
+    webhooks: {
+      enabled: true,
+      url: 'https://discord.com/api/webhooks/YOUR/WEBHOOK',
+      events: ['block', 'threat']
+    },
+    
+    // Bot detection
+    requestFingerprinting: {
+      enabled: true,
+      blockAutomatedTraffic: true
+    },
+    
+    // Analytics
+    analytics: {
+      enabled: true,
+      retention: 30
+    },
+    
+    // Smart rate limiting
+    rateLimiting: {
+      enabled: true,
+      maxRequests: 100,
+      windowMs: 60000,
+      dynamicThrottling: true
+    }
+  }
+});
+
+// Add middleware (order matters!)
+app.use(aimless.loading());      // 1. Loading screen
+app.use(aimless.middleware());   // 2. Security protection
+```
+
+### Validate User Input
+
+```javascript
 app.post('/api/user', (req, res) => {
-  // Elegant validation chain
   const result = aimless.validate(req.body.username)
-    .against(['sql', 'xss', 'command'])
+    .against(['sql', 'xss'])
     .sanitize()
     .result();
     
   if (!result.safe) {
-    return res.status(403).json({ 
-      error: 'Security threat detected',
-      threats: result.threats 
-    });
+    return res.status(403).json({ error: 'Invalid input' });
   }
   
   // Use result.sanitized safely
@@ -149,506 +227,192 @@ app.post('/api/user', (req, res) => {
 });
 ```
 
-### Option 3: Traditional Setup
-
-```javascript
-const express = require('express');
-const { Aimless } = require('aimless-security');
-
-const app = express();
-app.use(express.json());
-
-// Initialize Aimless Security
-const aimless = new Aimless({
-  rasp: {
-    enabled: true,
-    blockMode: true,
-    injectionProtection: true,
-    xssProtection: true,
-    csrfProtection: true,
-    anomalyDetection: true
-  },
-  logging: {
-    enabled: true,
-    level: 'info'
-  }
-});
-
-// Apply RASP middleware
-app.use(aimless.middleware());
-
-// Your routes
-app.get('/api/users', (req, res) => {
-  res.json({ users: [] });
-});
-
-app.listen(3000);
-```
-
-### TypeScript Usage
-
-```typescript
-import express from 'express';
-import Aimless, { AimlessConfig } from 'aimless-security';
-
-const config: AimlessConfig = {
-  rasp: {
-    enabled: true,
-    blockMode: true,
-    trustedOrigins: ['https://yourdomain.com'],
-    rateLimiting: {
-      enabled: true,
-      maxRequests: 100,
-      windowMs: 60000
-    }
-  }
-};
-
-const aimless = new Aimless(config);
-const app = express();
-
-app.use(express.json());
-app.use(aimless.middleware());
-```
-
-## Endpoint Access Control
-
-**Define exactly which APIs can be executed in your application:**
-
-### Allowlist Mode - Only Allow Specific Endpoints
-
-```javascript
-const aimless = new Aimless({
-  rasp: {
-    blockMode: true,
-    accessControl: {
-      mode: 'allowlist',
-      defaultAction: 'block',
-      allowedEndpoints: [
-        // Public endpoints
-        { path: '/', methods: ['GET'] },
-        { path: '/health', methods: ['GET'] },
-        { path: '/api/public/*', methods: ['GET'] },
-        
-        // Auth endpoints
-        { path: '/auth/login', methods: ['POST'] },
-        
-        // Protected endpoints
-        { 
-          path: '/api/user/profile', 
-          methods: ['GET', 'PUT'],
-          requireAuth: true // Must have auth header
-        }
-      ]
-    }
-  }
-});
-```
-
-### Blocklist Mode - Block Dangerous Endpoints
-
-```javascript
-accessControl: {
-  mode: 'blocklist',
-  blockedEndpoints: [
-    '/admin/*',
-    '/internal/*',
-    /\/debug.*/, // Regex patterns supported
-    '/.env'
-  ]
-}
-```
-
-### Protected Endpoints - Extra Security
-
-```javascript
-accessControl: {
-  mode: 'monitor',
-  protectedEndpoints: [
-    {
-      path: '/api/payments/*',
-      maxThreatLevel: 'low', // Block even low threats
-      requireAuth: true,
-      rateLimit: { maxRequests: 10, windowMs: 60000 }
-    },
-    {
-      path: '/api/admin/*',
-      maxThreatLevel: 'low',
-      requireAuth: true
-    }
-  ]
-}
-```
-
-### Regex & Wildcard Patterns
-
-```javascript
-allowedEndpoints: [
-  { path: '/api/*' },                    // Wildcard
-  { path: /^\/api\/v\d+\/.*/ },         // Versioned APIs
-  { path: /^\/users\/[0-9a-f-]{36}$/ }, // UUID patterns
-]
-```
-
-**[See examples/access-control.js for complete examples](./examples/access-control.js)**
-
-## Configuration
-
-### RASP Configuration
-
-```javascript
-const aimless = new Aimless({
-  rasp: {
-    enabled: true,                  // Enable/disable RASP
-    injectionProtection: true,      // SQL/NoSQL/Command injection detection
-    xssProtection: true,            // XSS attack detection
-    csrfProtection: true,           // CSRF protection
-    anomalyDetection: true,         // Anomalous behavior detection
-    blockMode: true,                // Block threats (false = monitor only)
-    
-    // Access Control (NEW!)
-    accessControl: {
-      mode: 'allowlist',           // 'allowlist' | 'blocklist' | 'monitor'
-      defaultAction: 'block',      // 'allow' | 'block'
-      requireAuthHeader: 'X-API-Key', // Global auth header
-      allowedEndpoints: [],        // See examples above
-      protectedEndpoints: [],      // Extra security rules
-      blockedEndpoints: []         // Explicitly blocked
-    },
-    
-    trustedOrigins: [               // Trusted origins for CSRF
-      'https://yourdomain.com'
-    ],
-    maxRequestSize: 10485760,      // Max request size in bytes (10MB)
-    rateLimiting: {
-      enabled: true,
-      maxRequests: 100,            // Max requests per window
-      windowMs: 60000              // Time window in ms (1 minute)
-    }
-  }
-});
-```
-
-### Fuzzing Configuration
-
-```javascript
-const aimless = new Aimless({
-  fuzzing: {
-    enabled: true,
-    maxPayloads: 100,              // Max payloads per parameter
-    timeout: 5000,                 // Timeout per test in ms
-    authBypassTests: true,         // Test auth bypass vulnerabilities
-    rateLimitTests: true,          // Test rate limiting
-    graphqlIntrospection: true,    // Test GraphQL introspection
-    customPayloads: []             // Custom payloads to include
-  }
-});
-```
-
-### Logging Configuration
-
-```javascript
-const aimless = new Aimless({
-  logging: {
-    enabled: true,
-    level: 'info',                 // 'debug' | 'info' | 'warn' | 'error'
-    logFile: './aimless.log'       // Optional log file path
-  }
-});
-```
-
-## API Reference
-
-### Class: `Aimless`
-
-#### `middleware()`
-
-Returns Express middleware for RASP protection.
-
-```javascript
-app.use(aimless.middleware());
-```
-
-#### `csrf()`
-
-Returns CSRF protection middleware. Adds CSRF token to response headers.
-
-```javascript
-app.use(aimless.csrf());
-```
-
-#### `analyze(request)`
-
-Manually analyze a request for threats.
-
-```javascript
-const threats = aimless.analyze({
-  method: 'POST',
-  path: '/api/login',
-  query: req.query,
-  body: req.body,
-  headers: req.headers,
-  ip: req.ip
-});
-```
-
-#### `generateCSRFToken(sessionId)`
-
-Generate a CSRF token for a session.
-
-```javascript
-const token = aimless.generateCSRFToken('session-123');
-```
-
-#### `sanitize(output)`
-
-Sanitize output to prevent XSS.
-
-```javascript
-const safe = aimless.sanitize(userInput);
-```
-
-#### `fuzz(target)`
-
-Fuzz test an API endpoint.
-
-```javascript
-const result = await aimless.fuzz({
-  url: 'https://api.example.com/users',
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json'
-  },
-  body: {
-    username: 'test',
-    password: 'test123'
-  }
-});
-
-console.log(`Found ${result.vulnerabilities.length} potential vulnerabilities`);
-```
-
-## Advanced Usage
-
 ### CSRF Protection
 
 ```javascript
-const express = require('express');
-const Aimless = require('aimless-security');
+app.use(aimless.csrf());  // Adds CSRF tokens
 
-const app = express();
-const aimless = new Aimless({
-  rasp: {
-    csrfProtection: true,
-    trustedOrigins: ['https://yourdomain.com']
-  }
-});
-
-// Add CSRF middleware
-app.use(aimless.csrf());
-
-// CSRF token is available in res.locals.csrfToken
 app.get('/form', (req, res) => {
   res.send(`
-    <form method="POST" action="/submit">
-      <input type="hidden" name="_csrf" value="${res.locals.csrfToken}">
-      <button type="submit">Submit</button>
+    <form method="POST">
+      <input type="hidden" value="${res.locals.csrfToken}">
+      <button>Submit</button>
     </form>
   `);
 });
+```
 
-// RASP middleware validates CSRF token
-app.use(aimless.middleware());
-app.post('/submit', (req, res) => {
-  res.send('Success!');
+### Check Security Analytics
+
+```javascript
+app.get('/admin/security', (req, res) => {
+  const analytics = aimless.getAnalytics();
+  res.json({
+    totalRequests: analytics.totalRequests,
+    threats: analytics.threatsDetected,
+    blocked: analytics.threatsBlocked,
+    topAttackTypes: analytics.topAttackTypes,
+    topAttackIPs: analytics.topAttackIPs
+  });
 });
 ```
 
-### Custom Threat Handling
+## 🎨 Customization
+
+### Custom Loading Screen
+
+The loading screen shows while Aimless checks requests. Perfect for user-facing apps:
 
 ```javascript
-app.use((req, res, next) => {
-  if (req.aimless && req.aimless.threats.length > 0) {
-    // Log threats to your monitoring system
-    console.log('Threats detected:', req.aimless.threats);
-    
-    // Custom response based on threat type
-    const hasCritical = req.aimless.threats.some(t => t.severity === 'critical');
-    if (hasCritical) {
-      return res.status(403).json({ error: 'Access denied' });
-    }
-  }
-  next();
-});
-```
-
-### API Fuzzing Example
-
-```javascript
-const Aimless = require('aimless-security');
-
-const aimless = new Aimless({
-  fuzzing: {
-    maxPayloads: 50,
-    authBypassTests: true,
-    graphqlIntrospection: true
-  }
-});
-
-async function testAPI() {
-  const result = await aimless.fuzz({
-    url: 'http://localhost:3000/api/users',
-    method: 'GET',
-    query: {
-      id: '1',
-      search: 'test'
-    }
-  });
-
-  console.log(`Tested ${result.testedPayloads} payloads`);
-  console.log(`Found ${result.vulnerabilities.length} vulnerabilities`);
-  
-  result.vulnerabilities.forEach(vuln => {
-    console.log(`[${vuln.severity}] ${vuln.type}: ${vuln.description}`);
-  });
+loadingScreen: {
+  enabled: true,
+  message: 'Verifying your request security...',
+  minDuration: 1000  // Show for at least 1 second
 }
-
-testAPI();
 ```
 
-### GraphQL Protection
+Features:
+- Dark theme design with your logo
+- Smooth animations
+- Customizable message
+- Only shows on HTML responses
+
+### Webhook Alerts
+
+Get notified instantly when attacks happen:
+
+**Discord:**
+```javascript
+webhooks: {
+  enabled: true,
+  url: 'https://discord.com/api/webhooks/YOUR/WEBHOOK/URL',
+  events: ['block', 'threat', 'rateLimit']
+}
+```
+
+**Slack:**
+```javascript
+webhooks: {
+  enabled: true,
+  url: 'https://hooks.slack.com/services/YOUR/WEBHOOK/URL',
+  events: ['all']
+}
+```
+
+### Bot Detection
+
+Automatically identify and block:
+- curl, wget, python-requests
+- Headless browsers (Puppeteer, Selenium)
+- Security scanners (SQLMap, Burp, ZAP)
+- Missing browser headers
+- Suspicious patterns
 
 ```javascript
-const aimless = new Aimless({
-  fuzzing: {
-    graphqlIntrospection: true
+requestFingerprinting: {
+  enabled: true,
+  blockAutomatedTraffic: true
+}
+```
+
+## 📊 API Reference
+
+### Core Methods
+
+- `aimless.middleware()` - Main security middleware
+- `aimless.loading()` - Loading screen middleware
+- `aimless.csrf()` - CSRF protection
+- `aimless.validate(input)` - Validate user input
+- `aimless.sanitize(text)` - Sanitize output
+- `aimless.getAnalytics()` - Get security metrics
+- `aimless.getIPReputation(ip)` - Get IP score (0-100)
+
+### Configuration Options
+
+```javascript
+{
+  rasp: {
+    enabled: boolean,              // Enable protection
+    blockMode: boolean,            // Block threats (false = monitor)
+    customBlockMessage: string,    // Custom block message
+    loadingScreen: { ... },        // Loading screen config
+    webhooks: { ... },             // Webhook config
+    requestFingerprinting: { ... },// Bot detection
+    analytics: { ... },            // Analytics config
+    rateLimiting: { ... }          // Rate limit config
+  },
+  logging: {
+    enabled: boolean,
+    level: 'info' | 'warn' | 'error'
   }
-});
+}
+```
 
-// Test GraphQL endpoint
-const result = await aimless.fuzz({
-  url: 'http://localhost:4000/graphql',
-  method: 'POST',
-  body: {
-    query: '{ users { id name } }'
+## 🚀 Deployment
+
+### Vercel / Next.js
+
+```javascript
+// pages/api/[...all].js
+import { Aimless } from 'aimless-sdk';
+
+const aimless = new Aimless({ rasp: { enabled: true } });
+
+export default async function handler(req, res) {
+  // Analyze request
+  const threats = aimless.analyze({
+    method: req.method,
+    path: req.url,
+    query: req.query,
+    body: req.body,
+    headers: req.headers,
+    ip: req.headers['x-forwarded-for'] || req.socket.remoteAddress
+  });
+
+  // Block if threats found
+  if (threats.length > 0) {
+    return res.status(403).json({ error: 'Request blocked' });
   }
-});
+
+  // Your API logic
+  res.json({ status: 'ok' });
+}
 ```
 
-## Security Threat Types
+### AWS Lambda
 
-Aimless detects the following threat types:
+Works out of the box with serverless frameworks!
 
-- `sql_injection` - SQL injection attempts
-- `nosql_injection` - NoSQL injection attempts
-- `command_injection` - OS command injection
-- `xss` - Cross-site scripting
-- `csrf` - Cross-site request forgery
-- `path_traversal` - Directory traversal
-- `xxe` - XML External Entity
-- `ssrf` - Server-side request forgery
-- `anomalous_behavior` - Unusual request patterns
-- `rate_limit_exceeded` - Rate limit violations
-- `auth_bypass_attempt` - Authentication bypass attempts
+### Express
 
-## Performance Considerations
+See examples above - just `app.use(aimless.middleware())`
 
-Aimless is designed to have minimal performance impact:
+## 📚 More Documentation
 
-- Efficient pattern matching using optimized regex
-- In-memory threat detection with no external dependencies
-- Configurable protection levels
-- Optional monitor-only mode for testing
+- [Complete Documentation](./docs.html) - Full API reference
+- [Examples](./examples/) - Working code examples
+- [Changelog](./CHANGELOG.md) - Version history
 
-## Testing & Validation
+## 🤝 Contributing
 
-### Running Tests
+Contributions welcome! Please see our contributing guidelines.
 
-```bash
-# Run all tests
-npm test
+## 📄 License
 
-# Run full validation suite
-npm run validate
+MIT - Use it anywhere, for free!
 
-# Build and test
-npm run test:build
+## 💬 Support
 
-# Verify package imports
-npm run verify
-```
-
-### Test Coverage
-
-Aimless includes 20 comprehensive serverless compatibility tests:
-
-✅ Module loading and initialization  
-✅ Configuration handling  
-✅ SQL injection detection  
-✅ XSS attack detection  
-✅ Input sanitization  
-✅ IP reputation scoring  
-✅ Null/undefined handling  
-✅ Large input processing  
-✅ Multiple instance isolation  
-✅ Node.js crypto integration  
-
-All tests must pass before publishing to NPM.
-
-### Manual Testing
-
-Test SQL injection detection:
-```bash
-node -e "const { Aimless } = require('aimless-security'); const a = new Aimless(); console.log('Safe:', a.isSafe(\"' OR 1=1--\"));"
-# Output: Safe: false
-```
-
-Test XSS detection:
-```bash
-node -e "const { Aimless } = require('aimless-security'); const a = new Aimless(); console.log('Safe:', a.isSafe(\"<script>alert('xss')</script>\"));"
-# Output: Safe: false
-```
-
-Test safe input:
-```bash
-node -e "const { Aimless } = require('aimless-security'); const a = new Aimless(); console.log('Safe:', a.isSafe('Hello World'));"
-# Output: Safe: true
-```
-
-## Best Practices
-
-1. **Start in Monitor Mode**: Test with `blockMode: false` initially
-2. **Configure Trusted Origins**: Set `trustedOrigins` for CSRF protection
-3. **Tune Rate Limits**: Adjust based on your application's traffic patterns
-4. **Review Logs**: Monitor detected threats regularly
-5. **Use HTTPS**: Always use HTTPS in production
-6. **Keep Updated**: Regularly update to get latest threat signatures
-7. **Wrap in Try-Catch**: Always wrap validation in try-catch for fail-open behavior
-8. **Test Before Deploy**: Run `npm run validate` before every deployment
-
-## Examples
-
-See the `/examples` directory for more detailed examples:
-
-- `basic-express.js` - Basic Express integration
-- `advanced-config.js` - Advanced configuration
-- `fuzzing.js` - API fuzzing examples
-- `graphql.js` - GraphQL protection
-- `vercel-nextjs.ts` - Complete Next.js/Vercel example
-- `safe-wrapper.js` - Production-safe error handling wrapper
-
-## Contributing
-
-Contributions are welcome! Please read our contributing guidelines.
-
-## License
-
-MIT
-
-## Support
-
-For issues, questions, or contributions, please visit our GitHub repository.
+- 🐛 [Report Issues](https://github.com/CamozDevelopment/Aimless-Security/issues)
+- ⭐ [Star on GitHub](https://github.com/CamozDevelopment/Aimless-Security)
+- 📧 Contact: [CamozDevelopment](https://github.com/CamozDevelopment)
 
 ---
 
-**Note**: Aimless Security is designed to complement, not replace, other security measures. Always follow security best practices and keep your dependencies up to date.
+<div align="center">
+
+**Made with ❤️ for the Node.js community**
+
+[⬆ Back to top](#-aimless-security)
+
+</div>

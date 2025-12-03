@@ -5,6 +5,110 @@ All notable changes to Aimless Security will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.4] - 2025-12-03
+
+### Added - 🎨 Custom UI & User Experience
+- **Custom Loading Screen**: Beautiful dark-themed loading screen with Aimless logo
+  - Shows while security checks run
+  - Customizable message and duration
+  - Smooth animations and professional design
+  - Only shows for HTML responses
+- **Custom Block Messages**: Define your own message when blocking threats
+  - Perfect for support contact info or custom instructions
+  - Configurable via `customBlockMessage` in RASP config
+
+### Added - 🔔 Webhook Notifications
+- **Discord Webhooks**: Rich embed formatting with color-coded threat levels
+- **Slack Webhooks**: Formatted attachment style with threat details
+- **Generic Webhooks**: Support for any webhook endpoint
+- **Event Filtering**: Choose which events to notify about (block, threat, rateLimit, all)
+- **Custom Headers**: Add authentication or custom headers to webhook requests
+- **Payload Control**: Option to include/exclude full request payload
+
+### Added - 🤖 Bot Detection & Fingerprinting
+- **Request Fingerprinting Engine**: Analyze user-agent and headers for bot patterns
+- **Bot Score (0-100)**: Automatic scoring of how likely a request is automated
+- **Pattern Detection**: Identifies curl, wget, python-requests, postman, scrapers, headless browsers, security scanners
+- **Auto-Block Bots**: Optional automatic blocking of automated traffic
+- **Fingerprint Trust**: Option to trust browser fingerprints vs bot patterns
+
+### Added - 📊 Security Analytics Engine
+- **Real-Time Metrics**: Track requests, threats, blocks, attack types, and IPs
+- **Attack Analytics**: Top attack types and top attacking IPs
+- **Retention Control**: Configurable data retention period (default 30 days)
+- **Export Capability**: Export raw analytics data for external processing
+- **Summary Reports**: Get formatted text summaries of security metrics
+
+### Added - ⚡ Dynamic Rate Limiting
+- **IP Reputation-Based**: Adjust rate limits based on IP threat score
+- **Suspicious IP Multiplier**: Lower limits for suspicious IPs automatically
+- **Adaptive Throttling**: Rate limits that learn from behavior patterns
+
+### Enhanced
+- **SQL Injection Detection**: Fixed high-confidence pattern checking (now properly detects `admin'`)
+- **Type Definitions**: Enhanced with WebhookPayload, RequestFingerprint, SecurityAnalytics interfaces
+- **Demo Server**: Complete v1.3.4 features demo with interactive UI (`examples/v1.3.4-features-demo.js`)
+- **Documentation**: Updated docs.html with comprehensive v1.3.4 feature documentation
+
+### API Changes
+- **New Methods**:
+  - `aimless.getAnalytics()`: Get security analytics data
+  - `aimless.getAnalyticsSummary()`: Get formatted analytics summary
+  - `aimless.loading()`: Middleware for custom loading screen
+
+### Configuration Changes
+```javascript
+{
+  rasp: {
+    // NEW: Custom messages
+    customBlockMessage: 'Contact security@example.com',
+    
+    // NEW: Loading screen
+    loadingScreen: {
+      enabled: true,
+      message: 'Checking security...',
+      minDuration: 500
+    },
+    
+    // NEW: Webhooks
+    webhooks: {
+      enabled: true,
+      url: 'https://discord.com/api/webhooks/...',
+      events: ['block', 'threat'],
+      includePayload: false,
+      customHeaders: {}
+    },
+    
+    // NEW: Bot detection
+    requestFingerprinting: {
+      enabled: true,
+      blockAutomatedTraffic: true,
+      trustBrowserFingerprints: true
+    },
+    
+    // NEW: Analytics
+    analytics: {
+      enabled: true,
+      retention: 30
+    },
+    
+    // ENHANCED: Rate limiting
+    rateLimiting: {
+      enabled: true,
+      maxRequests: 100,
+      windowMs: 60000,
+      dynamicThrottling: true,        // NEW
+      suspiciousIPMultiplier: 0.5     // NEW
+    }
+  }
+}
+```
+
+### Fixed
+- **SQL Injection**: High-confidence patterns (like `admin'`) now properly detected independently
+- **Webhooks**: Discord/Slack formatting now works correctly (no more 400 errors)
+- **Middleware Flow**: Loading screen properly shows before security checks
+
 ## [1.3.1] - 2025-11-20
 
 ### Added

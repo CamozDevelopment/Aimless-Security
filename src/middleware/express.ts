@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { AimlessConfig, SecurityThreat } from '../types';
+import { AimlessConfig, SecurityThreat, WebhookPayload } from '../types';
 import { RASP } from '../rasp';
 import { Logger } from '../logger';
 
@@ -8,6 +8,136 @@ export interface AimlessRequest extends Request {
     threats: SecurityThreat[];
     blocked: boolean;
   };
+}
+
+// Helper function to send webhooks
+async function sendWebhook(config: AimlessConfig, payload: WebhookPayload, logger: Logger): Promise<void> {
+  const webhookConfig = config.rasp?.webhooks;
+  
+  if (!webhookConfig?.enabled || !webhookConfig.url) {
+    return;
+  }
+
+  // Check if this event should be sent
+  const events = webhookConfig.events || ['all'];
+  if (!events.includes('all') && !events.includes(payload.event)) {
+    return;
+  }
+
+  try {
+    // Detect webhook type and format accordingly
+    const isDiscord = webhookConfig.url.includes('discord.com');
+    const isSlack = webhookConfig.url.includes('slack.com');
+
+    let body: string;
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+      'User-Agent': 'Aimless-Security/1.3.4',
+      ...(webhookConfig.customHeaders || {})
+    };
+
+    if (isDiscord) {
+      // Discord webhook format
+      const color = payload.event === 'block' ? 0xdc2626 : 
+                    payload.event === 'rateLimit' ? 0xf59e0b : 0xef4444;
+      
+      const title = payload.event === 'block' 
+        ? '🛡️ Security Threat Blocked'
+        : payload.event === 'rateLimit'
+        ? '⚠️ Rate Limit Exceeded'
+        : '🚨 Security Threat Detected';
+
+      body = JSON.stringify({
+        embeds: [{
+          title,
+          color,
+          fields: [
+            { name: 'IP Address', value: payload.ip || 'unknown', inline: true },
+            { name: 'Path', value: payload.path || '/', inline: true },
+            { name: 'Method', value: payload.method || 'GET', inline: true },
+            { name: 'Timestamp', value: payload.timestamp.toISOString(), inline: true },
+            ...(payload.threats && payload.threats.length > 0 ? [{
+              name: 'Threats',
+              value: payload.threats.map(t => 
+                `• ${t.type} (${t.severity}${t.confidence ? ` - ${t.confidence}% confidence` : ''})`
+              ).join('\n'),
+              inline: false
+            }] : [])
+          ],
+          footer: {
+            text: 'Aimless Security v1.3.4'
+          },
+          timestamp: payload.timestamp.toISOString()
+        }]
+      });
+    } else if (isSlack) {
+      // Slack webhook format
+      const color = payload.event === 'block' ? '#dc2626' : 
+                    payload.event === 'rateLimit' ? '#f59e0b' : '#ef4444';
+      
+      const emoji = payload.event === 'block' ? '🛡️' : 
+                    payload.event === 'rateLimit' ? '⚠️' : '🚨';
+
+      const text = payload.event === 'block' 
+        ? `*Security Threat Blocked*`
+        : payload.event === 'rateLimit'
+        ? `*Rate Limit Exceeded*`
+        : `*Security Threat Detected*`;
+
+      body = JSON.stringify({
+        attachments: [{
+          color,
+          title: `${emoji} ${text}`,
+          fields: [
+            { title: 'IP Address', value: payload.ip || 'unknown', short: true },
+            { title: 'Path', value: payload.path || '/', short: true },
+            { title: 'Method', value: payload.method || 'GET', short: true },
+            { title: 'Timestamp', value: payload.timestamp.toISOString(), short: true },
+            ...(payload.threats && payload.threats.length > 0 ? [{
+              title: 'Threats',
+              value: payload.threats.map(t => 
+                `• ${t.type} (${t.severity})`
+              ).join('\n'),
+              short: false
+            }] : [])
+          ],
+          footer: 'Aimless Security',
+          ts: Math.floor(payload.timestamp.getTime() / 1000)
+        }]
+      });
+    } else {
+      // Generic webhook
+      body = JSON.stringify({
+        ...payload,
+        payload: webhookConfig.includePayload ? payload.payload : undefined,
+        source: 'Aimless Security',
+        version: '1.3.4'
+      });
+    }
+
+    // Log webhook being sent
+    logger.info(`🔔 Sending webhook: ${payload.event} to ${webhookConfig.url.substring(0, 50)}...`);
+
+    // Send webhook (fire and forget - don't block request)
+    fetch(webhookConfig.url, {
+      method: 'POST',
+      headers,
+      body
+    }).then(response => {
+      if (response.ok) {
+        logger.info(`✅ Webhook delivered successfully (${payload.event})`);
+      } else {
+        response.text().then(text => {
+          logger.warn(`⚠️ Webhook failed: ${response.status} ${response.statusText} - ${text}`);
+        });
+      }
+    }).catch(error => {
+      logger.error('Webhook delivery failed:', error);
+    });
+
+  } catch (error) {
+    logger.error('Webhook error:', error);
+  }
 }
 
 export function createMiddleware(config: AimlessConfig = {}) {
@@ -89,6 +219,22 @@ export function createMiddleware(config: AimlessConfig = {}) {
       threats,
       blocked: shouldBlock
     };
+
+    // Send webhook for threats (even if not blocking)
+    if (threats.length > 0) {
+      const webhookPayload: WebhookPayload = {
+        event: shouldBlock ? 'block' : 'threat',
+        timestamp: new Date(),
+        ip,
+        path: req.path,
+        method: req.method,
+        threats,
+        userAgent: req.headers['user-agent'] as string,
+        reputation: undefined // TODO: Get from anomaly detector
+      };
+      
+      sendWebhook(config, webhookPayload, logger);
+    }
 
     // Block request if necessary
     if (shouldBlock) {
@@ -273,7 +419,7 @@ export function loadingScreen(config: AimlessConfig = {}) {
   <div id="aimless-loading">
     <div class="aimless-container">
       <div class="aimless-logo">
-        <img src="https://www.aimless.qzz.io/aimless-security-logo.png" alt="Aimless Security" />
+        <img src="https://aimless.qzz.io/aimless-security-trans-logo.png" alt="Aimless Security" />
       </div>
       <div class="aimless-message">${message}</div>
       <div class="aimless-spinner"></div>

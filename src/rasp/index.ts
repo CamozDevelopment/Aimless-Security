@@ -7,7 +7,7 @@ import { AdvancedThreatDetector } from './advanced-detector';
 import { Logger } from '../logger';
 
 export class RASP {
-  private config: Required<RASPConfig>;
+  private config: RASPConfig;
   private injectionDetector: InjectionDetector;
   private xssDetector: XSSDetector;
   private csrfDetector: CSRFDetector;
@@ -29,11 +29,17 @@ export class RASP {
         ...config.accessControl
       },
       trustedOrigins: [],
-      maxRequestSize: 10 * 1024 * 1024, // 10MB
+      maxRequestSize: 10 * 1024 * 1024, // 10MB default
       rateLimiting: {
-        enabled: false, // Disabled by default
+        enabled: false,
         maxRequests: 100,
         windowMs: 60000
+      },
+      customBlockMessage: undefined,
+      loadingScreen: {
+        enabled: false,
+        message: 'Checking security...',
+        minDuration: 500
       },
       ...config
     };

@@ -2,7 +2,7 @@ import { AimlessConfig } from './types';
 import { RASP } from './rasp';
 import { FuzzingEngine, FuzzTarget } from './fuzzing';
 import { Logger } from './logger';
-import { createMiddleware, csrfProtection } from './middleware/express';
+import { createMiddleware, csrfProtection, loadingScreen } from './middleware/express';
 
 export class Aimless {
   private rasp: RASP;
@@ -29,6 +29,13 @@ export class Aimless {
    */
   csrf() {
     return csrfProtection(this.config);
+  }
+
+  /**
+   * Get loading screen middleware (place BEFORE main middleware)
+   */
+  loading() {
+    return loadingScreen(this.config);
   }
 
   /**

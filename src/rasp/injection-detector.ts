@@ -290,11 +290,13 @@ export class InjectionDetector {
       const sqlMatches = this.sqlPatterns.filter(pattern => pattern.test(value));
       const unicodeMatches = this.unicodeSQLPatterns.filter(pattern => pattern.test(value));
       const totalSQLMatches = sqlMatches.length + unicodeMatches.length;
+      const isHighConfidence = this.hasHighConfidenceSQLPattern(value);
       
-      if (totalSQLMatches > 0) {
+      // Check if we should block - high confidence patterns OR multiple matches OR unicode
+      if (totalSQLMatches > 0 || isHighConfidence) {
         // Unicode SQL patterns are ALWAYS high confidence - even 1 match is suspicious
-        // Regular SQL patterns need 2+ matches
-        const shouldBlock = unicodeMatches.length > 0 || totalSQLMatches >= 2 || this.hasHighConfidenceSQLPattern(value);
+        // Regular SQL patterns need 2+ matches UNLESS they're high confidence
+        const shouldBlock = unicodeMatches.length > 0 || totalSQLMatches >= 2 || isHighConfidence;
         
         if (shouldBlock) {
           const attackType = unicodeMatches.length > 0 ? 'unicode-sql' : 'sql';
@@ -549,7 +551,13 @@ export class InjectionDetector {
       /;\s*DROP\s+/i,
       /;\s*DELETE\s+FROM\s+/i,
       /\bEXEC\s*\(/i,
-      /\bEXECUTE\s*\(/i
+      /\bEXECUTE\s*\(/i,
+      // Single quote at end of word is highly suspicious (e.g., "admin'")
+      /\w+'\s*$/,
+      // Single quote followed by SQL keywords
+      /'\s*(OR|AND|UNION|SELECT|WHERE|FROM|DROP|INSERT|UPDATE|DELETE)\b/i,
+      // Single quote followed by comment markers
+      /'\s*(--|#|\/\*)/
     ];
     
     return highConfidencePatterns.some(pattern => pattern.test(value));

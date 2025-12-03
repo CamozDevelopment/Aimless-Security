@@ -99,9 +99,14 @@ export function createMiddleware(config: AimlessConfig = {}) {
         threats: threats.length
       });
 
+      const baseMessage = 'Request blocked by Aimless Security';
+      const fullMessage = config.rasp?.customBlockMessage 
+        ? `${baseMessage}. ${config.rasp.customBlockMessage}`
+        : baseMessage;
+
       return res.status(403).json({
         error: 'Forbidden',
-        message: 'Request blocked by Aimless Security',
+        message: fullMessage,
         details: config.rasp?.blockMode ? 'Security threat detected' : undefined,
         timestamp: new Date().toISOString()
       });
@@ -155,5 +160,130 @@ export function csrfProtection(config: AimlessConfig = {}) {
       // Fail open - continue without CSRF token rather than breaking the app
       next();
     }
+  };
+}
+
+/**
+ * Loading screen middleware - shows "Checking security..." screen
+ * Place this BEFORE the main Aimless middleware
+ */
+export function loadingScreen(config: AimlessConfig = {}) {
+  const loadingConfig = config.rasp?.loadingScreen;
+  
+  // If loading screen is disabled, return no-op middleware
+  if (!loadingConfig?.enabled) {
+    return (req: Request, res: Response, next: NextFunction) => next();
+  }
+
+  const message = loadingConfig.message || 'Checking security...';
+  const minDuration = loadingConfig.minDuration || 500;
+
+  return (req: Request, res: Response, next: NextFunction) => {
+    const startTime = Date.now();
+    
+    // Intercept HTML responses to inject loading screen
+    const originalSend = res.send.bind(res);
+    let sent = false;
+
+    res.send = function(body: any) {
+      if (sent) return originalSend(body);
+      sent = true;
+
+      // Only inject loading screen for HTML responses
+      const contentType = res.getHeader('content-type');
+      if (contentType && contentType.toString().includes('text/html')) {
+        const elapsed = Date.now() - startTime;
+        const delay = Math.max(0, minDuration - elapsed);
+
+        // Inject loading screen HTML
+        const loadingHTML = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Security Check</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+    .loading-container {
+      text-align: center;
+      color: white;
+    }
+    .shield {
+      font-size: 64px;
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+    .message {
+      font-size: 24px;
+      margin-top: 20px;
+      font-weight: 500;
+    }
+    .spinner {
+      margin: 30px auto;
+      width: 50px;
+      height: 50px;
+      border: 4px solid rgba(255, 255, 255, 0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    .powered-by {
+      margin-top: 30px;
+      font-size: 14px;
+      opacity: 0.8;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.1); opacity: 0.8; }
+    }
+    .fade-out {
+      animation: fadeOut 0.5s ease-out forwards;
+    }
+    @keyframes fadeOut {
+      to { opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="loading-container" id="loadingScreen">
+    <div class="shield">🛡️</div>
+    <div class="message">${message}</div>
+    <div class="spinner"></div>
+    <div class="powered-by">Protected by Aimless Security</div>
+  </div>
+  <div id="content" style="display: none;">${body}</div>
+  <script>
+    setTimeout(function() {
+      document.getElementById('loadingScreen').classList.add('fade-out');
+      setTimeout(function() {
+        document.getElementById('loadingScreen').style.display = 'none';
+        document.getElementById('content').style.display = 'block';
+        document.body.style.background = '';
+        document.body.style.overflow = '';
+      }, 500);
+    }, ${delay});
+  </script>
+</body>
+</html>`;
+        return originalSend(loadingHTML);
+      }
+
+      return originalSend(body);
+    } as any;
+
+    next();
   };
 }

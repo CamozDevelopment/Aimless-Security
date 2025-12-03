@@ -39,6 +39,13 @@ export interface RASPConfig {
     maxRequests: number;
     windowMs: number;
   };
+  // UI Customization
+  customBlockMessage?: string; // Custom message after "Request blocked by Aimless Security"
+  loadingScreen?: {
+    enabled: boolean; // Show "Checking security..." loading screen
+    message?: string; // Custom loading message (default: "Checking security...")
+    minDuration?: number; // Minimum duration in ms (default: 500)
+  };
 }
 
 export interface FuzzingConfig {

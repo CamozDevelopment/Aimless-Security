@@ -6,9 +6,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     
     <!-- Primary Meta Tags -->
-    <title>Aimless Security SDK - Enterprise RASP & API Protection for Node.js | v1.3.2</title>
+    <title>Aimless Security SDK - Enterprise RASP & API Protection for Node.js | v1.3.4</title>
     <meta name="title" content="Aimless Security SDK - Enterprise RASP & API Protection for Node.js">
-    <meta name="description" content="Advanced Runtime Application Self-Protection (RASP) with Unicode SQL injection detection, Polyglot attack prevention, XSS protection, CSRF tokens, and intelligent threat scoring. 300+ detection patterns, zero-config setup, serverless-ready.">
+    <meta name="description" content="Advanced Runtime Application Self-Protection (RASP) with Unicode SQL injection detection, Polyglot attack prevention, Custom UI features, Webhook notifications, Bot detection, and Security Analytics. 300+ detection patterns, zero-config setup, serverless-ready.">
     <meta name="keywords" content="RASP, Runtime Application Self-Protection, Node.js security, API security, SQL injection protection, XSS prevention, CSRF protection, Unicode SQL injection, Polyglot injection, security middleware, web application security, cybersecurity, threat detection, Express.js security, serverless security, API fuzzing, OWASP protection, injection detection, security SDK, npm security package">
     <meta name="author" content="CamozDevelopment">
     <meta name="robots" content="index, follow">
@@ -62,8 +62,8 @@
         "ratingCount": "1"
       },
       "description": "Enterprise-grade Runtime Application Self-Protection (RASP) for Node.js applications. Features include Unicode SQL injection detection, Polyglot attack prevention, XSS protection, CSRF tokens, and 300+ threat detection patterns.",
-      "softwareVersion": "1.3.2",
-      "releaseNotes": "https://github.com/CamozDevelopment/Aimless-Security/releases/tag/v1.3.2",
+      "softwareVersion": "1.3.4",
+      "releaseNotes": "https://github.com/CamozDevelopment/Aimless-Security/releases/tag/v1.3.4",
       "datePublished": "2024-01-15",
       "dateModified": "2025-12-03",
       "author": {
@@ -234,7 +234,8 @@
                 <div class="hidden md:flex space-x-6">
                     <a href="#features" class="hover:text-primary transition">Features</a>
                     <a href="#installation" class="hover:text-primary transition">Installation</a>
-                    <a href="#unicode-polyglot" class="hover:text-purple-400 transition">🆕 v1.3.2</a>
+                    <a href="#v1-3-4-features" class="hover:text-blue-400 transition">🆕 v1.3.4</a>
+                    <a href="#unicode-polyglot" class="hover:text-purple-400 transition">v1.3.2</a>
                     <a href="#usage" class="hover:text-primary transition">Usage</a>
                     <a href="#api" class="hover:text-primary transition">API</a>
                     <a href="#examples" class="hover:text-primary transition">Examples</a>
@@ -252,7 +253,7 @@
         <div class="container mx-auto px-6 relative z-10">
             <div class="text-center max-w-4xl mx-auto">
                 <div class="inline-block bg-primary/20 border border-primary/30 rounded-full px-4 py-2 mb-6">
-                    <span class="text-primary font-semibold">🚀 New in v1.3.2: Unicode SQL & Polyglot Injection Detection</span>
+                    <span class="text-primary font-semibold">🚀 New in v1.3.4: Custom UI, Webhooks, Bot Detection & Analytics</span>
                 </div>
                 <h1 class="text-5xl md:text-7xl font-bold mb-6">
                     <span class="gradient-text">Runtime Application</span><br>
@@ -487,6 +488,78 @@
                         <li><i class="fas fa-check text-green-400 mr-2"></i>Critical severity</li>
                     </ul>
                 </div>
+
+                <!-- Custom Loading Screen - NEW v1.3.4 -->
+                <div class="feature-card bg-slate-800 p-6 rounded-xl border border-blue-500/50 relative">
+                    <div class="absolute top-2 right-2 bg-blue-500 text-white text-xs px-2 py-1 rounded-full">NEW v1.3.4</div>
+                    <div class="flex items-center mb-4">
+                        <div class="bg-blue-500/20 p-3 rounded-lg mr-4">
+                            <i class="fas fa-spinner text-2xl text-blue-400"></i>
+                        </div>
+                        <h3 class="text-xl font-bold">Custom Loading Screen</h3>
+                    </div>
+                    <p class="text-slate-400 mb-4">Beautiful security check loading screens</p>
+                    <ul class="space-y-2 text-sm text-slate-300">
+                        <li><i class="fas fa-check text-green-400 mr-2"></i>Dark theme design</li>
+                        <li><i class="fas fa-check text-green-400 mr-2"></i>Custom branding</li>
+                        <li><i class="fas fa-check text-green-400 mr-2"></i>Configurable duration</li>
+                        <li><i class="fas fa-check text-green-400 mr-2"></i>Smooth animations</li>
+                    </ul>
+                </div>
+
+                <!-- Webhook Notifications - NEW v1.3.4 -->
+                <div class="feature-card bg-slate-800 p-6 rounded-xl border border-green-500/50 relative">
+                    <div class="absolute top-2 right-2 bg-green-500 text-white text-xs px-2 py-1 rounded-full">NEW v1.3.4</div>
+                    <div class="flex items-center mb-4">
+                        <div class="bg-green-500/20 p-3 rounded-lg mr-4">
+                            <i class="fas fa-bell text-2xl text-green-400"></i>
+                        </div>
+                        <h3 class="text-xl font-bold">Webhook Notifications</h3>
+                    </div>
+                    <p class="text-slate-400 mb-4">Real-time attack alerts to Slack/Discord</p>
+                    <ul class="space-y-2 text-sm text-slate-300">
+                        <li><i class="fas fa-check text-green-400 mr-2"></i>Slack integration</li>
+                        <li><i class="fas fa-check text-green-400 mr-2"></i>Discord integration</li>
+                        <li><i class="fas fa-check text-green-400 mr-2"></i>Custom webhooks</li>
+                        <li><i class="fas fa-check text-green-400 mr-2"></i>Event filtering</li>
+                    </ul>
+                </div>
+
+                <!-- Request Fingerprinting - NEW v1.3.4 -->
+                <div class="feature-card bg-slate-800 p-6 rounded-xl border border-yellow-500/50 relative">
+                    <div class="absolute top-2 right-2 bg-yellow-500 text-white text-xs px-2 py-1 rounded-full">NEW v1.3.4</div>
+                    <div class="flex items-center mb-4">
+                        <div class="bg-yellow-500/20 p-3 rounded-lg mr-4">
+                            <i class="fas fa-fingerprint text-2xl text-yellow-400"></i>
+                        </div>
+                        <h3 class="text-xl font-bold">Bot Detection</h3>
+                    </div>
+                    <p class="text-slate-400 mb-4">Advanced browser fingerprinting</p>
+                    <ul class="space-y-2 text-sm text-slate-300">
+                        <li><i class="fas fa-check text-green-400 mr-2"></i>Bot score (0-100)</li>
+                        <li><i class="fas fa-check text-green-400 mr-2"></i>Automated traffic blocking</li>
+                        <li><i class="fas fa-check text-green-400 mr-2"></i>Scanner detection</li>
+                        <li><i class="fas fa-check text-green-400 mr-2"></i>Headless browser detection</li>
+                    </ul>
+                </div>
+
+                <!-- Security Analytics - NEW v1.3.4 -->
+                <div class="feature-card bg-slate-800 p-6 rounded-xl border border-cyan-500/50 relative">
+                    <div class="absolute top-2 right-2 bg-cyan-500 text-white text-xs px-2 py-1 rounded-full">NEW v1.3.4</div>
+                    <div class="flex items-center mb-4">
+                        <div class="bg-cyan-500/20 p-3 rounded-lg mr-4">
+                            <i class="fas fa-chart-bar text-2xl text-cyan-400"></i>
+                        </div>
+                        <h3 class="text-xl font-bold">Security Analytics</h3>
+                    </div>
+                    <p class="text-slate-400 mb-4">Detailed security metrics and insights</p>
+                    <ul class="space-y-2 text-sm text-slate-300">
+                        <li><i class="fas fa-check text-green-400 mr-2"></i>Attack trends</li>
+                        <li><i class="fas fa-check text-green-400 mr-2"></i>IP reputation tracking</li>
+                        <li><i class="fas fa-check text-green-400 mr-2"></i>Response time metrics</li>
+                        <li><i class="fas fa-check text-green-400 mr-2"></i>Export capabilities</li>
+                    </ul>
+                </div>
             </div>
         </div>
     </section>
@@ -495,7 +568,7 @@
     <section id="installation" class="py-20">
         <div class="container mx-auto px-6 max-w-6xl">
             <h2 class="text-4xl font-bold text-center mb-4 gradient-text">Installation & Setup</h2>
-            <p class="text-center text-slate-400 mb-12 text-lg">Complete guide to installing and configuring Aimless SDK v1.3.2</p>
+            <p class="text-center text-slate-400 mb-12 text-lg">Complete guide to installing and configuring Aimless SDK v1.3.4</p>
             
             <!-- Installation Methods -->
             <div class="grid md:grid-cols-2 gap-6 mb-12">
@@ -507,7 +580,7 @@
                     <p class="text-slate-400 mb-4">Recommended method - Always get the latest version</p>
                     <pre><code class="language-bash">npm install CamozDevelopment/Aimless-Security</code></pre>
                     <div class="mt-4 p-3 bg-green-500/10 border border-green-500/30 rounded">
-                        <p class="text-sm text-green-400">✓ Latest features including v1.3.2</p>
+                        <p class="text-sm text-green-400">✓ Latest features including v1.3.4</p>
                     </div>
                 </div>
                 
@@ -587,6 +660,393 @@ app.use(aimless.middleware());</code></pre>
                 <div class="mt-6 p-4 bg-green-500/10 border border-green-500/30 rounded-lg">
                     <p class="text-green-400 font-semibold">✓ Your API is now protected against all major attack vectors!</p>
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- New in v1.3.4 - UI Customization & Advanced Features -->
+    <section id="v1-3-4-features" class="py-20">
+        <div class="container mx-auto px-6 max-w-6xl">
+            <div class="text-center mb-12">
+                <div class="inline-block bg-blue-500/20 border border-blue-500/30 rounded-full px-6 py-2 mb-4">
+                    <span class="text-blue-400 font-semibold">🆕 Version 1.3.4</span>
+                </div>
+                <h2 class="text-4xl font-bold gradient-text mb-4">Custom UI & Advanced Security Features</h2>
+                <p class="text-slate-400 text-lg">Beautiful UX, real-time notifications, bot detection, and detailed analytics</p>
+            </div>
+
+            <!-- Custom Loading Screen -->
+            <div class="mb-12">
+                <h3 class="text-3xl font-bold mb-6 flex items-center">
+                    <i class="fas fa-spinner text-blue-400 mr-3"></i>
+                    Custom Loading Screen
+                </h3>
+                <p class="text-slate-300 mb-6">Show a beautiful "Checking security..." loading screen while Aimless validates requests. Perfect for user-facing applications.</p>
+
+                <div class="grid md:grid-cols-2 gap-6 mb-8">
+                    <div class="bg-slate-800 rounded-xl p-6 border border-blue-500/30">
+                        <h4 class="text-xl font-bold mb-3 text-blue-400">Configuration</h4>
+                        <pre><code class="language-javascript">const aimless = new Aimless({
+  rasp: {
+    enabled: true,
+    loadingScreen: {
+      enabled: true,
+      message: 'Checking security...',
+      minDuration: 500 // milliseconds
+    }
+  }
+});
+
+// Add loading screen BEFORE middleware
+app.use(aimless.loading());
+app.use(aimless.middleware());</code></pre>
+                    </div>
+
+                    <div class="bg-slate-800 rounded-xl p-6 border border-blue-500/30">
+                        <h4 class="text-xl font-bold mb-3 text-blue-400">Features</h4>
+                        <ul class="space-y-3 text-slate-300">
+                            <li><i class="fas fa-check text-green-400 mr-2"></i>Dark theme (#1a1a1a)</li>
+                            <li><i class="fas fa-check text-green-400 mr-2"></i>Aimless logo from CDN</li>
+                            <li><i class="fas fa-check text-green-400 mr-2"></i>Smooth fade animations</li>
+                            <li><i class="fas fa-check text-green-400 mr-2"></i>Customizable message</li>
+                            <li><i class="fas fa-check text-green-400 mr-2"></i>Minimum duration control</li>
+                            <li><i class="fas fa-check text-green-400 mr-2"></i>HTML responses only</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="bg-slate-900 rounded-xl p-6 border border-slate-700">
+                    <h4 class="text-xl font-bold mb-4">Live Preview</h4>
+                    <p class="text-slate-400 mb-4">The loading screen shows while security checks run, then smoothly fades out to reveal your content:</p>
+                    <div class="bg-slate-950 rounded-lg p-8 text-center border border-slate-800">
+                        <div class="inline-block">
+                            <div class="w-24 h-24 mx-auto mb-4 bg-gradient-to-br from-blue-500 to-purple-500 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-shield-halved text-4xl text-white"></i>
+                            </div>
+                            <p class="text-xl font-semibold text-white mb-2">Checking security...</p>
+                            <div class="w-12 h-12 mx-auto border-4 border-slate-700 border-t-blue-500 rounded-full animate-spin"></div>
+                            <p class="text-sm text-slate-500 mt-4">Protected by Aimless Security</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Custom Block Messages -->
+            <div class="mb-12">
+                <h3 class="text-3xl font-bold mb-6 flex items-center">
+                    <i class="fas fa-message text-green-400 mr-3"></i>
+                    Custom Block Messages
+                </h3>
+                <p class="text-slate-300 mb-6">Add custom text to blocked request responses for better user experience and support.</p>
+
+                <div class="bg-slate-800 rounded-xl p-6 border border-slate-700">
+                    <pre><code class="language-javascript">const aimless = new Aimless({
+  rasp: {
+    enabled: true,
+    blockMode: true,
+    customBlockMessage: 'For support, contact security@yourcompany.com'
+  }
+});
+
+app.use(aimless.middleware());
+
+// Blocked response will be:
+// "Request blocked by Aimless Security. For support, contact security@yourcompany.com"</code></pre>
+                </div>
+            </div>
+
+            <!-- Webhook Notifications -->
+            <div class="mb-12">
+                <h3 class="text-3xl font-bold mb-6 flex items-center">
+                    <i class="fas fa-bell text-yellow-400 mr-3"></i>
+                    Webhook Notifications
+                </h3>
+                <p class="text-slate-300 mb-6">Get real-time notifications in Slack, Discord, or custom endpoints when attacks are detected.</p>
+
+                <div class="grid md:grid-cols-2 gap-6 mb-8">
+                    <div class="bg-slate-800 rounded-xl p-6 border border-yellow-500/30">
+                        <h4 class="text-xl font-bold mb-3 text-yellow-400">Slack Integration</h4>
+                        <pre><code class="language-javascript">const aimless = new Aimless({
+  rasp: {
+    enabled: true,
+    webhooks: {
+      enabled: true,
+      url: 'https://hooks.slack.com/...',
+      events: ['block', 'threat'],
+      includePayload: false
+    }
+  }
+});</code></pre>
+                        <div class="mt-4 p-3 bg-green-500/10 border border-green-500/30 rounded">
+                            <p class="text-sm text-green-400">✓ Formatted Slack messages</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-800 rounded-xl p-6 border border-yellow-500/30">
+                        <h4 class="text-xl font-bold mb-3 text-yellow-400">Discord Integration</h4>
+                        <pre><code class="language-javascript">const aimless = new Aimless({
+  rasp: {
+    enabled: true,
+    webhooks: {
+      enabled: true,
+      url: 'https://discord.com/api/webhooks/...',
+      events: ['all'],
+      customHeaders: {
+        'X-Custom': 'header'
+      }
+    }
+  }
+});</code></pre>
+                        <div class="mt-4 p-3 bg-green-500/10 border border-green-500/30 rounded">
+                            <p class="text-sm text-green-400">✓ Rich embed messages</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-slate-800 rounded-xl p-6 border border-slate-700">
+                    <h4 class="text-xl font-bold mb-4">Webhook Payload</h4>
+                    <pre><code class="language-json">{
+  "event": "block",
+  "timestamp": "2025-12-03T10:30:00.000Z",
+  "ip": "192.168.1.100",
+  "path": "/api/users",
+  "method": "POST",
+  "threats": [{
+    "type": "sql_injection",
+    "severity": "high",
+    "description": "SQL injection (confidence: 85%)"
+  }],
+  "reputation": 45,
+  "source": "Aimless Security",
+  "version": "1.3.4"
+}</code></pre>
+                </div>
+            </div>
+
+            <!-- Bot Detection -->
+            <div class="mb-12">
+                <h3 class="text-3xl font-bold mb-6 flex items-center">
+                    <i class="fas fa-fingerprint text-purple-400 mr-3"></i>
+                    Request Fingerprinting & Bot Detection
+                </h3>
+                <p class="text-slate-300 mb-6">Automatically detect and block automated attacks, bots, and scanners with advanced fingerprinting.</p>
+
+                <div class="grid md:grid-cols-2 gap-6 mb-8">
+                    <div class="bg-slate-800 rounded-xl p-6 border border-purple-500/30">
+                        <h4 class="text-xl font-bold mb-3 text-purple-400">Configuration</h4>
+                        <pre><code class="language-javascript">const aimless = new Aimless({
+  rasp: {
+    enabled: true,
+    requestFingerprinting: {
+      enabled: true,
+      blockAutomatedTraffic: true,
+      trustBrowserFingerprints: true
+    }
+  }
+});</code></pre>
+                    </div>
+
+                    <div class="bg-slate-800 rounded-xl p-6 border border-purple-500/30">
+                        <h4 class="text-xl font-bold mb-3 text-purple-400">Detection Patterns</h4>
+                        <ul class="space-y-2 text-slate-300 text-sm">
+                            <li><i class="fas fa-check text-green-400 mr-2"></i>curl, wget, python-requests</li>
+                            <li><i class="fas fa-check text-green-400 mr-2"></i>Headless browsers (Puppeteer, Selenium)</li>
+                            <li><i class="fas fa-check text-green-400 mr-2"></i>Security scanners (SQLMap, Burp, ZAP)</li>
+                            <li><i class="fas fa-check text-green-400 mr-2"></i>Missing browser headers</li>
+                            <li><i class="fas fa-check text-green-400 mr-2"></i>Suspicious header combinations</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="bg-slate-800 rounded-xl p-6 border border-slate-700">
+                    <h4 class="text-xl font-bold mb-4">Bot Score Analysis</h4>
+                    <pre><code class="language-javascript">// Fingerprint is automatically analyzed
+// Bot Score: 0-100 (higher = more likely bot)
+
+// Score 0-49: Allow (likely human)
+// Score 50-79: Challenge (suspicious)
+// Score 80-100: Block (definitely bot)</code></pre>
+                    <div class="mt-4 grid grid-cols-3 gap-4">
+                        <div class="p-4 bg-green-500/10 border border-green-500/30 rounded text-center">
+                            <div class="text-3xl font-bold text-green-400">0-49</div>
+                            <div class="text-sm text-slate-400">Allow</div>
+                        </div>
+                        <div class="p-4 bg-yellow-500/10 border border-yellow-500/30 rounded text-center">
+                            <div class="text-3xl font-bold text-yellow-400">50-79</div>
+                            <div class="text-sm text-slate-400">Challenge</div>
+                        </div>
+                        <div class="p-4 bg-red-500/10 border border-red-500/30 rounded text-center">
+                            <div class="text-3xl font-bold text-red-400">80-100</div>
+                            <div class="text-sm text-slate-400">Block</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Security Analytics -->
+            <div class="mb-12">
+                <h3 class="text-3xl font-bold mb-6 flex items-center">
+                    <i class="fas fa-chart-line text-cyan-400 mr-3"></i>
+                    Security Analytics
+                </h3>
+                <p class="text-slate-300 mb-6">Comprehensive security metrics and insights for monitoring and improving your security posture.</p>
+
+                <div class="bg-slate-800 rounded-xl p-6 border border-slate-700 mb-6">
+                    <h4 class="text-xl font-bold mb-4">Enable Analytics</h4>
+                    <pre><code class="language-javascript">const aimless = new Aimless({
+  rasp: {
+    enabled: true,
+    analytics: {
+      enabled: true,
+      retention: 30 // days
+    }
+  }
+});
+
+// Get analytics
+const analytics = aimless.getAnalytics();
+
+console.log(analytics.totalRequests);
+console.log(analytics.threatsDetected);
+console.log(analytics.topAttackTypes);
+console.log(analytics.topAttackIPs);</code></pre>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div class="bg-gradient-to-br from-blue-500/20 to-blue-600/20 p-6 rounded-xl border border-blue-500/30">
+                        <h4 class="text-lg font-bold mb-2 text-blue-400">Request Metrics</h4>
+                        <ul class="space-y-2 text-sm text-slate-300">
+                            <li>• Total requests</li>
+                            <li>• Threats detected</li>
+                            <li>• Threats blocked</li>
+                            <li>• Avg response time</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-gradient-to-br from-purple-500/20 to-purple-600/20 p-6 rounded-xl border border-purple-500/30">
+                        <h4 class="text-lg font-bold mb-2 text-purple-400">Attack Analysis</h4>
+                        <ul class="space-y-2 text-sm text-slate-300">
+                            <li>• Top attack types</li>
+                            <li>• Attack trends</li>
+                            <li>• Requests by hour</li>
+                            <li>• Severity distribution</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-gradient-to-br from-green-500/20 to-green-600/20 p-6 rounded-xl border border-green-500/30">
+                        <h4 class="text-lg font-bold mb-2 text-green-400">IP Intelligence</h4>
+                        <ul class="space-y-2 text-sm text-slate-300">
+                            <li>• Top attacking IPs</li>
+                            <li>• IP reputation scores</li>
+                            <li>• Blocked IPs</li>
+                            <li>• Geographic data</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dynamic Rate Limiting -->
+            <div class="mb-12">
+                <h3 class="text-3xl font-bold mb-6 flex items-center">
+                    <i class="fas fa-gauge-high text-red-400 mr-3"></i>
+                    Dynamic Rate Limiting
+                </h3>
+                <p class="text-slate-300 mb-6">Smart rate limits that adapt based on IP reputation and threat level.</p>
+
+                <div class="bg-slate-800 rounded-xl p-6 border border-slate-700">
+                    <pre><code class="language-javascript">const aimless = new Aimless({
+  rasp: {
+    enabled: true,
+    rateLimiting: {
+      enabled: true,
+      maxRequests: 100,
+      windowMs: 60000, // 1 minute
+      dynamicThrottling: true,
+      suspiciousIPMultiplier: 0.5 // Reduce limit by 50% for suspicious IPs
+    }
+  }
+});
+
+// Good IPs: 100 requests/minute
+// Suspicious IPs (reputation < 50): 50 requests/minute
+// Bad IPs (reputation < 30): Blocked entirely</code></pre>
+                </div>
+            </div>
+
+            <!-- Complete Example -->
+            <div class="bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-blue-500/30 rounded-xl p-8">
+                <h3 class="text-2xl font-bold mb-4 flex items-center">
+                    <i class="fas fa-rocket text-blue-400 mr-3"></i>
+                    Complete v1.3.4 Example
+                </h3>
+                <pre><code class="language-javascript">const express = require('express');
+const { Aimless } = require('aimless-sdk');
+
+const app = express();
+app.use(express.json());
+
+const aimless = new Aimless({
+  rasp: {
+    enabled: true,
+    blockMode: true,
+    
+    // Custom UI
+    customBlockMessage: 'For support, contact security@example.com',
+    loadingScreen: {
+      enabled: true,
+      message: 'Verifying your request...',
+      minDuration: 800
+    },
+    
+    // Webhooks
+    webhooks: {
+      enabled: true,
+      url: 'https://hooks.slack.com/services/YOUR/WEBHOOK/URL',
+      events: ['block', 'threat'],
+      includePayload: false
+    },
+    
+    // Bot Detection
+    requestFingerprinting: {
+      enabled: true,
+      blockAutomatedTraffic: true
+    },
+    
+    // Analytics
+    analytics: {
+      enabled: true,
+      retention: 30
+    },
+    
+    // Smart Rate Limiting
+    rateLimiting: {
+      enabled: true,
+      maxRequests: 100,
+      windowMs: 60000,
+      dynamicThrottling: true,
+      suspiciousIPMultiplier: 0.5
+    }
+  }
+});
+
+// Add middleware (loading screen first!)
+app.use(aimless.loading());
+app.use(aimless.middleware());
+
+// Your routes
+app.get('/api/data', (req, res) => {
+  res.json({ data: 'Protected!' });
+});
+
+// Analytics endpoint
+app.get('/admin/analytics', (req, res) => {
+  const analytics = aimless.getAnalytics();
+  res.json(analytics);
+});
+
+app.listen(3000, () => {
+  console.log('🛡️ Server protected by Aimless Security v1.3.4');
+});</code></pre>
             </div>
         </div>
     </section>
@@ -1997,7 +2457,7 @@ if (reputation < 50) {
 
         // Copy install command
         function copyInstallCommand() {
-            const command = 'npm install aimless-security';
+            const command = 'npm install CamozDevelopment/Aimless-Security';
             navigator.clipboard.writeText(command).then(() => {
                 const btn = event.target.closest('button');
                 const originalText = btn.innerHTML;

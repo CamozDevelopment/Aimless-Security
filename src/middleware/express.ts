@@ -370,8 +370,8 @@ export function loadingScreen(config: AimlessConfig = {}) {
       color: #ffffff;
     }
     .aimless-logo {
-      width: 120px;
-      height: 120px;
+      width: 200px;
+      height: 200px;
       margin: 0 auto;
       animation: pulse 1.5s ease-in-out infinite;
     }
@@ -419,7 +419,7 @@ export function loadingScreen(config: AimlessConfig = {}) {
   <div id="aimless-loading">
     <div class="aimless-container">
       <div class="aimless-logo">
-        <img src="https://aimless.qzz.io/aimless-security-trans-logo.png" alt="Aimless Security" />
+        <img src="https://jsdimages.netlify.app/aimless-security-trans-logo.png" alt="Aimless Security" />
       </div>
       <div class="aimless-message">${message}</div>
       <div class="aimless-spinner"></div>

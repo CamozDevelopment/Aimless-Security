@@ -181,21 +181,20 @@ export function loadingScreen(config: AimlessConfig = {}) {
   return (req: Request, res: Response, next: NextFunction) => {
     const startTime = Date.now();
     
-    // Intercept HTML responses to inject loading screen
-    const originalSend = res.send.bind(res);
-    let sent = false;
+    // Store original send and json methods
+    const originalSend = res.send;
+    const originalJson = res.json;
 
-    res.send = function(body: any) {
-      if (sent) return originalSend(body);
-      sent = true;
+    // Override res.send
+    res.send = function(body: any): Response {
+      // Check if this is an HTML response
+      const isHtml = typeof body === 'string' && 
+        (body.trim().startsWith('<!DOCTYPE') || body.trim().startsWith('<html'));
 
-      // Only inject loading screen for HTML responses
-      const contentType = res.getHeader('content-type');
-      if (contentType && contentType.toString().includes('text/html')) {
+      if (isHtml) {
         const elapsed = Date.now() - startTime;
         const delay = Math.max(0, minDuration - elapsed);
 
-        // Inject loading screen HTML
         const loadingHTML = `
 <!DOCTYPE html>
 <html>
@@ -204,85 +203,107 @@ export function loadingScreen(config: AimlessConfig = {}) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Security Check</title>
   <style>
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    #aimless-loading {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      background: #1a1a1a;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
-      overflow: hidden;
+      z-index: 999999;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     }
-    .loading-container {
+    #aimless-loading.fade-out {
+      animation: fadeOut 0.5s ease-out forwards;
+    }
+    .aimless-container {
       text-align: center;
-      color: white;
+      color: #ffffff;
     }
-    .shield {
-      font-size: 64px;
+    .aimless-logo {
+      width: 120px;
+      height: 120px;
+      margin: 0 auto;
       animation: pulse 1.5s ease-in-out infinite;
     }
-    .message {
-      font-size: 24px;
-      margin-top: 20px;
-      font-weight: 500;
+    .aimless-logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
     }
-    .spinner {
+    .aimless-message {
+      font-size: 24px;
+      margin-top: 30px;
+      font-weight: 500;
+      color: #e0e0e0;
+    }
+    .aimless-spinner {
       margin: 30px auto;
       width: 50px;
       height: 50px;
-      border: 4px solid rgba(255, 255, 255, 0.3);
-      border-top-color: white;
+      border: 4px solid #333;
+      border-top-color: #667eea;
       border-radius: 50%;
       animation: spin 1s linear infinite;
     }
-    .powered-by {
+    .aimless-powered {
       margin-top: 30px;
       font-size: 14px;
-      opacity: 0.8;
+      color: #888;
     }
     @keyframes spin {
       to { transform: rotate(360deg); }
     }
     @keyframes pulse {
       0%, 100% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.1); opacity: 0.8; }
-    }
-    .fade-out {
-      animation: fadeOut 0.5s ease-out forwards;
+      50% { transform: scale(1.05); opacity: 0.9; }
     }
     @keyframes fadeOut {
       to { opacity: 0; }
     }
+    #aimless-content {
+      display: none;
+    }
   </style>
 </head>
 <body>
-  <div class="loading-container" id="loadingScreen">
-    <div class="shield">🛡️</div>
-    <div class="message">${message}</div>
-    <div class="spinner"></div>
-    <div class="powered-by">Protected by Aimless Security</div>
+  <div id="aimless-loading">
+    <div class="aimless-container">
+      <div class="aimless-logo">
+        <img src="https://www.aimless.qzz.io/aimless-security-logo.png" alt="Aimless Security" />
+      </div>
+      <div class="aimless-message">${message}</div>
+      <div class="aimless-spinner"></div>
+      <div class="aimless-powered">Protected by Aimless Security</div>
+    </div>
   </div>
-  <div id="content" style="display: none;">${body}</div>
+  <div id="aimless-content">${body}</div>
   <script>
     setTimeout(function() {
-      document.getElementById('loadingScreen').classList.add('fade-out');
+      var loading = document.getElementById('aimless-loading');
+      loading.classList.add('fade-out');
       setTimeout(function() {
-        document.getElementById('loadingScreen').style.display = 'none';
-        document.getElementById('content').style.display = 'block';
-        document.body.style.background = '';
-        document.body.style.overflow = '';
+        loading.style.display = 'none';
+        document.getElementById('aimless-content').style.display = 'block';
       }, 500);
     }, ${delay});
   </script>
 </body>
 </html>`;
-        return originalSend(loadingHTML);
+        res.type('html');
+        return originalSend.call(res, loadingHTML);
       }
 
-      return originalSend(body);
-    } as any;
+      return originalSend.call(res, body);
+    };
+
+    // Also override res.json to pass through normally
+    res.json = function(body: any): Response {
+      return originalJson.call(res, body);
+    };
 
     next();
   };

@@ -494,6 +494,12 @@ export class AdvancedThreatDetector {
    */
   detectAll(input: any, context?: string): SecurityThreat[] {
     const threats: SecurityThreat[] = [];
+    
+    // Handle undefined/null input
+    if (input === undefined || input === null) {
+      return threats;
+    }
+    
     const str = typeof input === 'string' ? input : JSON.stringify(input);
     
     // LDAP injection
@@ -513,7 +519,7 @@ export class AdvancedThreatDetector {
     if (deser) threats.push(deser);
     
     // JWT (if looks like a token)
-    if (str.match(/^eyJ[a-zA-Z0-9_-]+\./)) {
+    if (str && str.match(/^eyJ[a-zA-Z0-9_-]+\./)) {
       const jwt = this.analyzeJWT(str);
       if (jwt) threats.push(jwt);
     }

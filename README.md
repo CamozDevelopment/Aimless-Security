@@ -40,7 +40,7 @@ npm install CamozDevelopment/Aimless-Security
 
 ```javascript
 const express = require('express');
-const { Aimless } = require('aimless-sdk');
+const { Aimless } = require('aimless-security');
 
 const app = express();
 app.use(express.json());
@@ -354,7 +354,7 @@ requestFingerprinting: {
 
 ```javascript
 // pages/api/[...all].js
-import { Aimless } from 'aimless-sdk';
+import { Aimless } from 'aimless-security';
 
 const aimless = new Aimless({ rasp: { enabled: true } });
 

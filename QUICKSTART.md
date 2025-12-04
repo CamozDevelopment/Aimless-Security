@@ -10,7 +10,7 @@ npm install CamozDevelopment/Aimless-Security
 
 ```javascript
 const express = require('express');
-const { Aimless } = require('aimless-sdk');
+const { Aimless } = require('aimless-security');
 
 const app = express();
 app.use(express.json());
@@ -119,7 +119,7 @@ app.get('/analytics', (req, res) => {
 
 ```javascript
 const express = require('express');
-const { Aimless } = require('aimless-sdk');
+const { Aimless } = require('aimless-security');
 
 const app = express();
 app.use(express.json());
@@ -223,7 +223,7 @@ app.get('/form', (req, res) => {
 
 ```javascript
 // pages/api/users.js
-import { Aimless } from 'aimless-sdk';
+import { Aimless } from 'aimless-security';
 
 const aimless = new Aimless({ rasp: { enabled: true } });
 
@@ -248,7 +248,7 @@ export default async function handler(req, res) {
 ### AWS Lambda
 
 ```javascript
-const { Aimless } = require('aimless-sdk');
+const { Aimless } = require('aimless-security');
 const aimless = new Aimless({ rasp: { enabled: true } });
 
 exports.handler = async (event) => {

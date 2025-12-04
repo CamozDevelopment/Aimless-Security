@@ -1,0 +1,1216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aimless Security Setup Instructions - Complete Protection Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.95;
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 5px 15px;
+            border-radius: 20px;
+            margin: 10px 5px 0;
+            font-size: 0.9em;
+            backdrop-filter: blur(10px);
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            border-left: 5px solid #667eea;
+        }
+
+        .section h2 {
+            color: #667eea;
+            font-size: 2em;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section h3 {
+            color: #764ba2;
+            font-size: 1.5em;
+            margin: 25px 0 15px;
+        }
+
+        .step-number {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2em;
+            box-shadow: 0 4px 10px rgba(102, 126, 234, 0.3);
+        }
+
+        .code-block {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 28px;
+            border-radius: 10px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.7;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            border: 1px solid #333;
+            position: relative;
+            white-space: pre;
+        }
+
+        .code-block .comment {
+            color: #6a9955;
+        }
+
+        .code-block .keyword {
+            color: #c586c0;
+        }
+
+        .code-block .string {
+            color: #ce9178;
+        }
+
+        .code-block .function {
+            color: #dcdcaa;
+        }
+
+        .code-block .number {
+            color: #b5cea8;
+        }
+
+        .warning {
+            background: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .warning strong {
+            color: #856404;
+        }
+
+        .success {
+            background: #d4edda;
+            border-left: 5px solid #28a745;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .success strong {
+            color: #155724;
+        }
+
+        .info {
+            background: #d1ecf1;
+            border-left: 5px solid #17a2b8;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .info strong {
+            color: #0c5460;
+        }
+
+        .checklist {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .checklist li {
+            padding: 10px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .checklist li:before {
+            content: "☐ ";
+            color: #667eea;
+            font-size: 1.3em;
+            margin-right: 10px;
+        }
+
+        .file-path {
+            background: #f0f3f8;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.92em;
+            color: #1e293b;
+            border: 1px solid #cbd5e1;
+            font-weight: 600;
+        }
+
+        .command {
+            background: #0f172a;
+            color: #22c55e;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.92em;
+            border: 1px solid #1e293b;
+            font-weight: 600;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .feature-card h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        .toc {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .toc h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .toc ul {
+            list-style: none;
+        }
+
+        .toc li {
+            padding: 8px 0;
+        }
+
+        .toc a {
+            color: #764ba2;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .toc a:hover {
+            color: #667eea;
+            text-decoration: underline;
+        }
+
+        .copy-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9em;
+            margin-top: 10px;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .copy-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .copy-btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .copy-btn:hover {
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+        }
+
+        .copy-btn:active {
+            transform: translateY(0) scale(0.98);
+        }
+
+        .copy-btn span {
+            position: relative;
+            z-index: 1;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .section {
+                padding: 20px;
+            }
+        }
+
+        .highlight {
+            background: linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+
+        .screenshot {
+            width: 100%;
+            max-width: 600px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🛡️ Aimless Security Setup Guide</h1>
+            <p>Complete Protection in 4 Lines of Code - No API Key Required!</p>
+            <div>
+                <span class="badge">✓ API Protection</span>
+                <span class="badge">✓ Loading Screen</span>
+                <span class="badge">✓ Webhook Alerts</span>
+                <span class="badge">✓ 100% Free</span>
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="toc">
+                <h3>📋 Table of Contents</h3>
+                <ul>
+                    <li><a href="#overview">1. What You'll Get</a></li>
+                    <li><a href="#installation">2. Installation</a></li>
+                    <li><a href="#basic-setup">3. Basic Setup (3 Lines)</a></li>
+                    <li><a href="#loading-screen">4. Enable Loading Screen</a></li>
+                    <li><a href="#webhooks">5. Setup Webhook Alerts</a></li>
+                    <li><a href="#middleware-order">6. Critical: Middleware Order</a></li>
+                    <li><a href="#testing">7. Testing Everything</a></li>
+                    <li><a href="#troubleshooting">8. Troubleshooting</a></li>
+                </ul>
+            </div>
+
+            <!-- SECTION 1: OVERVIEW -->
+            <div class="section" id="overview">
+                <h2><span class="step-number">1</span> What You'll Get</h2>
+                
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h4>🔒 SQL Injection Protection</h4>
+                        <p>Automatically blocks SQL injection attempts in query parameters, request bodies, and headers.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4>🛡️ XSS Prevention</h4>
+                        <p>Detects and blocks cross-site scripting attacks before they reach your application.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4>⚡ Rate Limiting</h4>
+                        <p>Prevents abuse by limiting requests per IP address with configurable thresholds.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4>🤖 Bot Detection</h4>
+                        <p>Identifies and blocks malicious bots while allowing legitimate crawlers.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4>⏳ Loading Screen</h4>
+                        <p>Shows a professional loading screen while security checks run in the background.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4>📢 Webhook Alerts</h4>
+                        <p>Real-time Discord notifications when threats are detected on your site.</p>
+                    </div>
+                </div>
+
+                <div class="success">
+                    <strong>✨ Fail-Open Architecture:</strong> If security checks fail, your site stays online. Security never breaks your application!
+                </div>
+            </div>
+
+            <!-- SECTION 2: INSTALLATION -->
+            <div class="section" id="installation">
+                <h2><span class="step-number">2</span> Installation</h2>
+                
+                <h3>Step 2.1: Install the Package</h3>
+                <p>Open your terminal in your project folder and run:</p>
+
+                <div class="code-block">
+<span class="comment"># Install from GitHub (Latest Version - Recommended)</span>
+npm install github:CamozDevelopment/Aimless-Security#v1.3.4
+
+<span class="comment"># Or using package name</span>
+npm install aimless-security
+                </div>
+
+                <div class="info">
+                    <strong>💡 Note:</strong> The package is called <code>aimless-security</code> not <code>aimless-sdk</code>. No API key required - all features work out of the box!
+                </div>
+
+                <h3>Step 2.2: Verify Installation</h3>
+                <p>Check that the package was installed correctly:</p>
+
+                <div class="code-block">
+<span class="comment"># Check package.json</span>
+{
+  <span class="string">"dependencies"</span>: {
+    <span class="string">"aimless-security"</span>: <span class="string">"github:CamozDevelopment/Aimless-Security#v1.3.4"</span>
+  }
+}
+                </div>
+            </div>
+
+            <!-- SECTION 3: BASIC SETUP -->
+            <div class="section" id="basic-setup">
+                <h2><span class="step-number">3</span> Basic Setup (4 Lines of Code)</h2>
+
+                <p>This is the <span class="highlight">absolute minimum</span> to protect your APIs with authentication support:</p>
+
+                <div class="code-block">
+<span class="keyword">const</span> express = <span class="function">require</span>(<span class="string">'express'</span>);
+<span class="keyword">const</span> { Aimless } = <span class="function">require</span>(<span class="string">'aimless-security'</span>);
+
+<span class="keyword">const</span> app = <span class="function">express</span>();
+
+<span class="comment">// Create Aimless instance</span>
+<span class="keyword">const</span> aimless = <span class="keyword">new</span> <span class="function">Aimless</span>({ rasp: { enabled: <span class="keyword">true</span> } });
+
+<span class="comment">// Add to Express (3 lines)</span>
+app.<span class="function">use</span>(aimless.<span class="function">loading</span>());      <span class="comment">// Loading screen</span>
+
+<span class="comment">// Conditional middleware - skip auth routes to prevent false positives</span>
+app.<span class="function">use</span>((req, res, next) => {
+  <span class="keyword">const</span> authPaths = [<span class="string">'/api/auth/login'</span>, <span class="string">'/api/auth/register'</span>, <span class="string">'/api/auth/logout'</span>];
+  <span class="keyword">if</span> (authPaths.<span class="function">includes</span>(req.path)) <span class="keyword">return</span> <span class="function">next</span>();
+  aimless.<span class="function">middleware</span>()(req, res, next);
+});
+
+app.<span class="function">get</span>(<span class="string">'/api/users'</span>, (req, res) => {
+  res.<span class="function">json</span>({ message: <span class="string">'Protected by Aimless Security!'</span> });
+});
+
+app.<span class="function">listen</span>(<span class="number">3000</span>, () => <span class="function">console.log</span>(<span class="string">'Server running on port 3000'</span>));
+                </div>
+
+                <div class="success">
+                    <strong>✅ Done!</strong> Your APIs are now protected against SQL injection, XSS, rate limiting, and bot attacks! No API key required.
+                </div>
+
+                <div class="info">
+                    <strong>💡 Note:</strong> Aimless Security works without an API key! All features are available for free.
+                </div>
+            </div>
+
+            <!-- SECTION 4: LOADING SCREEN -->
+            <div class="section" id="loading-screen">
+                <h2><span class="step-number">4</span> Enable Loading Screen</h2>
+
+                <p>The loading screen shows while security checks run, giving users a smooth experience.</p>
+
+                <h3>Step 4.1: Add Loading Screen Configuration</h3>
+
+                <div class="code-block">
+<span class="keyword">const</span> aimless = <span class="keyword">new</span> <span class="function">Aimless</span>({
+  rasp: {
+    enabled: <span class="keyword">true</span>,
+    loadingScreen: {
+      enabled: <span class="keyword">true</span>,
+      minDuration: <span class="number">1000</span>,  <span class="comment">// Show for 1 second</span>
+      message: <span class="string">'Securing your connection...'</span>
+    }
+  }
+});
+                </div>
+
+                <h3>Step 4.2: CRITICAL - Fix Middleware Order</h3>
+
+                <div class="warning">
+                    <strong>⚠️ CRITICAL:</strong> The loading screen ONLY works if middleware is ordered correctly!
+                </div>
+
+                <p>The loading screen intercepts <code>res.send()</code> calls. It does NOT work with <code>res.sendFile()</code>!</p>
+
+                <div class="code-block">
+<span class="keyword">const</span> express = <span class="function">require</span>(<span class="string">'express'</span>);
+<span class="keyword">const</span> fs = <span class="function">require</span>(<span class="string">'fs'</span>);
+<span class="keyword">const</span> path = <span class="function">require</span>(<span class="string">'path'</span>);
+<span class="keyword">const</span> { <span class="function">createExpressMiddleware</span> } = <span class="function">require</span>(<span class="string">'aimless-security'</span>);
+
+<span class="keyword">const</span> app = <span class="function">express</span>();
+
+<span class="comment">// STEP 1: Loading Screen (FIRST!)</span>
+<span class="keyword">const</span> security = <span class="function">createExpressMiddleware</span>({
+  loadingScreen: {
+    enabled: <span class="keyword">true</span>,
+    duration: <span class="number">1000</span>,
+    message: <span class="string">'Securing your connection...'</span>,
+    logoUrl: <span class="string">'https://jsdimages.netlify.app/aimless-security-trans-logo.png'</span>
+  }
+});
+
+app.<span class="function">use</span>(security); <span class="comment">// Add loading screen FIRST</span>
+
+
+<span class="comment">// STEP 2: Body Parsers (BEFORE security checks)</span>
+app.<span class="function">use</span>(express.<span class="function">json</span>());
+app.<span class="function">use</span>(express.<span class="function">urlencoded</span>({ extended: <span class="keyword">true</span> }));
+
+<span class="comment">// STEP 3: Static Files (CRITICAL CONFIG!)</span>
+<span class="comment">// MUST set index: false to prevent auto-serving index.html</span>
+app.<span class="function">use</span>(express.<span class="function">static</span>(<span class="string">'public'</span>, { 
+  index: <span class="keyword">false</span>  <span class="comment">// This is CRITICAL!</span>
+}));
+
+<span class="comment">// STEP 4: Manual HTML Route (MUST use res.send!)</span>
+app.<span class="function">get</span>(<span class="string">'/'</span>, (req, res) => {
+  <span class="comment">// ❌ WRONG - This bypasses loading screen:</span>
+  <span class="comment">// res.sendFile(path.join(__dirname, 'public', 'index.html'));</span>
+  
+  <span class="comment">// ✅ CORRECT - This triggers loading screen:</span>
+  <span class="keyword">const</span> html = fs.<span class="function">readFileSync</span>(
+    path.<span class="function">join</span>(__dirname, <span class="string">'public'</span>, <span class="string">'index.html'</span>), 
+    <span class="string">'utf8'</span>
+  );
+  res.<span class="function">send</span>(html);
+});
+
+<span class="comment">// Your API routes...</span>
+app.<span class="function">get</span>(<span class="string">'/api/data'</span>, (req, res) => {
+  res.<span class="function">json</span>({ data: <span class="string">'Protected!'</span> });
+});
+
+app.<span class="function">listen</span>(<span class="number">3000</span>);
+                </div>
+
+                <div class="info">
+                    <strong>💡 Why This Order Matters:</strong>
+                    <ul style="margin-top: 10px; margin-left: 20px;">
+                        <li>Loading screen must be FIRST to intercept responses</li>
+                        <li>Body parsers must come BEFORE security checks (so XSS detection works)</li>
+                        <li>Static files need <code>index: false</code> or they'll bypass your route handler</li>
+                        <li>HTML must be sent with <code>res.send()</code> not <code>res.sendFile()</code></li>
+                    </ul>
+                </div>
+
+                <h3>Step 4.3: Test the Loading Screen</h3>
+
+                <div class="code-block">
+<span class="comment"># Start your server</span>
+node server.js
+
+<span class="comment"># Open in browser</span>
+http://localhost:3000
+
+<span class="comment"># You should see a 1-second loading screen!</span>
+                </div>
+            </div>
+
+            <!-- SECTION 5: WEBHOOKS -->
+            <div class="section" id="webhooks">
+                <h2><span class="step-number">5</span> Setup Webhook Alerts</h2>
+
+                <p>Get real-time Discord notifications when threats are detected on your site!</p>
+
+                <h3>Step 5.1: Create Discord Webhook</h3>
+
+                <ol style="margin-left: 20px; margin-top: 10px;">
+                    <li>Open Discord and go to your server</li>
+                    <li>Right-click a text channel → <strong>Edit Channel</strong></li>
+                    <li>Go to <strong>Integrations → Webhooks</strong></li>
+                    <li>Click <strong>New Webhook</strong></li>
+                    <li>Name it "Aimless Security"</li>
+                    <li>Click <strong>Copy Webhook URL</strong></li>
+                </ol>
+
+                <div class="info">
+                    <strong>💡 Example Webhook URL:</strong><br>
+                    <code style="word-break: break-all;">https://discord.com/api/webhooks/1234567890/AbCdEfGhIjKlMnOpQrStUvWxYz</code>
+                </div>
+
+                <h3>Step 5.2: Add Webhook to Configuration</h3>
+
+                <div class="code-block">
+<span class="keyword">const</span> aimless = <span class="keyword">new</span> <span class="function">Aimless</span>({
+  rasp: {
+    enabled: <span class="keyword">true</span>,
+    
+    <span class="comment">// Loading screen</span>
+    loadingScreen: {
+      enabled: <span class="keyword">true</span>,
+      minDuration: <span class="number">1000</span>,
+      message: <span class="string">'Securing your connection...'</span>
+    },
+    
+    <span class="comment">// Webhook notifications</span>
+    webhooks: {
+      enabled: <span class="keyword">true</span>,
+      url: <span class="string">'https://discord.com/api/webhooks/YOUR/WEBHOOK/URL'</span>,
+      events: [<span class="string">'threat'</span>, <span class="string">'block'</span>, <span class="string">'rateLimit'</span>]
+    }
+  }
+});
+                </div>
+
+                <div class="warning">
+                    <strong>⚠️ Security Tip:</strong> Use environment variables for sensitive data!
+                    <div class="code-block" style="margin-top: 10px;">
+<span class="comment"># Create .env file</span>
+DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/YOUR/WEBHOOK
+
+<span class="comment"># In your code:</span>
+<span class="keyword">require</span>(<span class="string">'dotenv'</span>).<span class="function">config</span>();
+
+<span class="keyword">const</span> aimless = <span class="keyword">new</span> <span class="function">Aimless</span>({
+  rasp: {
+    enabled: <span class="keyword">true</span>,
+    webhooks: {
+      enabled: <span class="keyword">true</span>,
+      url: process.env.DISCORD_WEBHOOK_URL,
+      events: [<span class="string">'threat'</span>, <span class="string">'block'</span>, <span class="string">'rateLimit'</span>]
+    }
+  }
+});
+                    </div>
+                </div>
+
+                <h3>Step 5.3: Test Webhook Notifications</h3>
+
+                <p>Test different threat types to see webhook alerts:</p>
+
+                <div class="code-block">
+<span class="comment"># Test SQL Injection (in browser console or Postman)</span>
+fetch(<span class="string">'/api/test?id=1\' OR \'1\'=\'1'</span>)
+
+<span class="comment"># Test XSS Attack</span>
+fetch(<span class="string">'/api/test'</span>, {
+  method: <span class="string">'POST'</span>,
+  headers: { <span class="string">'Content-Type'</span>: <span class="string">'application/json'</span> },
+  body: JSON.<span class="function">stringify</span>({ 
+    comment: <span class="string">'&lt;script&gt;alert("XSS")&lt;/script&gt;'</span> 
+  })
+})
+
+<span class="comment"># Test Rate Limiting (spam requests)</span>
+<span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i < <span class="number">30</span>; i++) {
+  fetch(<span class="string">'/api/test'</span>)
+}
+                </div>
+
+                <div class="success">
+                    <strong>✅ You should see Discord notifications like:</strong>
+                    <div style="margin-top: 10px; padding: 10px; background: #fff; border-radius: 5px; color: #333;">
+                        <strong style="color: #dc3545;">🚨 SQL Injection Detected</strong><br>
+                        <strong>URL:</strong> /api/test?id=1' OR '1'='1<br>
+                        <strong>IP:</strong> 192.168.1.1<br>
+                        <strong>Time:</strong> 2025-12-03 14:23:45
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 6: MIDDLEWARE ORDER -->
+            <div class="section" id="middleware-order">
+                <h2><span class="step-number">6</span> Critical: Middleware Order</h2>
+
+                <div class="warning">
+                    <strong>⚠️ MOST COMMON MISTAKE:</strong> Wrong middleware order breaks loading screen and XSS detection!
+                </div>
+
+                <h3>✅ CORRECT Order (Copy This Exactly!)</h3>
+
+                <div class="code-block">
+<span class="keyword">const</span> express = <span class="function">require</span>(<span class="string">'express'</span>);
+<span class="keyword">const</span> fs = <span class="function">require</span>(<span class="string">'fs'</span>);
+<span class="keyword">const</span> path = <span class="function">require</span>(<span class="string">'path'</span>);
+<span class="keyword">const</span> session = <span class="function">require</span>(<span class="string">'express-session'</span>);
+<span class="keyword">const</span> { <span class="function">createExpressMiddleware</span> } = <span class="function">require</span>(<span class="string">'aimless-security'</span>);
+
+<span class="keyword">const</span> app = <span class="function">express</span>();
+
+
+<span class="comment">// 1️⃣ LOADING SCREEN (MUST BE FIRST!)</span>
+
+<span class="keyword">const</span> security = <span class="function">createExpressMiddleware</span>({
+  apiKey: process.env.AIMLESS_API_KEY,
+  loadingScreen: {
+    enabled: <span class="keyword">true</span>,
+    duration: <span class="number">1000</span>,
+    message: <span class="string">'Securing your connection...'</span>,
+    logoUrl: <span class="string">'https://jsdimages.netlify.app/aimless-security-trans-logo.png'</span>
+  },
+  webhooks: {
+    enabled: <span class="keyword">true</span>,
+    url: process.env.DISCORD_WEBHOOK_URL,
+    events: [<span class="string">'sqlInjection'</span>, <span class="string">'xss'</span>, <span class="string">'rateLimit'</span>, <span class="string">'botDetection'</span>]
+  },
+  rateLimit: {
+    windowMs: <span class="number">10000</span>,      <span class="comment">// 10 seconds</span>
+    maxRequests: <span class="number">20</span>        <span class="comment">// 20 requests per window</span>
+  }
+});
+
+app.<span class="function">use</span>(security);
+
+
+<span class="comment">// 2️⃣ BODY PARSERS (BEFORE SECURITY CHECKS!)</span>
+
+<span class="comment">// These MUST come after loading screen but BEFORE routes</span>
+<span class="comment">// So that XSS detection can see request bodies</span>
+app.<span class="function">use</span>(express.<span class="function">json</span>());
+app.<span class="function">use</span>(express.<span class="function">urlencoded</span>({ extended: <span class="keyword">true</span> }));
+
+
+<span class="comment">// 3️⃣ STATIC FILES (index: false is CRITICAL!)</span>
+
+<span class="comment">// Without index: false, Express auto-serves index.html</span>
+<span class="comment">// and bypasses your route handler (no loading screen!)</span>
+app.<span class="function">use</span>(express.<span class="function">static</span>(<span class="string">'public'</span>, { 
+  index: <span class="keyword">false</span>  <span class="comment">// ← THIS IS CRITICAL!</span>
+}));
+
+
+<span class="comment">// 4️⃣ SESSION (Optional, after static files)</span>
+
+app.<span class="function">use</span>(<span class="function">session</span>({
+  secret: <span class="string">'your-secret-key'</span>,
+  resave: <span class="keyword">false</span>,
+  saveUninitialized: <span class="keyword">false</span>
+}));
+
+
+<span class="comment">// 5️⃣ HTML ROUTE (MUST use res.send!)</span>
+
+app.<span class="function">get</span>(<span class="string">'/'</span>, (req, res) => {
+  <span class="comment">// Read file and send with res.send() to trigger loading screen</span>
+  <span class="keyword">const</span> html = fs.<span class="function">readFileSync</span>(
+    path.<span class="function">join</span>(__dirname, <span class="string">'public'</span>, <span class="string">'index.html'</span>), 
+    <span class="string">'utf8'</span>
+  );
+  res.<span class="function">send</span>(html);
+});
+
+
+<span class="comment">// 6️⃣ YOUR API ROUTES (Now protected!)</span>
+
+app.<span class="function">get</span>(<span class="string">'/api/users'</span>, (req, res) => {
+  res.<span class="function">json</span>({ users: [] });
+});
+
+app.<span class="function">post</span>(<span class="string">'/api/comments'</span>, (req, res) => {
+  <span class="comment">// XSS protection automatically checks req.body</span>
+  res.<span class="function">json</span>({ success: <span class="keyword">true</span> });
+});
+
+app.<span class="function">listen</span>(<span class="number">3000</span>, () => {
+  console.<span class="function">log</span>(<span class="string">'🛡️ Server running with Aimless Security on port 3000'</span>);
+});
+                </div>
+
+                <h3>❌ WRONG Order (Common Mistakes)</h3>
+
+                <div class="code-block">
+<span class="comment">// ❌ WRONG: Static files before loading screen</span>
+app.<span class="function">use</span>(express.<span class="function">static</span>(<span class="string">'public'</span>));  <span class="comment">// Auto-serves index.html!</span>
+app.<span class="function">use</span>(security);  <span class="comment">// Loading screen never triggers</span>
+
+<span class="comment">// ❌ WRONG: Using res.sendFile instead of res.send</span>
+app.<span class="function">get</span>(<span class="string">'/'</span>, (req, res) => {
+  res.<span class="function">sendFile</span>(__dirname + <span class="string">'/public/index.html'</span>);  <span class="comment">// Bypasses loading screen!</span>
+});
+
+<span class="comment">// ❌ WRONG: Static files with default index</span>
+app.<span class="function">use</span>(express.<span class="function">static</span>(<span class="string">'public'</span>));  <span class="comment">// Missing { index: false }</span>
+                </div>
+            </div>
+
+            <!-- SECTION 7: TESTING -->
+            <div class="section" id="testing">
+                <h2><span class="step-number">7</span> Testing Everything</h2>
+
+                <h3>Test Checklist</h3>
+
+                <ul class="checklist">
+                    <li><strong>Loading Screen:</strong> Visit <code>http://localhost:3000</code> - should see 1 second loading screen</li>
+                    <li><strong>SQL Injection:</strong> Try <code>/api/test?id=1' OR '1'='1</code> - should get webhook alert</li>
+                    <li><strong>XSS Attack:</strong> POST with <code>&lt;script&gt;alert("XSS")&lt;/script&gt;</code> - should get webhook alert</li>
+                    <li><strong>Rate Limiting:</strong> Make 30+ requests quickly - should get 403 error and webhook</li>
+                    <li><strong>Normal Traffic:</strong> Regular requests should work fine without blocking</li>
+                </ul>
+
+                <h3>Quick Test Script (Add to Your HTML)</h3>
+
+                <div class="code-block">
+<span class="keyword">&lt;button</span> <span class="string">onclick</span>=<span class="string">"testSQL()"</span><span class="keyword">&gt;</span>Test SQL Injection<span class="keyword">&lt;/button&gt;</span>
+<span class="keyword">&lt;button</span> <span class="string">onclick</span>=<span class="string">"testXSS()"</span><span class="keyword">&gt;</span>Test XSS Attack<span class="keyword">&lt;/button&gt;</span>
+<span class="keyword">&lt;button</span> <span class="string">onclick</span>=<span class="string">"testRateLimit()"</span><span class="keyword">&gt;</span>Test Rate Limiting<span class="keyword">&lt;/button&gt;</span>
+
+<span class="keyword">&lt;script&gt;</span>
+<span class="keyword">async function</span> <span class="function">testSQL</span>() {
+  <span class="keyword">const</span> response = <span class="keyword">await</span> <span class="function">fetch</span>(<span class="string">'/api/test?id=1\' OR \'1\'=\'1'</span>);
+  console.<span class="function">log</span>(<span class="string">'SQL Test:'</span>, response.status);
+  <span class="function">alert</span>(<span class="string">'Check Discord for webhook notification!'</span>);
+}
+
+<span class="keyword">async function</span> <span class="function">testXSS</span>() {
+  <span class="keyword">const</span> response = <span class="keyword">await</span> <span class="function">fetch</span>(<span class="string">'/api/test'</span>, {
+    method: <span class="string">'POST'</span>,
+    headers: { <span class="string">'Content-Type'</span>: <span class="string">'application/json'</span> },
+    body: JSON.<span class="function">stringify</span>({ 
+      comment: <span class="string">'&lt;script&gt;alert("XSS")&lt;/script&gt;'</span> 
+    })
+  });
+  console.<span class="function">log</span>(<span class="string">'XSS Test:'</span>, response.status);
+  <span class="function">alert</span>(<span class="string">'Check Discord for webhook notification!'</span>);
+}
+
+<span class="keyword">async function</span> <span class="function">testRateLimit</span>() {
+  <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i < <span class="number">30</span>; i++) {
+    <span class="keyword">await</span> <span class="function">fetch</span>(<span class="string">'/api/test'</span>);
+  }
+  <span class="function">alert</span>(<span class="string">'Made 30 requests - check Discord for rate limit alert!'</span>);
+}
+<span class="keyword">&lt;/script&gt;</span>
+                </div>
+
+                <div class="success">
+                    <strong>✅ Expected Results:</strong>
+                    <ul style="margin-top: 10px; margin-left: 20px;">
+                        <li>Loading screen appears for 1 second on page load</li>
+                        <li>SQL injection triggers Discord webhook</li>
+                        <li>XSS attack triggers Discord webhook</li>
+                        <li>30 requests trigger rate limit webhook</li>
+                        <li>All threats logged to server console</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- SECTION 8: TROUBLESHOOTING -->
+            <div class="section" id="troubleshooting">
+                <h2><span class="step-number">8</span> Troubleshooting</h2>
+
+                <h3>❌ Loading Screen Not Showing</h3>
+                
+                <div class="warning">
+                    <strong>Problem:</strong> Page loads instantly without loading screen
+                </div>
+
+                <p><strong>Solutions:</strong></p>
+                <ol style="margin-left: 20px;">
+                    <li>Check middleware order - loading screen MUST be first:
+                        <div class="code-block">
+app.<span class="function">use</span>(security);  <span class="comment">// ← This FIRST</span>
+app.<span class="function">use</span>(express.<span class="function">json</span>());  <span class="comment">// ← Body parsers after</span>
+app.<span class="function">use</span>(express.<span class="function">static</span>(<span class="string">'public'</span>, { index: <span class="keyword">false</span> }));  <span class="comment">// ← { index: false }!</span>
+                        </div>
+                    </li>
+                    <li>Use <code>res.send()</code> NOT <code>res.sendFile()</code>:
+                        <div class="code-block">
+<span class="comment">// ❌ WRONG</span>
+res.<span class="function">sendFile</span>(path.<span class="function">join</span>(__dirname, <span class="string">'public'</span>, <span class="string">'index.html'</span>));
+
+<span class="comment">// ✅ CORRECT</span>
+<span class="keyword">const</span> html = fs.<span class="function">readFileSync</span>(path.<span class="function">join</span>(__dirname, <span class="string">'public'</span>, <span class="string">'index.html'</span>), <span class="string">'utf8'</span>);
+res.<span class="function">send</span>(html);
+                        </div>
+                    </li>
+                    <li>Disable static file auto-indexing:
+                        <div class="code-block">
+app.<span class="function">use</span>(express.<span class="function">static</span>(<span class="string">'public'</span>, { 
+  index: <span class="keyword">false</span>  <span class="comment">// ← MUST have this!</span>
+}));
+                        </div>
+                    </li>
+                </ol>
+
+                <h3>❌ Webhooks Not Sending</h3>
+
+                <div class="warning">
+                    <strong>Problem:</strong> No Discord notifications when attacks detected
+                </div>
+
+                <p><strong>Solutions:</strong></p>
+                <ol style="margin-left: 20px;">
+                    <li>Verify webhook is enabled:
+                        <div class="code-block">
+webhooks: {
+  enabled: <span class="keyword">true</span>,  <span class="comment">// ← Must be true!</span>
+  url: <span class="string">'https://discord.com/api/webhooks/...'</span>,
+  events: [<span class="string">'sqlInjection'</span>, <span class="string">'xss'</span>, <span class="string">'rateLimit'</span>, <span class="string">'botDetection'</span>]
+}
+                        </div>
+                    </li>
+                    <li>Check webhook URL is correct (copy from Discord)</li>
+                    <li>Verify events array includes the threat type you're testing</li>
+                    <li>Check server console for error messages</li>
+                </ol>
+
+                <h3>❌ XSS Not Detected</h3>
+
+                <div class="warning">
+                    <strong>Problem:</strong> XSS attacks not triggering alerts
+                </div>
+
+                <p><strong>Solutions:</strong></p>
+                <ol style="margin-left: 20px;">
+                    <li>Body parsers MUST come AFTER loading screen but BEFORE routes:
+                        <div class="code-block">
+app.<span class="function">use</span>(security);  <span class="comment">// 1. Loading screen first</span>
+app.<span class="function">use</span>(express.<span class="function">json</span>());  <span class="comment">// 2. Then body parsers</span>
+app.<span class="function">use</span>(express.<span class="function">urlencoded</span>({ extended: <span class="keyword">true</span> }));
+<span class="comment">// 3. Now routes can access req.body</span>
+                        </div>
+                    </li>
+                    <li>Make sure you're sending POST requests with JSON body</li>
+                    <li>Check Content-Type header is <code>application/json</code></li>
+                </ol>
+
+                <h3>❌ Package Name Error</h3>
+
+                <div class="warning">
+                    <strong>Problem:</strong> <code>Cannot find module 'aimless-sdk'</code>
+                </div>
+
+                <p><strong>Solution:</strong> The package is called <code>aimless-security</code> not <code>aimless-sdk</code>!</p>
+
+                <div class="code-block">
+<span class="comment">// ❌ WRONG</span>
+<span class="keyword">const</span> { createExpressMiddleware } = <span class="function">require</span>(<span class="string">'aimless-sdk'</span>);
+
+<span class="comment">// ✅ CORRECT</span>
+<span class="keyword">const</span> { createExpressMiddleware } = <span class="function">require</span>(<span class="string">'aimless-security'</span>);
+                </div>
+
+                <h3>❌ Rate Limiting Not Working</h3>
+
+                <div class="warning">
+                    <strong>Problem:</strong> Can make unlimited requests without being blocked
+                </div>
+
+                <p><strong>Solutions:</strong></p>
+                <ol style="margin-left: 20px;">
+                    <li>Lower the rate limit for testing:
+                        <div class="code-block">
+rateLimit: {
+  windowMs: <span class="number">10000</span>,  <span class="comment">// 10 seconds (shorter window)</span>
+  maxRequests: <span class="number">5</span>     <span class="comment">// Only 5 requests (easier to test)</span>
+}
+                        </div>
+                    </li>
+                    <li>Make sure you're testing from the same IP</li>
+                    <li>Check console for rate limit messages</li>
+                    <li>Restart server after changing configuration</li>
+                </ol>
+
+                <h3>🔍 Enable Debug Logging</h3>
+
+                <p>Add detailed logging to see what's happening:</p>
+
+                <div class="code-block">
+<span class="keyword">const</span> security = <span class="function">createExpressMiddleware</span>({
+  <span class="comment">// Enable verbose logging</span>
+  onThreatDetected: (threat) => {
+    console.<span class="function">log</span>(<span class="string">'🚨 THREAT DETECTED:'</span>, {
+      type: threat.type,
+      path: threat.path,
+      ip: threat.ip,
+      details: threat.details
+    });
+  },
+  
+  <span class="comment">// Log all requests</span>
+  onRequest: (req) => {
+    console.<span class="function">log</span>(<span class="string">`📥 ${req.method} ${req.path} from ${req.ip}`</span>);
+  }
+});
+                </div>
+
+                <h3>📞 Still Need Help?</h3>
+
+                <div class="info">
+                    <strong>💬 Get Support:</strong>
+                    <ul style="margin-top: 10px; margin-left: 20px;">
+                        <li>GitHub Issues: <a href="https://github.com/CamozDevelopment/Aimless-Security/issues">Report a bug</a></li>
+                        <li>Documentation: <a href="https://aimless.qzz.io">aimless.qzz.io</a></li>
+                        <li>Discord: Join our community server (link on GitHub)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- COMPLETE EXAMPLE -->
+            <div class="section">
+                <h2>🎯 Complete Working Example</h2>
+
+                <p>Copy this entire file to get started with everything enabled:</p>
+
+                <div class="code-block">
+
+<span class="comment">// server.js - Complete Aimless Security Setup</span>
+
+
+<span class="keyword">require</span>(<span class="string">'dotenv'</span>).<span class="function">config</span>();
+<span class="keyword">const</span> express = <span class="function">require</span>(<span class="string">'express'</span>);
+<span class="keyword">const</span> fs = <span class="function">require</span>(<span class="string">'fs'</span>);
+<span class="keyword">const</span> path = <span class="function">require</span>(<span class="string">'path'</span>);
+<span class="keyword">const</span> session = <span class="function">require</span>(<span class="string">'express-session'</span>);
+<span class="keyword">const</span> { <span class="function">createExpressMiddleware</span> } = <span class="function">require</span>(<span class="string">'aimless-security'</span>);
+
+<span class="keyword">const</span> app = <span class="function">express</span>();
+<span class="keyword">const</span> PORT = process.env.PORT || <span class="number">3000</span>;
+
+
+<span class="comment">// AIMLESS SECURITY - FULL CONFIGURATION</span>
+
+
+<span class="keyword">const</span> security = <span class="function">createExpressMiddleware</span>({
+  <span class="comment">// Loading screen configuration</span>
+  loadingScreen: {
+    enabled: <span class="keyword">true</span>,
+    duration: <span class="number">1000</span>,
+    message: <span class="string">'Securing your connection...'</span>,
+    logoUrl: <span class="string">'https://jsdimages.netlify.app/aimless-security-trans-logo.png'</span>
+  },
+  
+  <span class="comment">// Discord webhook notifications</span>
+  webhooks: {
+    enabled: <span class="keyword">true</span>,
+    url: process.env.DISCORD_WEBHOOK_URL,
+    events: [<span class="string">'sqlInjection'</span>, <span class="string">'xss'</span>, <span class="string">'rateLimit'</span>, <span class="string">'botDetection'</span>]
+  },
+  
+  <span class="comment">// Rate limiting</span>
+  rateLimit: {
+    windowMs: <span class="number">10000</span>,      <span class="comment">// 10 seconds</span>
+    maxRequests: <span class="number">20</span>        <span class="comment">// 20 requests max</span>
+  },
+  
+  <span class="comment">// Custom threat handler (optional)</span>
+  onThreatDetected: (threat) => {
+    console.<span class="function">log</span>(<span class="string">'🚨 THREAT:'</span>, threat.type, <span class="string">'from'</span>, threat.ip);
+  }
+});
+
+<span class="comment">// Apply security middleware FIRST!</span>
+app.<span class="function">use</span>(security);
+
+<span class="comment">// Body parsers (after loading screen, before routes)</span>
+app.<span class="function">use</span>(express.<span class="function">json</span>());
+app.<span class="function">use</span>(express.<span class="function">urlencoded</span>({ extended: <span class="keyword">true</span> }));
+
+<span class="comment">// Static files (index: false is critical!)</span>
+app.<span class="function">use</span>(express.<span class="function">static</span>(<span class="string">'public'</span>, { 
+  index: <span class="keyword">false</span> 
+}));
+
+<span class="comment">// Session middleware (optional)</span>
+app.<span class="function">use</span>(<span class="function">session</span>({
+  secret: process.env.SESSION_SECRET || <span class="string">'change-me-in-production'</span>,
+  resave: <span class="keyword">false</span>,
+  saveUninitialized: <span class="keyword">false</span>,
+  cookie: { secure: process.env.NODE_ENV === <span class="string">'production'</span> }
+}));
+
+
+<span class="comment">// ROUTES</span>
+
+
+<span class="comment">// Main page (triggers loading screen)</span>
+app.<span class="function">get</span>(<span class="string">'/'</span>, (req, res) => {
+  <span class="keyword">const</span> html = fs.<span class="function">readFileSync</span>(
+    path.<span class="function">join</span>(__dirname, <span class="string">'public'</span>, <span class="string">'index.html'</span>), 
+    <span class="string">'utf8'</span>
+  );
+  res.<span class="function">send</span>(html);
+});
+
+<span class="comment">// Protected API routes</span>
+app.<span class="function">get</span>(<span class="string">'/api/users'</span>, (req, res) => {
+  res.<span class="function">json</span>({ 
+    users: [
+      { id: <span class="number">1</span>, name: <span class="string">'John Doe'</span> },
+      { id: <span class="number">2</span>, name: <span class="string">'Jane Smith'</span> }
+    ]
+  });
+});
+
+app.<span class="function">post</span>(<span class="string">'/api/comments'</span>, (req, res) => {
+  <span class="comment">// XSS protection automatically checks req.body</span>
+  <span class="keyword">const</span> { comment } = req.body;
+  res.<span class="function">json</span>({ 
+    success: <span class="keyword">true</span>, 
+    message: <span class="string">'Comment posted!'</span>,
+    comment 
+  });
+});
+
+<span class="comment">// Test endpoint for security checks</span>
+app.<span class="function">get</span>(<span class="string">'/api/test'</span>, (req, res) => {
+  res.<span class="function">json</span>({ 
+    message: <span class="string">'Protected endpoint'</span>,
+    timestamp: <span class="keyword">new</span> <span class="function">Date</span>().<span class="function">toISOString</span>() 
+  });
+});
+
+app.<span class="function">post</span>(<span class="string">'/api/test'</span>, (req, res) => {
+  res.<span class="function">json</span>({ 
+    message: <span class="string">'Test POST received'</span>,
+    body: req.body 
+  });
+});
+
+
+<span class="comment">// START SERVER</span>
+
+
+app.<span class="function">listen</span>(PORT, () => {
+  console.<span class="function">log</span>(<span class="string">`🛡️  Aimless Security enabled`</span>);
+  console.<span class="function">log</span>(<span class="string">`🚀 Server running on http://localhost:${PORT}`</span>);
+  console.<span class="function">log</span>(<span class="string">`⏳ Loading screen: ${security.config.loadingScreen?.enabled ? 'ON' : 'OFF'}`</span>);
+  console.<span class="function">log</span>(<span class="string">`📢 Webhooks: ${security.config.webhooks?.enabled ? 'ON' : 'OFF'}`</span>);
+});
+                </div>
+
+                <p style="margin-top: 20px;"><strong>.env file:</strong></p>
+
+                <div class="code-block">
+<span class="comment"># Discord Webhook URL (optional)</span>
+DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/YOUR/WEBHOOK
+
+<span class="comment"># Session Secret</span>
+SESSION_SECRET=your-random-secret-key-here
+
+<span class="comment"># Server Configuration</span>
+PORT=3000
+NODE_ENV=development
+                </div>
+
+                <div class="success">
+                    <strong>🎉 That's it! You now have:</strong>
+                    <ul style="margin-top: 10px; margin-left: 20px;">
+                        <li>✅ Full API protection (SQL injection, XSS, bots)</li>
+                        <li>✅ Professional loading screen</li>
+                        <li>✅ Real-time Discord webhook alerts</li>
+                        <li>✅ Rate limiting protection</li>
+                        <li>✅ Production-ready security</li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // Copy code blocks to clipboard with improved UX
+        document.querySelectorAll('.code-block').forEach(block => {
+            const btn = document.createElement('button');
+            btn.className = 'copy-btn';
+            btn.innerHTML = '<span>📋 Copy Code</span>';
+            btn.onclick = () => {
+                const code = block.textContent.trim();
+                navigator.clipboard.writeText(code).then(() => {
+                    btn.innerHTML = '<span>✅ Copied!</span>';
+                    btn.style.background = 'linear-gradient(135deg, #22c55e 0%, #16a34a 100%)';
+                    setTimeout(() => {
+                        btn.innerHTML = '<span>📋 Copy Code</span>';
+                        btn.style.background = '';
+                    }, 2000);
+                }).catch(err => {
+                    btn.innerHTML = '<span>❌ Failed</span>';
+                    setTimeout(() => {
+                        btn.innerHTML = '<span>📋 Copy Code</span>';
+                    }, 2000);
+                });
+            };
+            block.parentElement.insertBefore(btn, block.nextSibling);
+        });
+
+        // Smooth scroll for TOC links
+        document.querySelectorAll('.toc a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const target = document.querySelector(link.getAttribute('href'));
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+    </script>
+</body>
+</html>

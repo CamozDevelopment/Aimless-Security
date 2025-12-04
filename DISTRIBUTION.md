@@ -1,6 +1,6 @@
 # Alternative Distribution Methods
 
-Since NPM publishing is blocked, here are several ways to distribute **aimless-sdk**:
+Since NPM publishing is blocked, here are several ways to distribute **aimless-security**:
 
 ## 🚀 Option 1: GitHub Packages (Recommended)
 
@@ -10,7 +10,7 @@ GitHub has its own package registry. Users can install directly from GitHub:
 1. Already have GitHub repo ✅
 2. Update package name in `package.json` to include scope:
    ```json
-   "name": "@camozdevelopment/aimless-sdk"
+   "name": "@camozdevelopment/aimless-security"
    ```
 
 3. Create `.npmrc` in project root:
@@ -25,7 +25,7 @@ GitHub has its own package registry. Users can install directly from GitHub:
 
 ### Users install with:
 ```bash
-npm install @camozdevelopment/aimless-sdk
+npm install @camozdevelopment/aimless-security
 ```
 
 ---
@@ -73,7 +73,7 @@ Create GitHub releases with built packages:
 2. GitHub Actions auto-creates release
 3. Users download `.tgz` file and install:
    ```bash
-   npm install ./aimless-sdk-1.3.1.tgz
+   npm install ./aimless-security-1.3.1.tgz
    ```
 
 ---
@@ -98,9 +98,9 @@ npm install CamozDevelopment/Aimless-Security#v1.3.1
 
 ### Usage stays the same:
 ```javascript
-const { Aimless } = require('aimless-sdk');
+const { Aimless } = require('aimless-security');
 // or
-import Aimless from 'aimless-sdk';
+import Aimless from 'aimless-security';
 ```
 
 ---

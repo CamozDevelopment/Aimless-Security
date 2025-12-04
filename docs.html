@@ -655,7 +655,13 @@ if (!result.safe) {
             <div class="bg-slate-800 rounded-xl p-8 border border-slate-700">
                 <pre><code class="language-javascript">const { Aimless } = require('aimless-sdk');
 const aimless = new Aimless({ rasp: { enabled: true } });
-app.use(aimless.middleware());</code></pre>
+
+// Skip auth routes to prevent false positives
+app.use((req, res, next) => {
+  const authPaths = ['/api/auth/login', '/api/auth/register'];
+  if (authPaths.includes(req.path)) return next();
+  aimless.middleware()(req, res, next);
+});</code></pre>
                 
                 <div class="mt-6 p-4 bg-green-500/10 border border-green-500/30 rounded-lg">
                     <p class="text-green-400 font-semibold">✓ Your API is now protected against all major attack vectors!</p>
@@ -699,7 +705,13 @@ app.use(aimless.middleware());</code></pre>
 
 // Add loading screen BEFORE middleware
 app.use(aimless.loading());
-app.use(aimless.middleware());</code></pre>
+
+// Conditional middleware - skip auth routes
+app.use((req, res, next) => {
+  const authPaths = ['/api/auth/login', '/api/auth/register'];
+  if (authPaths.includes(req.path)) return next();
+  aimless.middleware()(req, res, next);
+});</code></pre>
                     </div>
 
                     <div class="bg-slate-800 rounded-xl p-6 border border-blue-500/30">
@@ -752,6 +764,68 @@ app.use(aimless.middleware());
 
 // Blocked response will be:
 // "Request blocked by Aimless Security. For support, contact security@yourcompany.com"</code></pre>
+                </div>
+            </div>
+
+            <!-- Authentication Routes -->
+            <div class="mb-12">
+                <h3 class="text-3xl font-bold mb-6 flex items-center">
+                    <i class="fas fa-user-lock text-purple-400 mr-3"></i>
+                    Authentication & False Positives
+                </h3>
+                <p class="text-slate-300 mb-6">When using authentication endpoints (login, signup, etc.), apply Aimless conditionally to prevent false positives.</p>
+
+                <div class="bg-slate-800 rounded-xl p-6 border border-purple-500/30 mb-6">
+                    <h4 class="text-xl font-bold mb-3 text-purple-400">Problem: Auth Bypass Detection</h4>
+                    <p class="text-slate-400 mb-4">Login requests can trigger "auth_bypass_attempt" warnings because they naturally include authentication data. This is a false positive.</p>
+                    
+                    <div class="bg-red-500/10 border border-red-500/30 rounded-lg p-4">
+                        <p class="text-red-400 font-mono text-sm">⚠️ auth_bypass_attempt (high) - Request blocked</p>
+                    </div>
+                </div>
+
+                <div class="bg-slate-800 rounded-xl p-6 border border-green-500/30">
+                    <h4 class="text-xl font-bold mb-3 text-green-400">Solution: Conditional Middleware</h4>
+                    <p class="text-slate-400 mb-4">Skip Aimless security checks for authentication routes while protecting everything else:</p>
+                    
+                    <pre><code class="language-javascript">const { Aimless } = require('aimless-security');
+const aimless = new Aimless({
+  rasp: {
+    enabled: true,
+    blockMode: false,  // Monitor mode recommended during testing
+    anomalyDetection: false  // Disable to reduce false positives
+  }
+});
+
+app.use(aimless.loading());
+
+// Conditional middleware - skip auth routes
+app.use((req, res, next) => {
+  const authPaths = [
+    '/api/auth/login',
+    '/api/auth/register',
+    '/api/auth/logout',
+    '/api/auth/me',
+    '/api/auth/profile'
+  ];
+  
+  // Skip Aimless for auth endpoints
+  if (authPaths.includes(req.path)) {
+    return next();
+  }
+  
+  // Run Aimless for all other routes
+  aimless.middleware()(req, res, next);
+});</code></pre>
+
+                    <div class="mt-4 p-4 bg-green-500/10 border border-green-500/30 rounded-lg">
+                        <ul class="space-y-2 text-green-400 text-sm">
+                            <li><i class="fas fa-check mr-2"></i>Authentication works without blocks</li>
+                            <li><i class="fas fa-check mr-2"></i>All other routes remain protected</li>
+                            <li><i class="fas fa-check mr-2"></i>No false positives on login/signup</li>
+                            <li><i class="fas fa-check mr-2"></i>SQL injection, XSS still detected everywhere</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
 

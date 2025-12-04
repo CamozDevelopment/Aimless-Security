@@ -4,10 +4,13 @@ A full-featured BeamNG.drive mods community site with Aimless Security protectio
 
 ## Features
 
+✅ **User Authentication** - Signup, login, sessions with bcrypt  
+✅ **User Profiles** - View profiles with uploaded mods, reviews, and stats  
 ✅ **Browse & Search Mods** - Filter by category, sort by downloads/rating  
+✅ **Upload Mods** - Upload with images (5MB limit, stored in public/uploads)  
 ✅ **Mod Reviews** - Rate and review mods (1-5 stars)  
 ✅ **Download Tracking** - Track downloads and popular mods  
-✅ **Security Dashboard** - Real-time security analytics  
+✅ **Admin Dashboard** - Real-time security analytics (admin only)  
 ✅ **SQLite Database** - No external database needed  
 ✅ **Aimless Security** - Protection against SQL injection, XSS, bots, rate limiting  
 
@@ -43,10 +46,16 @@ beamng-community/
 ├── init-db.js          # Database initialization script
 ├── package.json        # Dependencies
 ├── beamng.db          # SQLite database (created after init-db)
+├── sessions.db        # SQLite session storage
+├── middleware/
+│   └── auth.js        # Authentication middleware
 └── public/
     ├── index.html     # Frontend HTML
-    └── app.js         # Frontend JavaScript
+    ├── app-auth.js    # Frontend JavaScript with authentication
+    └── uploads/       # User-uploaded mod images (auto-created)
 ```
+
+**Note:** Uploaded images are stored in `public/uploads/` and served statically.
 
 ## Security Features
 
@@ -58,8 +67,26 @@ beamng-community/
 - ✅ **Rate Limiting** - Prevents abuse (100 requests/minute)
 - ✅ **Loading Screen** - Shows security check on page load
 - ✅ **Analytics** - Track threats and attacks in real-time
+- ✅ **Auth Route Protection** - Skips security checks on `/api/auth/*` to prevent false positives
 
 **Current Mode:** `blockMode: false` (Monitor only - logs but doesn't block)
+
+### Middleware Setup (Important!)
+
+To prevent false positives on authentication routes, use conditional middleware:
+
+```javascript
+app.use(aimless.loading());
+
+// Skip Aimless for auth routes
+app.use((req, res, next) => {
+  const authPaths = ['/api/auth/login', '/api/auth/register', '/api/auth/logout', '/api/auth/me'];
+  if (authPaths.includes(req.path)) return next();
+  aimless.middleware()(req, res, next);
+});
+```
+
+This ensures authentication endpoints work without security blocks while other routes remain protected.
 
 ### To Enable Blocking:
 

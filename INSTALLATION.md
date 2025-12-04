@@ -9,7 +9,7 @@ npm install CamozDevelopment/Aimless-Security
 That's it! Now add it to your app:
 
 ```javascript
-const { Aimless } = require('aimless-sdk');
+const { Aimless } = require('aimless-security');
 
 const aimless = new Aimless({ rasp: { enabled: true } });
 app.use(aimless.middleware());
@@ -22,7 +22,7 @@ Want to see it work? Run this:
 ```bash
 # Create a test file
 echo "const express = require('express');
-const { Aimless } = require('aimless-sdk');
+const { Aimless } = require('aimless-security');
 
 const app = express();
 app.use(express.json());
@@ -151,7 +151,7 @@ app.use(aimless.middleware());
 Test that everything works:
 
 ```javascript
-const { Aimless } = require('aimless-sdk');
+const { Aimless } = require('aimless-security');
 const aimless = new Aimless();
 
 // Test SQL detection
@@ -166,7 +166,7 @@ console.log('Normal safe?', aimless.isSafe('Hello World'));  // true
 
 ## Common Issues
 
-### "Cannot find module 'aimless-sdk'"
+### "Cannot find module 'aimless-security'"
 
 **Fix:** Make sure you installed from GitHub:
 ```bash

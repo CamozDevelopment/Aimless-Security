@@ -234,7 +234,7 @@ npm install CamozDevelopment/Aimless-Security
 ## 🚀 Quick Start
 
 ```javascript
-const { Aimless } = require('aimless-sdk');
+const { Aimless } = require('aimless-security');
 
 const aimless = new Aimless({
   rasp: {
@@ -266,4 +266,4 @@ console.log('Severity:', result2.threats[0]?.severity); // 'critical'
 
 ---
 
-**aimless-sdk v1.3.2** - Advanced RASP with Unicode SQL and Polyglot Injection Detection
+**aimless-security v1.3.2** - Advanced RASP with Unicode SQL and Polyglot Injection Detection

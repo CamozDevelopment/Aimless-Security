@@ -17,6 +17,11 @@ db.serialize(() => {
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       username TEXT UNIQUE NOT NULL,
       email TEXT UNIQUE NOT NULL,
+      password TEXT NOT NULL,
+      avatar_url TEXT,
+      bio TEXT,
+      role TEXT DEFAULT 'user',
+      banned INTEGER DEFAULT 0,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )
   `);
@@ -32,6 +37,7 @@ db.serialize(() => {
       image_url TEXT,
       downloads INTEGER DEFAULT 0,
       rating REAL DEFAULT 0,
+      featured INTEGER DEFAULT 0,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
       FOREIGN KEY (user_id) REFERENCES users(id)
     )
@@ -60,11 +66,38 @@ db.serialize(() => {
     )
   `);
 
+  db.run(`
+    CREATE TABLE IF NOT EXISTS sessions (
+      sid TEXT PRIMARY KEY,
+      sess TEXT NOT NULL,
+      expired INTEGER NOT NULL
+    )
+  `);
+
   console.log('✅ Tables created');
 
-  // Insert sample users
-  db.run('INSERT OR IGNORE INTO users (username, email) VALUES (?, ?)', ['admin', 'admin@beamng.local']);
-  db.run('INSERT OR IGNORE INTO users (username, email) VALUES (?, ?)', ['modder123', 'modder@beamng.local']);
+  // Check if data already exists
+  const existingUsers = db.prepare('SELECT COUNT(*) as count FROM users').get();
+  const existingMods = db.prepare('SELECT COUNT(*) as count FROM mods').get();
+  
+  if (existingUsers.count > 0 || existingMods.count > 0) {
+    console.log('⚠️  Database already has data - skipping sample data insertion');
+    console.log(`   Found ${existingUsers.count} users and ${existingMods.count} mods`);
+    console.log('📊 Database tables verified!');
+    db.close();
+    process.exit(0);
+    return;
+  }
+
+  // Insert sample users (password: "password123" for all)
+  const bcrypt = require('bcrypt');
+  const hashedPassword = bcrypt.hashSync('password123', 10);
+  
+  db.run('INSERT OR IGNORE INTO users (username, email, password, role, bio, avatar_url) VALUES (?, ?, ?, ?, ?, ?)', 
+    ['admin', 'admin@beamng.local', hashedPassword, 'admin', 'Site administrator', 'https://api.dicebear.com/7.x/avataaars/svg?seed=admin']);
+  
+  db.run('INSERT OR IGNORE INTO users (username, email, password, bio, avatar_url) VALUES (?, ?, ?, ?, ?)', 
+    ['modder123', 'modder@beamng.local', hashedPassword, 'BeamNG modding enthusiast', 'https://api.dicebear.com/7.x/avataaars/svg?seed=modder123']);
 
   // Insert sample mods
   db.run(`

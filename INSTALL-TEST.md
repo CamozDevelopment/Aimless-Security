@@ -1,13 +1,13 @@
 # Quick Installation Test
 
-Test that aimless-sdk installs correctly from GitHub.
+Test that aimless-security installs correctly from GitHub.
 
 ## Test in a new project:
 
 ```bash
 # Create test directory
-mkdir test-aimless-sdk
-cd test-aimless-sdk
+mkdir test-aimless-security
+cd test-aimless-security
 npm init -y
 
 # Install from GitHub
@@ -21,7 +21,7 @@ npm install CamozDevelopment/Aimless-Security#v1.3.1
 
 Create `test.js`:
 ```javascript
-const { Aimless } = require('aimless-sdk');
+const { Aimless } = require('aimless-security');
 
 const aimless = new Aimless({
   rasp: {

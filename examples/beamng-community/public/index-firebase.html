@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BeamNG Mods Community - Firebase Edition</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
+    
+    <style>
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-slide-in {
+            animation: slideIn 0.3s ease-out;
+        }
+        .skeleton {
+            background: linear-gradient(90deg, #2d3748 25%, #4a5568 50%, #2d3748 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+        }
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white">
+    <!-- Auth Modal -->
+    <div id="auth-modal" class="fixed inset-0 bg-black bg-opacity-75 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-gray-800 rounded-lg max-w-md w-full p-8 animate-slide-in">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold">Sign In</h2>
+                <button onclick="closeAuthModal()" class="text-gray-400 hover:text-white">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            
+            <!-- Tab Switcher -->
+            <div class="flex space-x-2 mb-6">
+                <button id="signin-tab" onclick="switchAuthTab('signin')" class="flex-1 py-2 px-4 bg-blue-600 rounded-lg font-semibold transition">
+                    Sign In
+                </button>
+                <button id="signup-tab" onclick="switchAuthTab('signup')" class="flex-1 py-2 px-4 bg-gray-700 rounded-lg font-semibold transition">
+                    Sign Up
+                </button>
+            </div>
+            
+            <!-- Sign In Form -->
+            <div id="signin-form">
+                <input type="email" id="signin-email" placeholder="Email" class="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-3 mb-3 focus:outline-none focus:border-blue-500" />
+                <input type="password" id="signin-password" placeholder="Password" class="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-3 mb-4 focus:outline-none focus:border-blue-500" />
+                <button onclick="signInWithEmail()" class="w-full bg-blue-600 hover:bg-blue-700 py-3 rounded-lg font-semibold transition mb-3">
+                    <i class="fas fa-sign-in-alt mr-2"></i>Sign In
+                </button>
+            </div>
+            
+            <!-- Sign Up Form -->
+            <div id="signup-form" class="hidden">
+                <input type="text" id="signup-username" placeholder="Username" class="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-3 mb-3 focus:outline-none focus:border-blue-500" />
+                <input type="email" id="signup-email" placeholder="Email" class="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-3 mb-3 focus:outline-none focus:border-blue-500" />
+                <input type="password" id="signup-password" placeholder="Password (min 6 characters)" class="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-3 mb-4 focus:outline-none focus:border-blue-500" />
+                <button onclick="signUpWithEmail()" class="w-full bg-green-600 hover:bg-green-700 py-3 rounded-lg font-semibold transition mb-3">
+                    <i class="fas fa-user-plus mr-2"></i>Create Account
+                </button>
+            </div>
+            
+            <div class="relative my-6">
+                <div class="absolute inset-0 flex items-center">
+                    <div class="w-full border-t border-gray-700"></div>
+                </div>
+                <div class="relative flex justify-center text-sm">
+                    <span class="px-2 bg-gray-800 text-gray-400">Or continue with</span>
+                </div>
+            </div>
+            
+            <!-- Google Sign In -->
+            <button onclick="signInWithGoogle()" class="w-full bg-white text-gray-900 hover:bg-gray-100 py-3 rounded-lg font-semibold transition flex items-center justify-center">
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" class="w-5 h-5 mr-2" />
+                Sign in with Google
+            </button>
+            
+            <div id="auth-error" class="mt-4 text-red-500 text-sm hidden"></div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed top-4 right-4 bg-gray-800 border border-gray-700 rounded-lg p-4 shadow-lg transform translate-x-full transition-transform duration-300 z-50">
+        <div class="flex items-center space-x-3">
+            <i id="toast-icon" class="fas fa-check-circle text-green-500 text-xl"></i>
+            <span id="toast-message" class="text-white"></span>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="bg-gray-800 border-b border-gray-700 sticky top-0 z-40">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <h1 class="text-2xl font-bold text-blue-500 cursor-pointer" onclick="showHome()">
+                        <i class="fas fa-car"></i> BeamNG Community
+                    </h1>
+                </div>
+                <nav class="flex items-center space-x-6">
+                    <a href="#" onclick="showHome()" class="hover:text-blue-400 transition">
+                        <i class="fas fa-home"></i> Home
+                    </a>
+                    <a href="#" onclick="showMods()" class="hover:text-blue-400 transition">
+                        <i class="fas fa-download"></i> Mods
+                    </a>
+                    <a href="#" onclick="showAdmin()" class="hover:text-blue-400 transition">
+                        <i class="fas fa-shield-alt"></i> Security
+                    </a>
+                    
+                    <!-- User Menu -->
+                    <div id="user-menu-logged-out" class="flex items-center space-x-3">
+                        <button onclick="showAuthModal()" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg font-semibold transition">
+                            <i class="fas fa-sign-in-alt mr-2"></i>Sign In
+                        </button>
+                    </div>
+                    
+                    <div id="user-menu-logged-in" class="hidden relative">
+                        <button id="user-dropdown-btn" onclick="toggleUserDropdown()" class="flex items-center space-x-2 hover:text-blue-400 transition">
+                            <img id="user-avatar" src="" class="w-8 h-8 rounded-full border-2 border-blue-500" />
+                            <span id="user-display-name"></span>
+                            <i class="fas fa-chevron-down text-xs"></i>
+                        </button>
+                        <div id="user-dropdown" class="hidden absolute right-0 mt-2 w-48 bg-gray-800 border border-gray-700 rounded-lg shadow-lg py-2">
+                            <a href="#" onclick="showProfile()" class="block px-4 py-2 hover:bg-gray-700 transition">
+                                <i class="fas fa-user mr-2"></i>Profile
+                            </a>
+                            <a href="#" onclick="showMyMods()" class="block px-4 py-2 hover:bg-gray-700 transition">
+                                <i class="fas fa-folder mr-2"></i>My Mods
+                            </a>
+                            <hr class="border-gray-700 my-2" />
+                            <a href="#" onclick="signOut()" class="block px-4 py-2 hover:bg-gray-700 transition text-red-400">
+                                <i class="fas fa-sign-out-alt mr-2"></i>Sign Out
+                            </a>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        <!-- Pages will be injected here -->
+        <div id="app-content"></div>
+    </main>
+
+    <!-- Firebase Config -->
+    <script src="../config/firebase.js"></script>
+    
+    <!-- Main App Script -->
+    <script src="firebase-app.js"></script>
+</body>
+</html>

@@ -127,7 +127,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Comprehensive Testing**: 23/23 false positive prevention tests passing
 
 ### Fixed
-- Package name changed from `aimless-security` to `aimless-sdk`
+- Package name is `aimless-security`
 - Validate API now correctly detects XSS threats
 - Type map in validate() updated to match actual threat type values
 

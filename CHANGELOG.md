@@ -5,6 +5,14 @@ All notable changes to Aimless Security will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.5] - 2025-12-04
+
+### Fixed
+- Fixed `TypeError: Cannot read properties of undefined (reading 'match')` in AdvancedThreatDetector
+- Added null/undefined checks in `detectAll()` method to prevent crashes
+- Improved error handling when request data contains undefined values
+- Enhanced stability for edge cases in threat detection
+
 ## [1.3.4] - 2025-12-03
 
 ### Added - 🎨 Custom UI & User Experience

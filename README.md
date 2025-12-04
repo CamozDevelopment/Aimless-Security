@@ -64,7 +64,12 @@ app.listen(3000);
 - ✅ Unicode SQL Injection
 - ✅ Polyglot Attacks
 
-## ✨ What's New in v1.3.4
+## ✨ What's New in v1.3.5
+
+### 🐛 Bug Fixes
+- Fixed crash when request data contains undefined values
+- Improved null safety in AdvancedThreatDetector
+- Enhanced error handling in threat detection pipeline
 
 ## ✨ What's New in v1.3.4
 

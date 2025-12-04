@@ -179,7 +179,7 @@ SESSION_SECRET=your-secret-key-here
 
 - **Backend:** Express.js + Node.js
 - **Database:** SQLite (better-sqlite3)
-- **Security:** Aimless SDK v1.3.4
+- **Security:** Aimless SDK v1.3.5
 - **Frontend:** HTML + Tailwind CSS + Vanilla JS
 - **Session:** express-session
 

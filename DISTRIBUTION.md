@@ -41,7 +41,7 @@ npm install CamozDevelopment/Aimless-Security
 
 Or specific version/tag:
 ```bash
-npm install CamozDevelopment/Aimless-Security#v1.3.1
+npm install CamozDevelopment/Aimless-Security#v1.3.6
 ```
 
 **No setup needed** - works right now! ✅
@@ -55,7 +55,7 @@ Automatically serves files from GitHub releases:
 ### Users can use via CDN:
 ```html
 <!-- Browser -->
-<script src="https://cdn.jsdelivr.net/gh/CamozDevelopment/Aimless-Security@1.3.1/dist/index.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/CamozDevelopment/Aimless-Security@1.3.6/dist/index.js"></script>
 ```
 
 ```javascript
@@ -69,11 +69,11 @@ npm install CamozDevelopment/Aimless-Security
 
 Create GitHub releases with built packages:
 
-1. Tag version: `git tag v1.3.1 && git push origin v1.3.1`
+1. Tag version: `git tag v1.3.6 && git push origin v1.3.6`
 2. GitHub Actions auto-creates release
 3. Users download `.tgz` file and install:
    ```bash
-   npm install ./aimless-security-1.3.1.tgz
+   npm install ./aimless-security-1.3.6.tgz
    ```
 
 ---
@@ -92,7 +92,7 @@ npm install CamozDevelopment/Aimless-Security
 
 Or install a specific version:
 ```bash
-npm install CamozDevelopment/Aimless-Security#v1.3.1
+npm install CamozDevelopment/Aimless-Security#v1.3.6
 ```
 \```
 
@@ -109,8 +109,8 @@ import Aimless from 'aimless-security';
 
 1. **Tag current version:**
    ```bash
-   git tag v1.3.1
-   git push origin v1.3.1
+   git tag v1.3.6
+   git push origin v1.3.6
    ```
 
 2. **Update README** with GitHub installation instructions

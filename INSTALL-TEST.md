@@ -14,7 +14,7 @@ npm init -y
 npm install CamozDevelopment/Aimless-Security
 
 # Or install specific version
-npm install CamozDevelopment/Aimless-Security#v1.3.1
+npm install CamozDevelopment/Aimless-Security#v1.3.6
 ```
 
 ## Test the installation:
